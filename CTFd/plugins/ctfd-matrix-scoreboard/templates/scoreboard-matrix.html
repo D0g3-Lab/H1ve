@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block stylesheets %}
+<style>
+th.score {
+    height: 20px;
+    width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+    vertical-align: bottom !important;
+    padding: 0;
+    font-size: 12px;
+    line-height: 0.8 !important;
+}
+
+th.chalname {
+    height: 80px;
+    width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+    vertical-align: bottom !important;
+    padding: 0;
+    font-size: 12px;
+    line-height: 0.8 !important;
+}
+.chalname > div{
+     position: relative;
+    top: 0px;
+    left: 30px;
+    height: 100%;
+    /*overflow: hidden;*/
+    /* TODO border */
+    -webkit-transform: skew(-45deg,0deg);
+    transform: skew(-45deg,0deg);
+}
+.chalname span{
+    display: inline-block;
+    line-height: 12px;
+    position: absolute;
+    bottom: 30px;
+    left: -40px;
+    text-align: left;
+    width:85px;
+    -webkit-transform: skew(45deg,0deg) rotate(315deg) !important;
+    transform: skew(45deg,0deg) rotate(315deg) !important;
+}
+.chalmark img {
+    height: 30px;
+}
+.chalmark {
+    font-size:20px;
+}
+
+.matrix {
+    overflow-x: scroll !important;
+    cursor: grab !important;
+    cursor : -o-grab !important;
+    cursor : -moz-grab !important;
+    cursor : -webkit-grab !important;
+}
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="section section-standard" id="users">
+    <div class="section-inner">
+        <div class="container">
+            <div class="section-header" data-100p-top="transform[swing]:translateY(-25px);opacity[swing]:0" data-75p-top="transform[swing]:translateY(0);opacity[swing]:1">
+                <h3>Scoreboard</h3>
+                <div class="divider">//</div>
+            </div>
+            {% if errors %}
+            <div class="container main-container">
+                <div id='errors' class="row">
+            {% for error in errors %}
+                    <h1>{{ error }}</h1>
+            {% endfor %}
+                </div>
+            </div>
+            {% else %}
+
+                {% if score_frozen %}
+                <div class="container main-container">
+                    <div class="row">
+                        <h1>Scoreboard has been frozen.</h1>
+                    </div>
+                </div>
+                {% endif %}
+
+            <div class="matrix dragscroll">
+            <table id="scoreboard" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th width="5%" rowspan="2" class="text-center"><b>Rank</b>
+                        </th>
+                        <th width="10%" rowspan="2"><b>Team</b>
+                        </th>
+                        <th width="5%" rowspan="2"><b>Score</b>
+                        </th>
+                        {% for chal in challenges %}
+                            <div><th class="chalname" title="{{ chal.category }}"><div><span>{{ chal.name }}</span></div></th></div>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        {% for chal in challenges %}
+                            <div><th width="10%"  class="score" title="{{ chal.category }}"><b>{{ chal.value }}</b></th></div>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                {% for team in teams %}
+                    <tr><td>{{ loop.index }}</td><td><a href="{{ request.script_root }}/teams/{{ team.teamid }}">{{ team.name }}</a></td><td>{{ team.score }}</td>
+                        {% for chal in challenges %}
+                            <td class="chalmark">
+                            {% if chal.id in team.solves %}
+                            ✔
+                            {% else %}
+
+                            {% endif %}
+                            </td>
+                        {% endfor %}
+
+
+                       </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+</div>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    <script>var challenges = {{ challenges | tojson }};</script>
+    <script src="{{ request.script_root }}/matrix/static/dragscroll.js"></script>
+    <script src="{{ request.script_root }}/matrix/static/scoreboard-matrix.js"></script>
+{% endblock %}

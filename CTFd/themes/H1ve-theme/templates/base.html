@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{ get_ctf_name() }}</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="{{ url_for('views.themes', path='img/favicon.ico') }}"
+		  type="image/x-icon">
+	<link rel="stylesheet" href="{{ url_for('views.themes', path='css/vendor/bootstrap.min.css') }}">
+	<link rel="stylesheet" href="{{ url_for('views.themes', path='css/vendor/font-awesome/fontawesome-fonts.css') }}" type='text/css'>
+	<link rel="stylesheet" href="{{ url_for('views.themes', path='css/vendor/font-awesome/fontawesome-all.min.css') }}" type='text/css'>
+	
+	<link rel="stylesheet" href="{{ url_for('views.themes', path='css/vendor/font.css') }}"  type='text/css'>
+	<link rel="stylesheet" href="{{ url_for('views.themes', path='css/jumbotron.css') }}">
+	<link rel="stylesheet" href="{{ url_for('views.themes', path='css/sticky-footer.css') }}">
+	<link rel="stylesheet" href="{{ url_for('views.themes', path='css/base.css') }}">
+	<link rel="stylesheet" href="{{ url_for('views.themes', path='css/yellow.css') }}">
+    <link rel="stylesheet" href="{{ url_for('views.themes', path='css/gfonts.css') }}">
+    <link rel="stylesheet" href="{{ url_for('views.themes', path='css/linea-arrows.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('views.themes', path='css/linea-basic.min.css') }}">
+	{% block stylesheets %}{% endblock %}
+	{% for stylesheet in get_registered_stylesheets() %}
+		{% if stylesheet.startswith('http') %}
+			<link rel="stylesheet" type="text/css" href="{{ stylesheet }}">
+		{% elif request.script_root %}
+			<link rel="stylesheet" type="text/css" href="{{ request.script_root }}/{{ stylesheet }}">
+		{% else %}
+			<link rel="stylesheet" type="text/css" href="{{ stylesheet }}">
+		{% endif %}
+	{% endfor %}
+	<link rel="stylesheet" type="text/css" href="{{ url_for('views.custom_css') }}">
+	<script src="{{ url_for('views.themes', path='js/vendor/promise-polyfill.min.js') }}"></script>
+	<script src="{{ url_for('views.themes', path='js/vendor/eventsource.min.js') }}"></script>
+	<script src="{{ url_for('views.themes', path='js/vendor/fetch.min.js') }}"></script>
+	<script src="{{ url_for('views.themes', path='js/CTFd.js') }}"></script>
+	<script src="{{ url_for('views.themes', path='js/vendor/moment.min.js') }}"></script>
+	<script src="{{ url_for('views.themes', path='js/vendor/nunjucks.min.js') }}"></script>
+	<script type="text/javascript">
+		var script_root = "{{ request.script_root }}";
+		var csrf_nonce = "{{ nonce }}";
+		var user_mode = "{{ get_config('user_mode') }}";
+		var ctf_start = {{ get_config("start") | tojson }};
+		var ctf_end = {{ get_config("end") | tojson }};
+		CTFd.options.urlRoot = script_root;
+		CTFd.options.csrfNonce = csrf_nonce;
+		CTFd.options.start = ctf_start;
+		CTFd.options.end = ctf_end;
+	</script>
+</head>
+<body class="skrollr" data-skrollr="true">
+    <div class="loader-overlay">
+        <div class="loader">
+            <div class="loader-icon">
+                <span class="icon icon-arrows-glide"></span>
+            </div>
+            <h3 class="loader-text">Loading</h3>
+        </div>
+    </div>
+    <div class="navbar navbar-inverse navbar-fixed-top" id="navbar-main">
+        <div class="navbar-inner clearfix">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-menu">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="brand" href="{{ url_for('views.static_html', route='/') }}" title="Outside">
+                        <span class="title">
+                            <!-- {% if get_ctf_logo() %}
+							<img class="img-responsive ctf_logo" src="{{ url_for('views.files', path=get_ctf_logo()) }}" height="25" alt="{{ get_ctf_name() }}">
+							{% else %}
+							D0g3
+							{% endif %} -->
+                            D0g3
+                        </span>
+                        <span class="icon icon-arrows-glide"></span>
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="nav navbar-nav nav-left">
+                        {% for page in get_user_page_menu_bar() %}
+						{% if page.route.startswith('http://') or page.route.startswith('https://') %}
+							<li class="nav-item">
+								<a class="nav-link" href="{{ page.route }}">{{ page.title }}</a>
+							</li>
+						{% else %}
+							<li class="nav-item">
+								<a class="nav-link" href="{{ url_for('views.static_html', route=page.route) }}">{{ page.title }}</a>
+							</li>
+						{% endif %}
+					{% endfor %}
+                        <li id="notifications">
+                            <a href="{{ url_for('views.notifications') }}">
+                                <span class="main-link">Notification</span>
+                                <span class="jewel"></span>
+                            </a>
+                        </li>
+                        <li id="matrix">
+                            <a href="/matrix/">
+                                <span class="main-link">Matrix</span>
+                                <span class="jewel"></span>
+                            </a>
+                        </li>
+                        {% if get_config('account_visibility') != 'admins' %}
+						<li class="nav-item" id="users">
+							<a class="nav-link" href="{{ url_for('users.listing') }}">
+                                <span class="main-link">Users</span>
+                                <span class="jewel"></span>
+                            </a>
+						</li>
+						{% if get_config('user_mode') == 'teams' %}
+						<li class="nav-item" id="teams">
+							<a class="nav-link" href="{{ url_for('teams.listing') }}">
+                                <span class="main-link">Teams</span>
+                                <span class="jewel"></span>
+                            </a>
+                        
+						</li>
+						{% endif %}
+					    {% endif %}
+{#                        <li id="scoreboard">#}
+{#                            <a href="{{ url_for('scoreboard.listing') }}">#}
+{#                                <span class="main-link">Scoreboard</span>#}
+{#                                <span class="jewel"></span>#}
+{#                            </a>#}
+{#                        </li>#}
+                        <li id="challenges">
+                            <a href="{{ url_for('challenges.listing') }}">
+                                <span class="main-link">Challenges</span>
+                                <span class="jewel"></span>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav nav-right">
+                    {% if name is defined %}
+							{% if type == 'admin' %}
+							<li id="admin">
+                            <a href="{{ url_for('admin.view') }}">
+                                <span class="main-link">Admin</span>
+                                <span class="jewel"></span>
+                            </a>
+                        	</li>
+							{% endif %}
+							{% if config.user_mode() == "teams" %}
+							<li id="team">
+	                            <a href="{{ url_for('teams.private') }}">
+	                                <span class="main-link">Team</span>
+	                                <span class="jewel"></span>
+	                            </a>
+	                        </li>
+							{% endif %}
+							<li id="user">
+	                            <a href="{{ url_for('users.private') }}">
+	                                <span class="main-link">Profile</span>
+	                                <span class="jewel"></span>
+	                            </a>
+	                        </li>
+							<li id="settings">
+	                            <a href="{{ url_for('views.settings') }}">
+	                                <span class="main-link">Settings</span>
+	                                <span class="jewel"></span>
+	                            </a>
+	                        </li>
+	                        <li id="logout">
+	                            <a href="{{ url_for('auth.logout') }}">
+	                                <span class="main-link">Logout</span>
+	                                <span class="jewel"></span>
+	                            </a>
+	                        </li>
+						
+					{% else %}
+						{% if registration_visible() %}
+							<li id="register">
+	                            <a href="{{ url_for('auth.register') }}">
+	                                <span class="main-link">Register</span>
+	                                <span class="jewel"></span>
+	                            </a>
+	                        </li>
+							<li id="login">
+	                            <a href="{{ url_for('auth.login') }}">
+	                                <span class="main-link">Login</span>
+	                                <span class="jewel"></span>
+	                            </a>
+	                        </li>
+							
+						
+						{% else %}
+						<li id="login">
+                            <a href="{{ url_for('auth.login') }}">
+                                <span class="main-link">Login</span>
+                                <span class="jewel"></span>
+                            </a>
+                        </li>
+                        {% endif %}
+					{% endif %}
+                        
+                        
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="to-top" class="to-top">
+        <a href="#" class="To the top" title="To the top">
+            <i class="fa fa-angle-up"></i>
+        </a>
+    </div>
+
+	{% block content %}
+	{% endblock %}
+
+	
+
+	<script src="{{ url_for('views.themes', path='js/vendor/jquery.min.js') }}"></script>
+	<script src="{{ url_for('views.themes', path='js/vendor/markdown-it.min.js') }}"></script>
+	<script src="{{ url_for('views.themes', path='js/vendor/bootstrap.bundle.min.js') }}"></script>
+	<script src="{{ url_for('views.themes', path='js/vendor/howler.min.js') }}"></script>
+	<script src="{{ url_for('views.themes', path='js/vendor/window-controller.js') }}"></script>
+	<script src="{{ url_for('views.themes', path='js/style.js') }}"></script>
+	<script src="{{ url_for('views.themes', path='js/utils.js') }}"></script>
+	<script src="{{ url_for('views.themes', path='js/ezq.js') }}"></script>
+	<script src="{{ url_for('views.themes', path='js/events.js') }}"></script>
+	<script src="{{ url_for('views.themes', path='js/skrollr.min.js') }}"></script>
+    <script src="{{ url_for('views.themes', path='js/custom.js') }}"></script>
+	{% block scripts %}
+	{% endblock %}
+
+	{% for script in get_registered_scripts() %}
+	{% if script.startswith('http') %}
+	<script src="{{ script }}"></script>
+	{% elif request.script_root %}
+	<script src="{{ request.script_root }}/{{ script }}"></script>
+	{% else %}
+	<script src="{{ script }}"></script>
+	{% endif %}
+	{% endfor %}
+</body>
+</html>

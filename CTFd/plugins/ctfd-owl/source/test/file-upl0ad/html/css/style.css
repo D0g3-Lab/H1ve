@@ -1,0 +1,359 @@
+/*
+Author: W3layout
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+*/
+body{
+	background:url(../images/bg2.jpg),no-repeat;
+	background-size: cover;
+	background-attachment: fixed;
+}
+body a{
+transition:0.5s all;
+-webkit-transition:0.5s all;
+-moz-transition:0.5s all;
+-o-transition:0.5s all;
+-ms-transition:0.5s all;
+font-weight:400;
+
+}
+input[type="button"],input[type="submit"],input[type="email"]{
+transition:0.5s all;
+-webkit-transition:0.5s all;
+-moz-transition:0.5s all;
+-o-transition:0.5s all;
+-ms-transition:0.5s all;
+
+}
+h1,h2,h3,h4,h5,h6{
+margin:0;	
+font-weight:400;
+transition:0.5s all;
+-webkit-transition:0.5s all;
+-moz-transition:0.5s all;
+-o-transition:0.5s all;
+-ms-transition:0.5s all;
+font-family: 'Cabin', sans-serif;
+}
+.clear {
+clear:both;
+}
+p{
+margin:0;
+font-family: 'Raleway', sans-serif;
+}
+
+ul{
+margin:0;
+padding:0;
+}
+
+label{
+margin:0;
+}
+img {
+width: 100%;
+}
+footer{
+font-family: 'Raleway', sans-serif;
+}
+@font-face {
+  font-family:'Raleway';
+  src: url('../fonts/Raleway-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family:'Cabin';
+  src: url('../fonts/Cabin-Regular.ttf') format('truetype');
+}
+/*--/Reset code--*/
+.w3ls-head h1{    
+    font-size: 40px;
+    font-weight: 500;
+	text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 50px 0px 50px 0px;
+	color: #fff;
+}
+span{
+	color: #ea9224;
+}
+.w3l-h2 h2 {
+    font-size: 35px;
+    font-weight: 500;
+	text-align: center;
+    text-transform: capitalize;
+	letter-spacing:1px;
+    padding: 40px 0px 40px 0px;
+    color: #ffffff;
+}
+.w3l-notify p{
+    font-size: 15px;
+    font-weight: 500;
+    text-align: center;
+    text-transform: capitalize;
+    letter-spacing: 2px;
+	padding: 10px 0px 10px 0px;
+    color: #fff;
+}
+.w3ls-container {
+    display: flex;
+    justify-content: center;
+}
+.w3l-form {
+	flex-basis: 450px;
+    background-color: rgba(14, 12, 10, 0.38);
+    min-height: 400px;
+    padding: 2em;
+    box-shadow: 5px 5px 1px rgba(255, 255, 255, 0.83);
+}
+.w3l-email input[type="text"] {
+    font-size: 15px;
+    font-weight: 500;
+    text-align: left;
+    text-transform: lowercase;
+    letter-spacing: 1px;
+    width: 100%;
+    box-sizing: border-box;
+    border: 2px solid #fff;
+    background-color: #14d6d6;
+    background: none;
+    color: #fff;
+    outline: none;
+    padding: 10px;
+    margin: 20px 0px 20px 0px;
+	
+}
+.w3l-submit input[type="submit"] {
+    font-size: 20px;
+    font-weight: 500;
+    text-transform: lowercase;
+    text-align: center;
+    letter-spacing: 1px;
+    width: 40%;
+    box-sizing: border-box;
+    border: 2px solid #fff;
+    outline: none;
+    padding: 10px;
+    margin: 20px auto;
+    cursor: pointer;
+    display: block;
+    color: #fff;
+    background-color: #ea9224;
+	-webkit-transition: 0.5s ease-in;
+	-moz-transition: 0.5s ease-in;
+	-o-transition: 0.5s ease-in;
+	-ms-transition: 0.5s ease-in;
+	transition: 0.5s ease-in;
+	
+}
+footer {
+    font-size: 15px;
+    font-weight: 500;
+    text-align: center;
+    text-transform: capitalize;
+    letter-spacing: 2px;
+    padding: 70px 0px;
+    color: #fff;
+}
+footer a {
+    font-size: 15px;
+    font-weight: 500;
+    text-transform: capitalize;
+    text-decoration: none;
+    color: #fff;
+	
+}
+footer a:hover {
+    color: #52f52a;
+	-webkit-transition: 0.5s ease-in;
+	-moz-transition: 0.5s ease-in;
+	-o-transition: 0.5s ease-in;
+	-ms-transition: 0.5s ease-in;
+	transition: 0.5s ease-in;
+}
+/*--responsive--*/
+@media(max-width:1920px){
+
+}
+@media(max-width:1680px){
+	
+}
+@media(max-width:1600px){
+
+}
+@media(max-width:1440px){
+	
+}
+@media(max-width:1366px){
+	
+}
+@media(max-width:1280px){
+	
+}
+
+@media(max-width:1080px){
+	
+}
+@media(max-width:1050px){
+	
+}
+@media(max-width:1024px){
+	.w3l-submit input[type="submit"] {
+		font-size: 18px;
+	}
+}
+@media(max-width:991px){
+	
+}
+@media(max-width:900px){
+	
+}
+@media(max-width:800px){
+	
+}
+@media(max-width:768px){
+	.w3l-submit input[type="submit"] {
+		font-size: 18px;
+	}
+}
+@media(max-width:736px){
+	
+}
+@media(max-width:667px){
+	.w3l-submit input[type="submit"] {
+		font-size: 17px;
+	}
+	footer {
+		letter-spacing: 1px;
+	}
+}
+@media(max-width:640px){
+	footer {
+		letter-spacing: 1px;
+	}
+}
+@media(max-width:600px){
+	.w3l-submit input[type="submit"] {
+		font-size: 18px;
+	}
+}
+@media(max-width:568px){
+	.w3l-form {
+		flex-basis: 400px;
+	}
+	.w3ls-head h1 {
+		font-size: 30px;
+	}
+	.w3l-h2 h2 {
+		font-size: 30px;
+	}
+	.w3l-submit input[type="submit"] {
+		font-size: 17px;
+	}
+	footer{
+		letter-spacing: 0px;
+	}
+}
+@media(max-width:480px){
+	.w3l-form {
+		flex-basis: 350px;
+	}
+	.w3l-submit input[type="submit"] {
+		width: 40%;
+	}
+	.w3l-submit input[type="submit"] {
+		font-size: 15px;
+	}
+}
+@media(max-width:414px){
+	.w3l-form {
+		flex-basis: 300px;
+	}
+	.w3ls-head h1 {
+		font-size: 28px;
+	}
+	.w3l-h2 h2 {
+		font-size: 30px;
+	}
+	.w3l-notify p {
+		font-size: 14px;
+	}
+	.w3l-submit input[type="submit"] {
+		font-size: 16px;
+	}
+	.w3l-submit input[type="submit"]{
+	    width: 50%;
+	}
+	footer {
+		font-size: 14px;
+	}
+	footer a{
+		font-size: 14px;
+	}
+}
+@media(max-width:384px){
+	.w3l-form {
+		flex-basis: 260px;
+	}
+	.w3ls-head h1 {
+		font-size: 25px;
+	}
+	.w3l-h2 h2 {
+    font-size: 25px;
+	}
+	.w3l-notify p {
+		font-size: 12px;
+	}
+	.w3l-submit input[type="submit"] {
+		font-size: 18px;
+	}
+	.w3l-submit input[type="submit"] {
+		width: 60%;
+	}
+	footer {
+		font-size: 13px;
+	}
+	footer a {
+		font-size: 13px;
+	}
+}
+@media(max-width:375px){
+	.w3l-form {
+		flex-basis: 250px;
+	}
+	.w3l-notify p {
+		font-size: 13px;
+	}
+	.w3l-submit input[type="submit"] {
+		font-size: 15px;
+	}
+	footer a {
+		font-size: 13px;
+	}
+}
+@media(max-width:320px){
+	.w3l-form {
+		flex-basis: 200px;
+	}
+	.w3ls-head h1 {
+		font-size: 20px;
+	}
+	.w3l-notify p {
+		font-size: 11px;
+	}
+	.w3l-submit input[type="submit"] {
+    font-size: 13px;
+	}
+	.w3l-submit input[type="submit"] {
+		width: 60%;
+	}
+	footer {
+    font-size: 13px;
+	}
+	footer a {
+		font-size: 13px;
+	}
+}
+/*--/responsive--*/

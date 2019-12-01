@@ -1,0 +1,23 @@
+version: '2'
+services:
+  # 基本环境
+  php: # 容器名字
+    # build 该置顶目录下的dockerfile
+    build: .
+    # image指定build Dockerfile生成镜像的名称
+    image: 0akarma-file-upload
+    ports:
+      - 9999:80
+    volumes:
+        # 挂载的 Flag
+        - "$PWD/flag:/var/www/html/include/flag:ro"
+        - "$PWD/apache2.conf:/etc/apache2/apache2.conf"
+    tty: true
+    networks:
+      - net
+
+networks:
+    # 配置docker network
+    net: 
+      external: 
+         name: ctfd_frp_containers

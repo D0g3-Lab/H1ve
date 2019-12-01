@@ -1,0 +1,96 @@
+<div role="tabpanel" class="tab-pane config-section active" id="docker">
+	<form method="POST" autocomplete="off" class="w-100">
+{#        <div class="form-group">#}
+{#			<label>#}
+{#				Deploy Mode#}
+{#				<small class="form-text text-muted">#}
+{#					Which mode the cotainer deploy#}
+{#				</small>#}
+{#			</label>#}
+{#			<select class="form-control" id="set-deploy-select">#}
+{#                <option> -- </option>#}
+{#                <option> SINGLE </option>#}
+{#                <option> FRP </option>#}
+{#            </select>#}
+{#		</div>#}
+        <div class="form-group">
+			<label>
+				Docker Flag Prefix
+				<small class="form-text text-muted">
+					Docker flag prefix in containers
+				</small>
+			</label>
+			<input type="text" class="form-control" id="docker_flag_prefix" name="docker_flag_prefix" value="{{ configs.get("docker_flag_prefix") }}">
+		</div>
+        <div class="form-group">
+			<label>
+				Docker APIs URL
+				<small class="form-text text-muted">
+					Docker APIs URL to connect. (Separated by commas)
+				</small>
+			</label>
+			<input type="text" class="form-control" id="docker-api-url" name="docker_api_url" value="{{ configs.get("docker_api_url") }}">
+		</div>
+        <div class="form-group">
+			<label>
+				Max Container Count
+				<small class="form-text text-muted">
+					Max Container Count
+				</small>
+			</label>
+			<input type="text" class="form-control" id="docker-max-container-count" name="docker_max_container_count" value="{{ configs.get("docker_max_container_count") }}">
+		</div>
+
+        <div class="form-group">
+			<label>
+				Max Renewal Times
+				<small class="form-text text-muted">
+					Max Renewal Times
+				</small>
+			</label>
+			<input type="text" class="form-control" id="docker-max-renew-count" name="docker_max_renew_count" value="{{ configs.get("docker_max_renew_count") }}">
+		</div>
+
+{#        <div class="form-group">#}
+{#			<label>#}
+{#				Docker Auto Connect Containers#}
+{#				<small class="form-text text-muted">#}
+{#					Decide which container will be connected to multi-container-network automatically. Separated by commas.#}
+{#				</small>#}
+{#			</label>#}
+{#			<input type="text" class="form-control" id="docker-auto-connect-containers" name="docker_auto_connect_containers" value="{{ configs.get("docker_auto_connect_containers") }}">#}
+{#		</div>#}
+
+{#        <div class="form-group">#}
+{#			<label>#}
+{#				Docker Auto Connect Network#}
+{#				<small class="form-text text-muted">#}
+{#					Decide which network will be connected for single-container.#}
+{#				</small>#}
+{#			</label>#}
+{#			<input type="text" class="form-control" id="docker-auto-connect-network" name="docker_auto_connect_network" value="{{ configs.get("docker_auto_connect_network") }}">#}
+{#		</div>#}
+
+{#        <div class="form-group">#}
+{#			<label>#}
+{#				Docker Dns Setting#}
+{#				<small class="form-text text-muted">#}
+{#					Decide which dns will be used in container network.#}
+{#				</small>#}
+{#			</label>#}
+{#			<input type="text" class="form-control" id="docker-dns" name="docker_dns" value="{{ configs.get("docker_dns") }}">#}
+{#		</div>#}
+
+{#        <div class="form-group">#}
+{#			<label>#}
+{#				Docker Swarm Nodes#}
+{#				<small class="form-text text-muted">#}
+{#					Will pick up one from it, You should set your node with label name=windows-* or name=linux-*. Separated by commas.#}
+{#				</small>#}
+{#			</label>#}
+{#			<input type="text" class="form-control" id="docker-swarm-nodes" name="docker_swarm_nodes" value="{{ configs.get("docker_swarm_nodes") }}">#}
+{#		</div>#}
+
+		<button type="submit" class="btn btn-md btn-primary float-right">Update</button>
+	</form>
+</div>

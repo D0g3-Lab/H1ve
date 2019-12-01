@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="section section-standard" id="notifications">
+        <div class="section-inner">
+            <div class="container">
+                <div class="section-header" data-100p-top="transform[swing]:translateY(-25px);opacity[swing]:0" data-75p-top="transform[swing]:translateY(0);opacity[swing]:1">
+                    <h3>Notification</h3>
+                    <div class="divider">//</div>
+                </div>
+                
+                <!--<h3 class="timeline-header">Education</h3>-->
+                <div class="timeline">
+                {% for notification in notifications %}
+                    <div class="timeline-block">
+                        <div class="timeline-img hexagon">
+                            <span class="plus" data-100p-top="transform[swing]:scale(0.2);opacity[swing]:0" data-75p-top="transform[swing]:scale(1);opacity[swing]:1">+</span>
+                        </div>
+                        <div class="timeline-content" data-100p-top="transform[swing]:translateX(25px);opacity[swing]:0" data-75p-top="transform[swing]:translateX(0);opacity[swing]:1">
+                            <span class="timeline-date" data-100p-top="transform[swing]:translateX(-50px);opacity[swing]:0" data-75p-top="transform[swing]:translateX(0);opacity[swing]:1">
+                                <span>
+                                    <i class="fa fa-calendar" aria-hidden="true"></i> 
+                                    <script>
+                                            document.write(moment("{{ notification.date | isoformat }}").local().format('MMMM Do, h:mm:ss A'))
+                                        </script>
+                                </span>
+                                <!--{{ notification.date | isoformat }}-->
+                            </span>
+                            <div class="timeline-description clearfix">
+                                <h3>{{ notification.title }}</h3>
+                                <p>{{ notification.content | safe }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{{ url_for('views.themes', path='js/vendor/plotly.min.js') }}"></script>
+	<script src="{{ url_for('views.themes', path='js/utils.js') }}"></script>
+{% endblock %}

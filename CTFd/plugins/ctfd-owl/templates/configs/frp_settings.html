@@ -1,0 +1,85 @@
+<div role="tabpanel" class="tab-pane config-section" id="frp">
+	<form method="POST" autocomplete="off" class="w-100">
+{#        <div class="form-group">#}
+{#			<label>#}
+{#				Frp API IP#}
+{#				<small class="form-text text-muted">#}
+{#					Frp API IP#}
+{#				</small>#}
+{#			</label>#}
+{#			<input type="text" class="form-control" id="frp-api-ip" name="frp_api_ip" value="{{ configs.get("frp_api_ip") }}">#}
+{#		</div>#}
+{##}
+{#        <div class="form-group">#}
+{#			<label>#}
+{#				Frp API Port#}
+{#				<small class="form-text text-muted">#}
+{#					Frp API Port#}
+{#				</small>#}
+{#			</label>#}
+{#			<input type="text" class="form-control" id="frp-api-port" name="frp_api_port" value="{{ configs.get("frp_api_port") }}">#}
+{#		</div>#}
+
+        <div class="form-group">
+			<label>
+				Frp Http Domain Suffix
+				<small class="form-text text-muted">
+					Container URL to show
+				</small>
+			</label>
+			<input type="text" class="form-control" id="frp-http-domain-suffix" name="frp_http_domain_suffix" value="{{ configs.get("frp_http_domain_suffix") }}">
+		</div>
+
+{#        <div class="form-group">#}
+{#			<label>#}
+{#				Frp Http Port#}
+{#				<small class="form-text text-muted">#}
+{#					For http redirect#}
+{#				</small>#}
+{#			</label>#}
+{#			<input type="number" class="form-control" id="frp-http-port" name="frp_http_port" value="{{ configs.get("frp_http_port") }}">#}
+{#		</div>#}
+
+        <div class="form-group">
+			<label>
+				Frp Direct IP Address
+				<small class="form-text text-muted">
+					For direct redirect
+				</small>
+			</label>
+			<input type="text" class="form-control" id="frp-direct-ip-address" name="frp_direct_ip_address" value="{{ configs.get("frp_direct_ip_address") }}">
+		</div>
+
+        <div class="form-group">
+			<label>
+				Frp Direct Minimum Port
+				<small class="form-text text-muted">
+					For direct redirect
+				</small>
+			</label>
+			<input type="text" class="form-control" id="frp-direct-port-minimum" name="frp_direct_port_minimum" value="{{ configs.get("frp_direct_port_minimum") }}">
+		</div>
+
+        <div class="form-group">
+			<label>
+				Frp Direct Maximum Port
+				<small class="form-text text-muted">
+					For direct redirect
+				</small>
+			</label>
+			<input type="text" class="form-control" id="frp-direct-port-maximum" name="frp_direct_port_maximum" value="{{ configs.get("frp_direct_port_maximum") }}">
+		</div>
+
+        <div class="form-group">
+			<label>
+				Frpc config template
+				<small class="form-text text-muted">
+                    Frpc config template, only need common section!
+				</small>
+			</label>
+			<textarea class="form-control" id="frp-config-template" name="frpc_config_template" rows="7">{{ configs.get("frpc_config_template") }}</textarea>
+		</div>
+
+		<button type="submit" class="btn btn-md btn-primary float-right">Update</button>
+	</form>
+</div>
