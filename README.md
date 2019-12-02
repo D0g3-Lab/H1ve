@@ -74,14 +74,14 @@ https://ctf.dao.ge (备用)
 
 #### 一体化自研版
 
-![](./docs/img/ADA-index.png)
-![](./docs/img/ADA-config.png)
-![](./docs/img/ADA-manage.png)
-![](./docs/img/ADA-scorelist.png)
+![](./docs/img/ADA-index.jpg)
+![](./docs/img/ADA-config.jpg)
+![](./docs/img/ADA-manage.jpg)
+![](./docs/img/ADA-scorelist.jpg)
 
 #### 银河麒麟版
 
-![](./docs/img/ADA-compile.png)
+![](./docs/img/ADA-compile.jpg)
 
 ### Project Vision
 该平台设计的初衷，是为网安人才培养领域提供一个低成本、高成效的教学平台。希望通过线上解题、线下ADA赛制自动化部署流程，降低比赛举办难度。
