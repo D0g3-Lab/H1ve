@@ -108,6 +108,8 @@ def setup():
             set_config("mail_useauth", None)
 
             set_config("setup", True)
+            # add h1ve-theme as default theme
+            set_config("ctf_theme", "H1ve-theme")
 
             try:
                 db.session.add(admin)
@@ -179,14 +181,17 @@ def static_html(route):
     :param route:
     :return:
     """
-    page = get_page(route)
-    if page is None:
-        abort(404)
+    if route == "index":
+        return render_template("index.html")
     else:
-        if page.auth_required and authed() is False:
-            return redirect(url_for("auth.login", next=request.full_path))
+        page = get_page(route)
+        if page is None:
+            abort(404)
+        else:
+            if page.auth_required and authed() is False:
+                return redirect(url_for("auth.login", next=request.full_path))
 
-        return render_template("page.html", content=markdown(page.content))
+            return render_template("page.html", content=markdown(page.content))
 
 
 @views.route("/files", defaults={"path": ""})
