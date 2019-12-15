@@ -99,6 +99,7 @@ th.chalname {
                         </th>
                         <th width="5%" rowspan="2"><b>Score</b>
                         </th>
+                        <!-- TODO: 可适应布局调整  -->
                         {% for chal in challenges %}
                             <div><th class="chalname" title="{{ chal.category }}"><div><span>{{ chal.name }}</span></div></th></div>
                         {% endfor %}
