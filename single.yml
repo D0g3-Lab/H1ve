@@ -56,8 +56,9 @@ services:
        - internal
 
   frps:
-    image: hive-frp
-    build: ./frp
+    image: 0akarma/hive-frp
+    # you can build image by yourself if you want.
+    # build: ./frp
     restart: always
     volumes:
       - ./frp:/conf/
@@ -71,8 +72,9 @@ services:
       frp:
 
   frpc:
-    image: hive-frp
-    build: ./frp
+    image: 0akarma/hive-frp
+    # you can build image by yourself if you want.
+    # build: ./frp
     restart: always
     volumes:
       - ./frp:/conf/

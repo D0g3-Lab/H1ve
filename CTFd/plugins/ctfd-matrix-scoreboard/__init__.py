@@ -36,10 +36,15 @@ def load(app):
         jstandings = []
         # print(standings)
         for team in standings:
-            print(team)
-            teamid = team[0]
-            # To do 区分模式
-            solves = db.session.query(Solves.challenge_id.label('chalid'), Solves.date.label('date')).filter(Solves.team_id==teamid)
+            mode = utils.get_config("user_mode")
+            if mode == "teams":
+                teamid = Users.query.filter_by(id=team[0]).first_or_404().team_id
+                solves = db.session.query(Solves.challenge_id.label('chalid'), Solves.date.label('date')).filter(
+                    Solves.team_id == teamid)
+            else:
+                teamid = team[0]
+                solves = db.session.query(Solves.challenge_id.label('chalid'), Solves.date.label('date')).filter(
+                    Solves.user_id == teamid)
 
             freeze = utils.get_config('freeze')
             if freeze:
@@ -67,7 +72,6 @@ def load(app):
                     score = score + int(cvalue * 1)
                 jsolves.append(solve)
 
-            mode = utils.get_config("user_mode")
             if mode == "teams":
                 jstandings.append({'userid':"", 'teamid':team[0], 'score':score, 'name':team[2],'solves':jsolves})
             else:
