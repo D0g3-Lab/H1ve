@@ -1,3 +1,9 @@
+1.0.1 / 2019-12-16
+=================
+
+* Adapt different mode for ctfd-matrix-scoreboard plugin
+* Fix some bugs (#3)
+
 1.0.0 / 2019-12-1
 =================
 
