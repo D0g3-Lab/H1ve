@@ -57,9 +57,12 @@ class FrpUtils:
         frp_api_ip = "frpc"
         frp_api_port = "7400"
         # print(output)
-        if configs.get("frpc_config_template") is not None:
-            requests.put("http://" + frp_api_ip + ":" + frp_api_port + "/api/config", output,
-                         timeout=5)
-            requests.get("http://" + frp_api_ip + ":" + frp_api_port + "/api/reload", timeout=5)
-        else:
+        try:
+            if configs.get("frpc_config_template") is not None:
+                requests.put("http://" + frp_api_ip + ":" + frp_api_port + "/api/config", output,
+                             timeout=5)
+                requests.get("http://" + frp_api_ip + ":" + frp_api_port + "/api/reload", timeout=5)
+            else:
+                pass
+        except Exception as e:
             pass
