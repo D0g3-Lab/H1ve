@@ -25,7 +25,7 @@ class DockerUtils:
         configs = DBUtils.get_all_configs()
         basedir = os.path.dirname(__file__)
         challenge = DynamicCheckChallenge.query.filter_by(id=challenge_id).first_or_404()
-        port = configs.get("frp_direct_port_minimum") + int(user_id)
+        port = str(int(configs.get("frp_direct_port_minimum")) + int(user_id))
         flag = DockerUtils.gen_flag()
         socket = DockerUtils.get_socket()
         sname = os.path.join(basedir, "source/" + challenge.dirname)
@@ -51,7 +51,7 @@ class DockerUtils:
             docker_id = str(uuid.uuid3(uuid.NAMESPACE_DNS, name)).replace("-","")
             msg = name + " up."
             log(
-                "containers",
+                "owl",
                 "[{date}] {name} {msg}",
                 msg=msg,
             )
@@ -60,11 +60,10 @@ class DockerUtils:
             # print(e)
             msg = name + " up error." + str(e)
             log(
-                "containers",
+                "owl",
                 "[{date}] {name} {msg}",
                 msg=msg,
             )
-            logger.info(msg)
             return False
 
 
@@ -85,7 +84,7 @@ class DockerUtils:
             os.system("rm -rf " + dname)
             msg = name + " down."
             log(
-                "containers",
+                "owl",
                 "[{date}] {name} {msg}",
                 msg=msg,
             )
@@ -93,7 +92,7 @@ class DockerUtils:
         except Exception as e:
             msg = name + " up." + str(e)
             log(
-                "containers",
+                "owl",
                 "[{date}] {name} {msg}",
                 msg=msg,
             )

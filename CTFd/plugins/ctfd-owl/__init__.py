@@ -30,6 +30,7 @@ from .frp_utils import FrpUtils
 import datetime, fcntl
 from flask_apscheduler import APScheduler
 import logging, os, sys
+from .extensions import get_mode
 
 def load(app):
     # upgrade()
@@ -47,25 +48,25 @@ def load(app):
     )
 
     log_dir = app.config["LOG_FOLDER"]
-    logger_containers = logging.getLogger("containers")
-    logger_containers.setLevel(logging.INFO)
+    logger_owl = logging.getLogger("owl")
+    logger_owl.setLevel(logging.INFO)
     logs = {
-        "containers": os.path.join(log_dir, "containers.log"),
+        "owl": os.path.join(log_dir, "owl.log"),
     }
     try:
         for log in logs.values():
             if not os.path.exists(log):
                 open(log, "a").close()
         container_log = logging.handlers.RotatingFileHandler(
-            logs["containers"], maxBytes=10000
+            logs["owl"], maxBytes=10000
         )
-        logger_containers.addHandler(container_log)
+        logger_owl.addHandler(container_log)
     except IOError:
         pass
 
     stdout = logging.StreamHandler(stream=sys.stdout)
-    logger_containers.addHandler(stdout)
-    logger_containers.propagate = 0
+    logger_owl.addHandler(stdout)
+    logger_owl.propagate = 0
 
     @owl_blueprint.route('/admin/settings', methods=['GET'])
     @admins_only
@@ -108,15 +109,23 @@ def load(app):
         ControlUtil.expired_container(user_id=user_id, challenge_id=challenge_id)
         return jsonify({'success': True})
 
+    @owl_blueprint.route("/admin/containers", methods=['DELETE'])
+    @admins_only
+    def admin_delete_container():
+        user_id = request.args.get('user_id')
+        ControlUtil.destroy_container(user_id)
+        return jsonify({'success': True})
+
     # instances
     @owl_blueprint.route('/container', methods=['GET'])
     @authed_only
     def list_container():
-        user_id = ControlUtil.get_mode()
+        user_id = get_mode()
         challenge_id = request.args.get('challenge_id')
         ControlUtil.check_challenge(challenge_id, user_id)
         data = ControlUtil.get_container(user_id=user_id)
         configs = DBUtils.get_all_configs()
+        remain_time = int(configs.get("docker_max_renew_count"))
         domain = configs.get('frp_http_domain_suffix', "")
         if data is not None:
             if int(data.challenge_id) != int(challenge_id):
@@ -129,23 +138,23 @@ def load(app):
             if dynamic_docker_challenge.deployment == "single":
                 return jsonify({'success': True, 'type': 'redirect', 'ip': configs.get('frp_direct_ip_address', ""),
                                 'port': data.port,
-                                'remaining_time': 3600 - (datetime.datetime.utcnow() - data.start_time).seconds,
+                                'remaining_time': remain_time - (datetime.datetime.utcnow() - data.start_time).seconds,
                                 'lan_domain': lan_domain})
             else:
                 if dynamic_docker_challenge.redirect_type == "http":
                     if int(configs.get('frp_http_port', "80")) == 80:
                         return jsonify({'success': True, 'type': 'http', 'domain': data.docker_id + "." + domain,
-                                           'remaining_time': 3600 - (datetime.datetime.utcnow() - data.start_time).seconds,
+                                           'remaining_time': remain_time - (datetime.datetime.utcnow() - data.start_time).seconds,
                                            'lan_domain': lan_domain})
                     else:
                         return jsonify({'success': True, 'type': 'http',
                                            'domain': data.docker_id + "." + domain + ":" + configs.get('frp_http_port', "80"),
-                                           'remaining_time': 3600 - (datetime.datetime.utcnow() - data.start_time).seconds,
+                                           'remaining_time': remain_time - (datetime.datetime.utcnow() - data.start_time).seconds,
                                            'lan_domain': lan_domain})
                 else:
                     return jsonify({'success': True, 'type': 'redirect', 'ip': configs.get('frp_direct_ip_address', ""),
                                        'port': data.port,
-                                       'remaining_time': 3600 - (datetime.datetime.utcnow() - data.start_time).seconds,
+                                       'remaining_time': remain_time - (datetime.datetime.utcnow() - data.start_time).seconds,
                                        'lan_domain': lan_domain})
         else:
             return jsonify({'success': True})
@@ -153,7 +162,7 @@ def load(app):
     @owl_blueprint.route('/container', methods=['POST'])
     @authed_only
     def new_container():
-        user_id = ControlUtil.get_mode()
+        user_id = get_mode()
 
         if ControlUtil.frequency_limit():
             return jsonify({'success': False, 'msg': 'Frequency limit, You should wait at least 1 min.'})
@@ -166,9 +175,10 @@ def load(app):
             ControlUtil.check_challenge(challenge_id, user_id)
             configs = DBUtils.get_all_configs()
             current_count = DBUtils.get_all_alive_container_count()
-            print(configs.get("docker_max_container_count"))
-            if int(configs.get("docker_max_container_count")) <= int(current_count):
-                return jsonify({'success': False, 'msg': 'Max container count exceed.'})
+            # print(configs.get("docker_max_container_count"))
+            if configs.get("docker_max_container_count") != "None":
+                if int(configs.get("docker_max_container_count")) <= int(current_count):
+                    return jsonify({'success': False, 'msg': 'Max container count exceed.'})
 
             dynamic_docker_challenge = DynamicCheckChallenge.query \
                 .filter(DynamicCheckChallenge.id == challenge_id) \
@@ -183,7 +193,7 @@ def load(app):
     @owl_blueprint.route('/container', methods=['DELETE'])
     @authed_only
     def destroy_container():
-        user_id = ControlUtil.get_mode()
+        user_id = get_mode()
 
         if ControlUtil.frequency_limit():
             return jsonify({'success': False, 'msg': 'Frequency limit, You should wait at least 1 min.'})
