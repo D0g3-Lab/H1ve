@@ -23,9 +23,9 @@ named `ctfd-owl`.
 
 **Max Renewal Time** 最大容器失效时间（超过会自动关闭容器）
 
-
-
 ![docker-setting-demo-w150](./assets/demo_img/owl-docker_shrink.png)
+
+
 
 **FRP Http Domain Suffix** FRP域名前缀（如开启动态域名转发必填）
 
@@ -35,9 +35,34 @@ named `ctfd-owl`.
 
 **FRP Direct Maximum Port** 最大端口
 
-**FRP Config Template** Frpc热重载配置头模版
+**FRP Config Template** Frpc热重载配置头模版(如不会自定义，尽量按照默认配置)
+
+```
+[common]
+token = random_this
+server_addr = frps
+server_port = 80
+admin_addr = 0.0.0.0
+admin_port = 7400
+```
 
 ![frp-setting-demo-w150](./assets/demo_img/owl-frp_shrink.png)
+
+### Add Challenge
+
+**Challenge Type** 题目类型(选`dynamic_check_docker`)
+
+**Deployment Type** 部署方式(选`SINGLE-DOCKER-COMPOSE`)
+
+**Dirname** 题目所在文件夹（相对于`source`的相对路径）
+
+**FRP Type** frp类型(`DIRECT`为ip直接访问，`HTTP`为域名访问)
+
+**FRP Port** 题目内网端口(例子中为`80`)
+
+![owl-challenges-demo-w150](./assets/demo_img/owl-challenges_shrink.png)
+
+
 
 ### Demo
 
