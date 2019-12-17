@@ -30,6 +30,7 @@ from .frp_utils import FrpUtils
 import datetime, fcntl
 from flask_apscheduler import APScheduler
 import logging, os, sys
+from .extensions import get_mode
 
 def load(app):
     # upgrade()

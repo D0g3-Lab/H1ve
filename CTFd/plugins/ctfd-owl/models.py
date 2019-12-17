@@ -21,6 +21,7 @@ from CTFd.models import (
 )
 import math, datetime
 from CTFd.utils.uploads import delete_file
+from .extensions import get_mode
 
 class DynamicCheckValueChallenge(BaseChallenge):
     id = "dynamic_check_docker"  # Unique identifier used to register challenges
@@ -177,7 +178,7 @@ class DynamicCheckValueChallenge(BaseChallenge):
         data = request.form or request.get_json()
         submission = data["submission"].strip()
         # flags = Flags.query.filter_by(challenge_id=challenge.id).all()
-        user_id = ControlUtil.get_mode()
+        user_id = get_mode()
 
         flag = OwlContainers.query.filter_by(user_id=user_id, challenge_id=challenge.id).first()
         print(flag)
@@ -246,30 +247,6 @@ class DynamicCheckValueChallenge(BaseChallenge):
 
         # We subtract -1 to allow the first solver to get max point value
         solve_count -= 1
-
-        # add coolq send msg
-        try:
-            from .coolq import init_bot
-            bot = init_bot()
-            if solve_count == 0:
-                msg = "[Msg] First Blood of {} by {}-{}".format(challenge.name, team.name, user.name)
-                bot.send_group_msg(group_id=793235129, message=msg)
-            elif solve_count == 1:
-                msg = "[Msg] Double Kill of {} by {}-{}".format(challenge.name, team.name, user.name)
-                bot.send_group_msg(group_id=793235129, message=msg)
-            elif solve_count == 2:
-                msg = "[Msg] Triple Kill of {} by {}-{}".format(challenge.name, team.name, user.name)
-                bot.send_group_msg(group_id=793235129, message=msg)
-            else:
-                msg = "[Msg] Rampage of {} by {}-{}".format(challenge.name, team.name, user.name)
-        except Exceptions as e:
-            log(
-                "submissions",
-                "[{date}] {name} bot error {error}",
-                error=str(e)
-            )
-
-
 
         # It is important that this calculation takes into account floats.
         # Hence this file uses from __future__ import division
