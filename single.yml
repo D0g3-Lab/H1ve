@@ -56,7 +56,7 @@ services:
        - internal
 
   frps:
-    image: 0akarma/hive-frp
+    image: d0g3/hive-frp
     # you can build image by yourself if you want.
     # build: ./frp
     restart: always
@@ -72,7 +72,7 @@ services:
       frp:
 
   frpc:
-    image: 0akarma/hive-frp
+    image: d0g3/hive-frp
     # you can build image by yourself if you want.
     # build: ./frp
     restart: always
