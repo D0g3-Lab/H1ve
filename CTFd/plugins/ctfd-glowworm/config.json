@@ -1,0 +1,4 @@
+{
+    "name": "CTFd Glowworm",
+    "route": "/plugins/ctfd-glowworm/admin/settings"
+}
