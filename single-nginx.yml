@@ -1,4 +1,4 @@
-version: '2'
+version: '3.5'
 
 services:
   main:
@@ -39,7 +39,7 @@ services:
     volumes:
       - .data/mysql:/var/lib/mysql
     networks:
-      - internal
+      internal:
     # This command is required to set important mariadb defaults
     command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --wait_timeout=28800, --log-warnings=0]
 
@@ -49,7 +49,7 @@ services:
     volumes:
     - .data/redis:/data
     networks:
-       - internal
+      internal:
 
   frps:
     image: d0g3/hive-frp
@@ -64,6 +64,7 @@ services:
       - /conf/frps.ini
     networks:
       frp:
+        ipv4_address: 10.1.0.3
 
   frpc:
     image: d0g3/hive-frp
@@ -78,6 +79,7 @@ services:
       - /conf/frpc.ini
     networks:
       frp:
+        ipv4_address: 10.1.0.4
       frp_containers:
 
   nginx:
@@ -94,18 +96,21 @@ services:
       - "80:80"
       - "443:443"
     networks:
-      - net
-      - frp
+      default:
+      frp:
+        ipv4_address: 10.1.0.2
 networks:
     default:
     internal:
         internal: true
     frp:
+      name: "h1ve-frp"
       driver: bridge
       ipam:
         config:
           - subnet: 10.1.0.0/16
     frp_containers:
+        name: "h1ve-frp_containers"
         driver: bridge
         ipam:
           config:
