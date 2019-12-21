@@ -1,0 +1,112 @@
+version: '2'
+
+services:
+  main:
+    build: .
+    image: hive-main
+    user: root
+    restart: always
+    expose:
+      - 8000
+    environment:
+      - UPLOAD_FOLDER=/var/uploads
+      - DATABASE_URL=mysql+pymysql://root:ctfd@db/ctfd
+      - REDIS_URL=redis://cache:6379
+      - WORKERS=1
+      - LOG_FOLDER=/var/log/CTFd
+      - ACCESS_LOG=/var/log/CTFd/access.log
+      - ERROR_LOG=/var/log/CTFd/error.log
+    volumes:
+      - .data/CTFd/logs:/var/log/CTFd
+      - .data/CTFd/uploads:/var/uploads
+      - .:/opt/CTFd
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - db
+    networks:
+      default:
+      internal:
+      frp_containers:
+
+  db:
+    image: mariadb:10.4
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=ctfd
+      - MYSQL_USER=ctfd
+      - MYSQL_PASSWORD=ctfd
+      - MYSQL_DATABASE=ctfd
+    volumes:
+      - .data/mysql:/var/lib/mysql
+    networks:
+      - internal
+    # This command is required to set important mariadb defaults
+    command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --wait_timeout=28800, --log-warnings=0]
+
+  cache:
+    image: redis:4
+    restart: always
+    volumes:
+    - .data/redis:/data
+    networks:
+       - internal
+
+  frps:
+    image: d0g3/hive-frp
+    restart: always
+    volumes:
+      - ./frp:/conf/
+    expose:
+      - 80
+    entrypoint:
+      - /app/frps
+      - -c
+      - /conf/frps.ini
+    networks:
+      frp:
+
+  frpc:
+    image: d0g3/hive-frp
+    restart: always
+    volumes:
+      - ./frp:/conf/
+    expose:
+      - 7400
+    entrypoint:
+      - /app/frpc
+      - -c
+      - /conf/frpc.ini
+    networks:
+      frp:
+      frp_containers:
+
+  nginx:
+    image: d0g3/h1ve-nginx
+    restart: always
+    depends_on:
+      - main
+    # 数据卷
+    volumes:
+      - "$PWD/nginx/conf/ssl:/etc/nginx/ssl:ro"
+      - "$PWD/nginx/conf/vhosts:/etc/nginx/vhosts:ro"
+      - "$PWD/nginx/conf/nginx.conf:/etc/nginx/nginx.conf:ro"
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - net
+      - frp
+networks:
+    default:
+    internal:
+        internal: true
+    frp:
+      driver: bridge
+      ipam:
+        config:
+          - subnet: 10.1.0.0/16
+    frp_containers:
+        driver: bridge
+        ipam:
+          config:
+            - subnet: 10.2.0.0/16

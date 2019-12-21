@@ -1,0 +1,125 @@
+{
+  "browser_verify_rule": [],
+  "filter_rule": [
+    {
+      "enable": true,
+      "matcher": "ngx_lua_waf/wafconf/whiteurl",
+      "action": "accept"
+    },
+    {
+      "enable": true,
+      "code": "403",
+      "matcher": "ngx_lua_waf/wafconf/args",
+      "custom_response": false,
+      "action": "block"
+    },
+    {
+      "enable": true,
+      "code": "403",
+      "matcher": "ngx_lua_waf/wafconf/cookie",
+      "custom_response": false,
+      "action": "block"
+    },
+    {
+      "enable": true,
+      "code": "403",
+      "matcher": "ngx_lua_waf/wafconf/post",
+      "custom_response": false,
+      "action": "block"
+    },
+    {
+      "enable": true,
+      "code": "403",
+      "matcher": "ngx_lua_waf/wafconf/url",
+      "custom_response": false,
+      "action": "block"
+    },
+    {
+      "enable": true,
+      "code": "403",
+      "matcher": "ngx_lua_waf/wafconf/user-agent",
+      "custom_response": false,
+      "action": "block"
+    }
+  ],
+  "readonly": false,
+  "static_file_rule": [],
+  "proxy_pass_rule": [],
+  "summary_request_enable": true,
+  "summary_group_persistent_enable": true,
+  "base_uri": "/h1ve",
+  "dashboard_host": "",
+  "response": {},
+  "frequency_limit_enable": false,
+  "uri_rewrite_rule": [],
+  "cookie_prefix": "h1ve",
+  "filter_enable": true,
+  "browser_verify_enable": false,
+  "scheme_lock_rule": [],
+  "frequency_limit_rule": [],
+  "summary_with_host": true,
+  "scheme_lock_enable": false,
+  "matcher": {
+    "ngx_lua_waf/wafconf/post": {
+      "Method": {
+        "operator": "=",
+        "value": "POST"
+      },
+      "Header": {
+        "name_operator": "*",
+        "operator": "≈",
+        "value": "select.+(from|limit) (?:(union(.*?)select)) having|rongjitest sleep\\((\\s*)(\\d*)(\\s*)\\) benchmark\\((.*)\\,(.*)\\) base64_decode\\( (?:from\\W+information_schema\\W) (?:(?:current_)user|database|schema|connection_id)\\s*\\( (?:etc\\/\\W*passwd) into(\\s+)+(?:dump|out)file\\s* group\\s+by.+\\( xwork.MethodAccessor (?:define|eval|file_get_contents|include|require|require_once|shell_exec|phpinfo|system|passthru|preg_\\w+|execute|echo|print|print_r|var_dump|(fp)open|alert|showmodaldialog)\\( xwork\\.MethodAccessor (gopher|doc|php|glob|file|phar|zlib|ftp|ldap|dict|ogg|data)\\:\\/ java\\.lang \\$_(GET|post|cookie|files|session|env|phplib|GLOBALS|SERVER)\\[ \\<(iframe|script|body|img|layer|div|meta|style|base|object|input) (onmouseover|onerror|onload)\\="
+      }
+    },
+    "ngx_lua_waf/wafconf/url": {
+      "URI": {
+        "operator": "≈",
+        "value": "\\.(svn|htaccess|bash_history)|\\.(bak|inc|old|mdb|sql|backup|java|class)$|(vhost|bbs|host|wwwroot|www|site|root|hytop|flashfxp).*\\.rar|(phpmyadmin|jmx-console|jmxinvokerservlet)|java\\.lang|/(attachments|upimg|images|css|uploadfiles|html|uploads|templets|static|template|data|inc|forumdata|upload|includes|cache|avatar)/(\\\\w+).(php|jsp)"
+      }
+    },
+    "ngx_lua_waf/wafconf/user-agent": {
+      "UserAgent": {
+        "operator": "≈",
+        "value": "(HTTrack|harvest|audit|dirbuster|pangolin|nmap|sqln|-scan|hydra|Parser|libwww|BBBike|sqlmap|w3af|owasp|Nikto|fimap|havij|PycURL|zmeu|BabyKrokodil|netsparker|httperf|bench| SF/)"
+      }
+    },
+    "ngx_lua_waf/wafconf/args": {
+      "Args": {
+        "name_operator": "*",
+        "operator": "≈",
+        "value": "\\.\\./|\\:\\$|\\$\\{|select.+(from|limit)|(?:(union(.*?)select))|having|rongjitest|sleep\\((\\s*)(\\d*)(\\s*)\\)|benchmark\\((.*)\\,(.*)\\)|base64_decode\\(|(?:from\\W+information_schema\\W)|(?:(?:current_)user|database|schema|connection_id)\\s*\\(|(?:etc\\/\\W*passwd)|into(\\s+)+(?:dump|out)file\\s*|group\\s+by.+\\(|xwork.MethodAccessor|(?:define|eval|file_get_contents|include|require|require_once|shell_exec|phpinfo|system|passthru|preg_\\w+|execute|echo|print|print_r|var_dump|(fp)open|alert|showmodaldialog)\\(|xwork\\.MethodAccessor|(gopher|doc|php|glob|file|phar|zlib|ftp|ldap|dict|ogg|data)\\:\\/|java\\.lang|\\$_(GET|post|cookie|files|session|env|phplib|GLOBALS|SERVER)\\[|\\<(iframe|script|body|img|layer|div|meta|style|base|object|input)|(onmouseover|onerror|onload)\\="
+      }
+    },
+    "all_request": {},
+    "ngx_lua_waf/wafconf/cookie": {
+      "Cookie": {
+        "name_operator": "*",
+        "operator": "≈",
+        "value": "\\.\\./|\\:\\$|\\$\\{|select.+(from|limit)|(?:(union(.*?)select))|having|rongjitest|sleep\\((\\s*)(\\d*)(\\s*)\\)|benchmark\\((.*)\\,(.*)\\)|base64_decode\\(|(?:from\\W+information_schema\\W)|(?:(?:current_)user|database|schema|connection_id)\\s*\\(|(?:etc\\/\\W*passwd)|into(\\s+)+(?:dump|out)file\\s*|group\\s+by.+\\(|xwork.MethodAccessor|(?:define|eval|file_get_contents|include|require|require_once|shell_exec|phpinfo|system|passthru|preg_\\w+|execute|echo|print|print_r|var_dump|(fp)open|alert|showmodaldialog)\\(|xwork\\.MethodAccessor|(gopher|doc|php|glob|file|phar|zlib|ftp|ldap|dict|ogg|data)\\:\\/|java\\.lang|\\$_(GET|post|cookie|files|session|env|phplib|GLOBALS|SERVER)\\["
+      }
+    },
+    "ngx_lua_waf/wafconf/whiteurl": {
+      "IP": {
+        "operator": "=",
+        "value": "127.0.0.1"
+      }
+    }
+  },
+  "summary_temporary_period": 60,
+  "static_file_enable": false,
+  "summary_group_temporary_enable": true,
+  "backend_upstream": {},
+  "redirect_enable": false,
+  "uri_rewrite_enable": false,
+  "admin": [
+    {
+      "enable": true,
+      "user": "verynginx",
+      "password": "verynginx"
+    }
+  ],
+  "summary_collect_rule": [],
+  "proxy_pass_enable": false,
+  "config_version": "0.36",
+  "redirect_rule": []
+}
