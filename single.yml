@@ -7,16 +7,16 @@ services:
       context: .
       args:
         - WORKDIR=$PWD
-    image: hive-main
+    image: h1ve-main
     user: root
     restart: always
     ports:
-      - 8000:8000
+      - 8000:4000
     environment:
       - UPLOAD_FOLDER=/var/uploads
       - DATABASE_URL=mysql+pymysql://root:ctfd@db/ctfd
       - REDIS_URL=redis://cache:6379
-      - WORKERS=1
+      - WORKERS=3
       - LOG_FOLDER=/var/log/CTFd
       - ACCESS_LOG=/var/log/CTFd/access.log
       - ERROR_LOG=/var/log/CTFd/error.log
@@ -31,6 +31,7 @@ services:
       default:
       internal:
       frp_containers:
+        ipv4_address: 10.2.0.10
 
   db:
     image: mariadb:10.4
@@ -56,7 +57,7 @@ services:
        internal:
 
   frps:
-    image: d0g3/hive-frp
+    image: d0g3/h1ve-frp
     # you can build image by yourself if you want.
     # build: ./frp
     restart: always
@@ -73,7 +74,7 @@ services:
         ipv4_address: 10.1.0.3
 
   frpc:
-    image: d0g3/hive-frp
+    image: d0g3/h1ve-frp
     # you can build image by yourself if you want.
     # build: ./frp
     restart: always

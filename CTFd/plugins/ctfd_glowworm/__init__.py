@@ -154,10 +154,10 @@ def load(app):
     @glowworm_blueprint.route("/admin/init", methods=['PATCH'])
     @admins_only
     def admin_init_competitions():
+        from .schedule import scheduler
         interval = DBUtils.get_all_configs().get("per_round")
         interval = str(int(int(interval) / 60))
         if ControlUtil.init_competition():
-            scheduler.remove_job('time_base')
             job = scheduler.add_job(id='time_base', func=ControlUtil.check_env, args=["init"], trigger='cron', minute="*/{}".format(interval))
             # job = scheduler.add_job(id='time_base', func=ControlUtil.check_env, args=["init"], trigger='interval', seconds=5)
             print(job)
@@ -274,7 +274,7 @@ def load(app):
         from apscheduler.jobstores.redis import RedisJobStore
         class Config(object):
             SCHEDULER_JOBSTORES = {
-                'default': RedisJobStore(host="redis", port=6379, password="", db=15)
+                'default': RedisJobStore(host="cache", port=6379, password="", db=15)
             }
             SCHEDULER_EXECUTORS = {
                 'default': {'type': 'threadpool', 'max_workers': 20}

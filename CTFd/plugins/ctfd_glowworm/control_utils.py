@@ -21,6 +21,8 @@ class ControlUtil:
     @staticmethod
     def remove_competition():
         mode = utils.get_config("user_mode")
+        from .schedule import scheduler
+        scheduler.remove_job('time_base')
         challenges = ADAChallenge.query.all()
         # 清除运行的容器
         for challenge in challenges:

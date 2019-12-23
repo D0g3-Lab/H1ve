@@ -1,3 +1,23 @@
+1.0.6 / 2019-12-23
+=================
+
+* Change py-redis to 3.0 to adapt flask_apscheduler
+* Fix bugs in `CTFd-Glowworm` plugin
+* Add two icons and change some codes to adapt `CTFd-Glowworm` plugin
+* Change Dockerfile to an exist base image
+* Fix bugs when running with `CTFd-Glowworm` plugin
+
+1.0.5 / 2019-12-21
+=================
+
+* Adapt `single-nginx` mode
+* Change `.yml` to v3.5 to set exact network name
+
+1.0.3 / 2019-12-19
+=================
+
+* Add `CTFd-Glowworm` plugin basic functions
+
 1.0.2 / 2019-12-17
 =================
 

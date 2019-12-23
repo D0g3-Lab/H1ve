@@ -312,10 +312,10 @@ class GlowwormContainers(db.Model):
     ip = db.Column(db.String(32))
     service_port = db.Column(db.Integer)
     ssh_port = db.Column(db.Integer)
-    ssh_key = db.Column(db.String(32))
+    ssh_key = db.Column(db.String(36))
     create_time = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
     flag = db.Column(db.String(128), nullable=True)
-    key = db.Column(db.String(32))
+    key = db.Column(db.String(36))
 
     # Todo 数据库预留可视化信息
 
@@ -333,9 +333,9 @@ class GlowwormAttacks(db.Model):
     attack_name = db.Column(db.String(32))
     victim_id = db.Column(db.Integer)
     victim_name = db.Column(db.String(32))
-    docker_id = db.Column(db.Integer, db.ForeignKey('glowworm_containers.docker_id'))
+    docker_id = db.Column(db.String(32))
 
-    envname = db.Column(db.String(72), db.ForeignKey('challenges.name'))
+    envname = db.Column(db.String(80))
     flag = db.Column(db.String(128))
     round = db.Column(db.Integer)
     time = db.Column(db.DateTime, default=datetime.datetime.utcnow, index=True)

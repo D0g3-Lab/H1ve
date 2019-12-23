@@ -322,7 +322,7 @@ fi
                 db.session.add(instance)
                 db.session.commit()
                 command = """#!/bin/sh
-docker run -tid --restart=on-failure:10 --privileged --name %s --cpus=%s -m %s -v "%s":"%s" -p %s:%s -p %s:%s %s "/conf/service.sh"
+docker run -tid --restart=on-failure:10 --privileged --name %s --cpus=%s -m %s -v "%s":"%s" -p %s:%s -p %s:%s --network h1ve-frp_containers %s "/conf/service.sh"
 """ % ( name, cpu_limit, memory_limit, confPath, "/conf", insert_service_port, env_port, insert_ssh_port, "22", dirname)
                 print(command)
                 with open(os.path.join(confPath, "docker.sh"), 'w') as f:
