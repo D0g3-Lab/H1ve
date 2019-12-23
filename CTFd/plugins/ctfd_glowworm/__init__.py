@@ -27,7 +27,6 @@ from CTFd.plugins.challenges import CHALLENGE_CLASSES
 from .db_utils import DBUtils
 from .control_utils import ControlUtil
 import datetime, fcntl
-from flask_apscheduler import APScheduler
 import logging, os, sys, uuid
 from .extensions import get_mode
 
@@ -36,7 +35,7 @@ def load(app):
     app.db.create_all()
     CHALLENGE_CLASSES["ada_challenge"] = GlowwormChallenge
     register_plugin_assets_directory(
-        app, base_path="/plugins/ctfd-glowworm/assets/"
+        app, base_path="/plugins/ctfd_glowworm/assets/"
     )
     glowworm_blueprint = Blueprint(
         "ctfd-glowworm",
@@ -68,7 +67,8 @@ def load(app):
     logger_glowworm.propagate = 0
 
     @glowworm_blueprint.route("/flag", methods=['POST'])
-    @during_ctf_time_only
+    # TODO: fix differfent time bug
+    # @during_ctf_time_only
     def update_flag():
         try:
             req = request.get_json()
@@ -157,10 +157,18 @@ def load(app):
         interval = DBUtils.get_all_configs().get("per_round")
         interval = str(int(int(interval) / 60))
         if ControlUtil.init_competition():
-            # job = scheduler.add_job(id='time_base', func=ControlUtil.check_env, args=[app, "init"], trigger='cron', minute="*/{}".format(interval))
-            job = scheduler.add_job(id='time_base', func=ControlUtil.check_env, args=["init"], trigger='interval',
-                                    seconds=2)
+            scheduler.remove_job('time_base')
+            job = scheduler.add_job(id='time_base', func=ControlUtil.check_env, args=["init"], trigger='cron', minute="*/{}".format(interval))
+            # job = scheduler.add_job(id='time_base', func=ControlUtil.check_env, args=["init"], trigger='interval', seconds=5)
             print(job)
+            return jsonify({'success': True})
+        else:
+            return jsonify({'success': False})
+
+    @glowworm_blueprint.route("/admin/remove", methods=['PATCH'])
+    @admins_only
+    def admin_remove_competitions():
+        if ControlUtil.remove_competition():
             return jsonify({'success': True})
         else:
             return jsonify({'success': False})
@@ -211,17 +219,6 @@ def load(app):
             else:
                 return jsonify({'success': False})
 
-    # Todo: Change this view to an queue-func
-    @glowworm_blueprint.route("/admin/init", methods=['GET','POST'])
-    def time_base():
-        req = request.get_json()
-        print(req)
-        try:
-            DBUtils.update_attack_log(attack_id=req['attack_id'], victim_id=req['victim_id'], docker_id=req['docker_id'], flag=req['flag'])
-            return jsonify({'success': True})
-        except Exception as e:
-            return jsonify({'success': False})
-
     @glowworm_blueprint.route('/container', methods=['GET'])
     @authed_only
     def container_info():
@@ -235,7 +232,7 @@ def load(app):
                 return jsonify({})
             else:
                 return jsonify({'success': True, 'type': 'direct', 'ip': configs.get('direct_address', ""),
-                    'port': data.service_port,
+                    'service_port' : data.service_port, 'ssh_port' : data.ssh_port, 'ssh_key' : data.ssh_key
                 })
         else:
             return jsonify({'success': True})
@@ -254,11 +251,43 @@ def load(app):
             print(e)
             return jsonify({'success': False})
 
+    @glowworm_blueprint.route("/attacks", methods=['GET'])
+    def list_attacks():
+        page = abs(request.args.get("page", 1, type=int))
+        results_per_page = 50
+        page_start = results_per_page * (page - 1)
+        page_end = results_per_page * (page - 1) + results_per_page
+
+        count = GlowwormAttacks.query.count()
+        attacks = (
+            GlowwormAttacks.query.order_by(GlowwormAttacks.time.desc())
+                .slice(page_start, page_end)
+                .all()
+        )
+
+        pages = int(count / results_per_page) + (count % results_per_page > 0)
+        return render_template("glowworm_attacks.html", attacks=attacks, pages=pages, curr_page=page)
+
     app.register_blueprint(glowworm_blueprint)
 
     try:
-        scheduler = APScheduler()
+        from apscheduler.jobstores.redis import RedisJobStore
+        class Config(object):
+            SCHEDULER_JOBSTORES = {
+                'default': RedisJobStore(host="redis", port=6379, password="", db=15)
+            }
+            SCHEDULER_EXECUTORS = {
+                'default': {'type': 'threadpool', 'max_workers': 20}
+            }
+            SCHEDULER_API_ENABLED = True
+
+        lock_file = open("/tmp/ctfd_glowworm.lock", "w")
+        lock_fd = lock_file.fileno()
+        fcntl.lockf(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+
+        from .schedule import scheduler
+        app.config.from_object(Config())
         scheduler.init_app(app)
         scheduler.start()
-    except Exception as e:
-        print(e)
+    except IOError:
+        pass

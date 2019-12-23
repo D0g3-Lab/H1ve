@@ -18,26 +18,28 @@ from CTFd.models import (
     Users,
     Teams,
     Notifications,
+    Submissions
 )
 import math, datetime
 from CTFd.utils.uploads import delete_file
-from .extensions import get_mode
+from .extensions import get_mode, get_round
+from sqlalchemy.orm import column_property
 
 class GlowwormChallenge(BaseChallenge):
     id = "ada_challenge"  # Unique identifier used to register challenges
     name = "ada_challenge"  # Name of a challenge type
     templates = {  # Handlebars templates used for each aspect of challenge editing & viewing
-        "create": "/plugins/ctfd-glowworm/assets/create.html",
-        "update": "/plugins/ctfd-glowworm/assets/update.html",
-        "view": "/plugins/ctfd-glowworm/assets/view.html",
+        "create": "/plugins/ctfd_glowworm/assets/create.html",
+        "update": "/plugins/ctfd_glowworm/assets/update.html",
+        "view": "/plugins/ctfd_glowworm/assets/view.html",
     }
     scripts = {  # Scripts that are loaded when a template is loaded
-        "create": "/plugins/ctfd-glowworm/assets/create.js",
-        "update": "/plugins/ctfd-glowworm/assets/update.js",
-        "view": "/plugins/ctfd-glowworm/assets/view.js",
+        "create": "/plugins/ctfd_glowworm/assets/create.js",
+        "update": "/plugins/ctfd_glowworm/assets/update.js",
+        "view": "/plugins/ctfd_glowworm/assets/view.js",
     }
     # Route at which files are accessible. This must be registered using register_plugin_assets_directory()
-    route = "/plugins/ctfd-glowworm/assets/"
+    route = "/plugins/ctfd_glowworm/assets/"
     # Blueprint used to access the static_folder directory.
     blueprint = Blueprint(
         "ctfd-glowworm-challenge",
@@ -173,18 +175,27 @@ class GlowwormChallenge(BaseChallenge):
         """
         data = request.form or request.get_json()
         submission = data["submission"].strip()
-        # flags = Flags.query.filter_by(challenge_id=challenge.id).all()
-        # Todo: change this to another way
+
         user_id = get_mode()
 
-        flag = GlowwormContainers.query.filter_by(user_id=user_id, challenge_id=challenge.id).first()
-        print(flag)
+        victim = GlowwormContainers.query.filter_by(flag=submission).first()
 
-
-        if get_flag_class(flag.type).compare(flag, submission):
-            return True, "Correct"
-        else:
+        if victim == None:
             return False, "Incorrect"
+        else:
+            round = get_round()
+            old = GlowwormAttacks.query.filter_by(round=round, flag=submission, attack_id=user_id,victim_id=victim.user_id).order_by(
+                GlowwormAttacks.time.desc()).first()
+            if old == None:
+                if victim.user_id == user_id:
+                    return False, "Do not attack yourself :)"
+                return True, "Correct"
+            else:
+                return False, "Do not submit again :("
+
+
+
+
 
     @staticmethod
     def solve(user, team, challenge, request):
@@ -201,42 +212,40 @@ class GlowwormChallenge(BaseChallenge):
         submission = data["submission"].strip()
 
         Model = get_model()
+        if Model == Users:
+            attacker = GlowwormContainers.query.filter_by(user_id=user.id, challenge_id=challenge.id).first()
+            attacker_name = user.name
+            victim = GlowwormContainers.query.filter_by(flag=submission).first()
+            victim_name = Users.query.filter_by(id=victim.user_id).first()
+            team_id = None
+        else:
+            attacker = GlowwormContainers.query.filter_by(user_id=team.id, challenge_id=challenge.id).first()
+            attacker_name = team.name
+            victim = GlowwormContainers.query.filter_by(flag=submission).first()
+            victim_name = Teams.query.filter_by(id=victim.user_id).first()
+            team_id = victim_name.team_id
 
-        solve = Solves(
+        attack = GlowwormAttacks(
+            attack_id = attacker.user_id,
+            attack_name = attacker_name,
+            victim_id = victim.user_id,
+            victim_name = victim_name.name,
+            docker_id = victim.docker_id,
+            envname = victim.docker_id.split("_",1)[1],
+            flag = submission,
+            round = get_round()
+        )
+        attack_log = GlowwormAttackLog(
             user_id=user.id,
             team_id=team.id if team else None,
+            victim_user_id=victim_name.id,
+            victim_team_id=team_id,
             challenge_id=challenge.id,
             ip=get_ip(req=request),
             provided=submission,
         )
-        db.session.add(solve)
-
-        solve_count = (
-            Solves.query.join(Model, Solves.account_id == Model.id)
-                .filter(
-                Solves.challenge_id == challenge.id,
-                Model.hidden == False,
-                Model.banned == False,
-            )
-                .count()
-        )
-
-        # We subtract -1 to allow the first solver to get max point value
-        solve_count -= 1
-
-
-        # It is important that this calculation takes into account floats.
-        # Hence this file uses from __future__ import division
-        value = (
-                        ((chal.minimum - chal.initial) / (chal.decay ** 2)) * (solve_count ** 2)
-                ) + chal.initial
-
-        value = math.ceil(value)
-
-        if value < chal.minimum:
-            value = chal.minimum
-
-        chal.value = value
+        db.session.add(attack)
+        db.session.add(attack_log)
 
         db.session.commit()
         db.session.close()
@@ -294,6 +303,7 @@ class GlowwormConfigs(db.Model):
         self.key = key
         self.value = value
 
+
 class GlowwormContainers(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer)
@@ -320,7 +330,9 @@ class GlowwormContainers(db.Model):
 class GlowwormAttacks(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     attack_id = db.Column(db.Integer)
+    attack_name = db.Column(db.String(32))
     victim_id = db.Column(db.Integer)
+    victim_name = db.Column(db.String(32))
     docker_id = db.Column(db.Integer, db.ForeignKey('glowworm_containers.docker_id'))
 
     envname = db.Column(db.String(72), db.ForeignKey('challenges.name'))
@@ -332,3 +344,100 @@ class GlowwormAttacks(db.Model):
 
     def __init__(self, *args, **kwargs):
         super(GlowwormAttacks, self).__init__(**kwargs)
+
+class GlowwormAttackLog(Submissions):
+    __tablename__ = "glowworm_attack_log"
+    id = db.Column(
+        None, db.ForeignKey("submissions.id", ondelete="CASCADE"), primary_key=True
+    )
+    challenge_id = column_property(
+        db.Column(db.Integer, db.ForeignKey("challenges.id", ondelete="CASCADE")),
+        Submissions.challenge_id,
+    )
+    user_id = column_property(
+        db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE")),
+        Submissions.user_id,
+    )
+    team_id = column_property(
+        db.Column(db.Integer, db.ForeignKey("teams.id", ondelete="CASCADE")),
+        Submissions.team_id,
+    )
+
+    victim_user_id = column_property(
+        db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"))
+    )
+    victim_team_id = column_property(
+        db.Column(db.Integer, db.ForeignKey("teams.id", ondelete="CASCADE"))
+    )
+
+    user = db.relationship("Users", foreign_keys="GlowwormAttackLog.user_id", lazy="select")
+    team = db.relationship("Teams", foreign_keys="GlowwormAttackLog.team_id", lazy="select")
+    challenge = db.relationship(
+        "Challenges", foreign_keys="GlowwormAttackLog.challenge_id", lazy="select"
+    )
+
+    __mapper_args__ = {"polymorphic_identity": "attack"}
+
+class GlowwormCheckLog(Submissions):
+    __tablename__ = "glowworm_check_log"
+    id = db.Column(
+        None, db.ForeignKey("submissions.id", ondelete="CASCADE"), primary_key=True
+    )
+    challenge_id = column_property(
+        db.Column(db.Integer, db.ForeignKey("challenges.id", ondelete="CASCADE")),
+        Submissions.challenge_id,
+    )
+    user_id = column_property(
+        db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE")),
+        Submissions.user_id,
+    )
+    team_id = column_property(
+        db.Column(db.Integer, db.ForeignKey("teams.id", ondelete="CASCADE")),
+        Submissions.team_id,
+    )
+    victim_user_id = column_property(
+        db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"))
+    )
+    victim_team_id = column_property(
+        db.Column(db.Integer, db.ForeignKey("teams.id", ondelete="CASCADE"))
+    )
+
+    user = db.relationship("Users", foreign_keys="GlowwormCheckLog.user_id", lazy="select")
+    team = db.relationship("Teams", foreign_keys="GlowwormCheckLog.team_id", lazy="select")
+    challenge = db.relationship(
+        "Challenges", foreign_keys="GlowwormCheckLog.challenge_id", lazy="select"
+    )
+
+    __mapper_args__ = {"polymorphic_identity": "check"}
+
+class GlowwormInitLog(Submissions):
+    __tablename__ = "glowworm_init_log"
+    id = db.Column(
+        None, db.ForeignKey("submissions.id", ondelete="CASCADE"), primary_key=True
+    )
+    challenge_id = column_property(
+        db.Column(db.Integer, db.ForeignKey("challenges.id", ondelete="CASCADE")),
+        Submissions.challenge_id,
+    )
+    user_id = column_property(
+        db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE")),
+        Submissions.user_id,
+    )
+    team_id = column_property(
+        db.Column(db.Integer, db.ForeignKey("teams.id", ondelete="CASCADE")),
+        Submissions.team_id,
+    )
+    victim_user_id = column_property(
+        db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"))
+    )
+    victim_team_id = column_property(
+        db.Column(db.Integer, db.ForeignKey("teams.id", ondelete="CASCADE"))
+    )
+
+    user = db.relationship("Users", foreign_keys="GlowwormInitLog.user_id", lazy="select")
+    team = db.relationship("Teams", foreign_keys="GlowwormInitLog.team_id", lazy="select")
+    challenge = db.relationship(
+        "Challenges", foreign_keys="GlowwormInitLog.challenge_id", lazy="select"
+    )
+
+    __mapper_args__ = {"polymorphic_identity": "init"}

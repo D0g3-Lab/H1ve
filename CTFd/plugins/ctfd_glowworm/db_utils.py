@@ -1,9 +1,9 @@
 import datetime
 import uuid
 from CTFd import utils
-from .models import GlowwormConfigs, GlowwormContainers, ADAChallenge, GlowwormAttacks
+from .models import GlowwormConfigs, GlowwormContainers, ADAChallenge, GlowwormAttacks, GlowwormInitLog
 from CTFd.models import Users, Teams
-from .extensions import get_competition_time
+from .extensions import get_round
 from CTFd.models import (
     db
 )
@@ -109,32 +109,46 @@ class DBUtils:
             return False
 
     @staticmethod
-    def update_attack_log(attack_id, victim_id, docker_id, flag):
-        competition_time = get_competition_time()
-        print(competition_time)
-        round = 1
-        try:
-            if victim_id != "0":
-                attack = GlowwormAttacks(
-                    attack_id = attack_id,
-                    victim_id = victim_id,
-                    docker_id = docker_id,
-                    envname = docker_id.split("_")[1],
-                    flag = flag,
-                    round =round
-                )
-                print(attack)
-            else:
-                attack = GlowwormAttacks(
-                    flag="New Round {}".format(round),
-                    round=round
-                )
+    def update_attack_log(attack_id=None, attack_name=None, victim_id=None, victim_name=None, challenge_id=None, flag=None):
+        from .schedule import scheduler
+        with scheduler.app.app_context():
+            round = get_round()
+            try:
+                if challenge_id != None:
+                    container = GlowwormContainers.query.filter_by(challenge_id=challenge_id,user_id=victim_id).first()
+                    docker_id = container.docker_id
+                    attack = GlowwormAttacks(
+                        attack_id = attack_id,
+                        attack_name = attack_name,
+                        victim_id = victim_id,
+                        victim_name = victim_name,
+                        docker_id = docker_id,
+                        envname = docker_id.split("_")[1],
+                        flag = flag,
+                        round =round
+                    )
+                    init = GlowwormInitLog(
+                        user_id=victim_id,
+                        team_id=victim_name,
+                        victim_user_id=victim_id,
+                        victim_team_id=victim_name,
+                        challenge_id=challenge_id,
+                        ip="127.0.0.1",
+                        provided="Init",
+                    )
+                    db.session.add(init)
+
+                else:
+                    attack = GlowwormAttacks(
+                        flag="New Round {}".format(round),
+                        round=round
+                    )
                 print(attack)
 
-            db.session.add(attack)
-            db.session.commit()
-            db.session.close()
-            return True
-        except Exception as e:
-            print(e)
-            return False
+                db.session.add(attack)
+                db.session.commit()
+                db.session.close()
+                return True
+            except Exception as e:
+                print(e)
+                return False

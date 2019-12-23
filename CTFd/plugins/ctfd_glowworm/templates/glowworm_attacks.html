@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block content %}
+<div class="section section-standard" id="users">
+	<div class="section-inner">
+	    <div class="container">
+	        <div class="section-header" data-100p-top="transform[swing]:translateY(-25px);opacity[swing]:0" data-75p-top="transform[swing]:translateY(0);opacity[swing]:1">
+	            <h3>Attacks</h3>
+	            <div class="divider">//</div>
+	        </div>
+
+
+			<div class="row">
+				<div class="col-md-12">
+					<table class="table table-striped">
+						<thead>
+						<tr>
+                            <td><b>Round</b></td>
+							<td><b>Attacker</b></td>
+							<td><b>Victim</b></td>
+							<td class="d-none d-md-table-cell d-lg-table-cell"><b>Type</b></td>
+							<td class="d-none d-md-table-cell d-lg-table-cell"><b>Message</b></td>
+							<td class="d-none d-md-table-cell d-lg-table-cell"><b>Time</b></td>
+						</tr>
+						</thead>
+						<tbody>
+						{% for attack in attacks %}
+							<tr>
+                                <td>{{ attack.round }}</td>
+								<td>
+									{% if attack.attack_id %} {{ attack.attack_name }} {% else %} K&K {% endif %}
+								</td>
+								<td class="text-center" style="width: 10px;">
+									{% if attack.victim_id %} {{ attack.victim_name }} {% else %} K&K {% endif %}
+								</td>
+								<td class="d-none d-md-table-cell d-lg-table-cell">
+									{% if attack.envname %} {{ attack.envname }} {% else %} {% endif %}
+								</td>
+								<td class="d-none d-md-table-cell d-lg-table-cell">
+									<span>
+										{% if attack.attack_id %}
+										{% else %}
+											{{ attack.flag }}
+										{% endif %}
+									</span>
+								</td>
+								<td class="d-none d-md-table-cell d-lg-table-cell">
+									<span>{{ attack.time }}</span>
+								</td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+			{% if pages > 1 %}
+				<div class="row">
+					<div class="col-md-12">
+						<div class="text-center">Page
+							<br>
+							{% if curr_page != 1 %}
+								<a href="{{ url_for('users.listing', page=curr_page - 1) }}">
+									&lt;&lt;&lt;
+								</a>
+							{% endif %}
+							{% for page in range(1, pages + 1) %}
+								{% if curr_page != page %}
+									<a href="{{ url_for('users.listing', page=page) }}">{{ page }}</a>
+								{% else %}
+									<b>{{ page }}</b>
+								{% endif %}
+							{% endfor %}
+							{% if curr_page != pages %}
+								<a href="{{ url_for('users.listing', page=curr_page + 1) }}">
+									&gt;&gt;&gt;
+								</a>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

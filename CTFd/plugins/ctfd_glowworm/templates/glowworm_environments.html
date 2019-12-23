@@ -11,6 +11,9 @@
 			<a class="init-competition">
 				<i class="btn-fa fas fa-trophy fa-2x px-2" data-toggle="tooltip" data-placement="top" title="Init Competition"></i>
 			</a>
+				<a class="remove-competition">
+				<i class="btn-fa fas fa-trash fa-2x px-2" data-toggle="tooltip" data-placement="top" title="Remove Competition"></i>
+			</a>
 		</div>
 		</div>
 	</div>
@@ -306,6 +309,29 @@
                       ezal({
                             title: "Success",
                             body: "This Competition has been inited!",
+                            button: "OK"
+                        });
+                    }
+                  });
+      }
+    });
+  });
+        $(".remove-competition").click(function(e) {
+    ezq({
+      title: "Remove competition",
+      body: "Are you sure you want to Remove competition",
+      success: function() {
+        CTFd.fetch("/plugins/ctfd-glowworm/admin/remove", {
+          method: "PATCH"
+        })
+          .then(function(response) {
+            return response.json();
+          })
+          .then(function(response) {
+                    if (response.success) {
+                      ezal({
+                            title: "Success",
+                            body: "This Competition has been removed!",
                             button: "OK"
                         });
                     }

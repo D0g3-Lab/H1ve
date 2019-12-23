@@ -1,9 +1,10 @@
 import os, uuid, subprocess, logging, time, re
 from .db_utils import DBUtils
 from CTFd import utils
-from .models import ADAChallenge, GlowwormContainers
+from .models import ADAChallenge, GlowwormContainers, GlowwormCheckLog, GlowwormAttacks
+from .extensions import get_round
 from CTFd.utils.logging import log
-from CTFd.models import db
+from CTFd.models import db, Users, Teams
 from .extensions import get_mode, teampasswd
 
 class DockerUtils:
@@ -39,15 +40,27 @@ class DockerUtils:
 
     @staticmethod
     def check_env(challenge_id):
-        try:
-            mode = utils.get_config("user_mode")
-            platform_name = utils.get_config("ctf_name")
-            basePath = os.path.abspath(os.path.dirname(__file__))
-            platformDir = os.path.join(basePath, platform_name)
-            challenge = ADAChallenge.query.filter_by(id=challenge_id).first_or_404()
-            dirname = challenge.dirname.split("/")[1]
-            containers = GlowwormContainers.query.all()
-            for index in containers:
+        from .schedule import scheduler
+        with scheduler.app.app_context():
+            try:
+                mode = utils.get_config("user_mode")
+                platform_name = utils.get_config("ctf_name")
+                basePath = os.path.abspath(os.path.dirname(__file__))
+                platformDir = os.path.join(basePath, platform_name)
+                challenge = ADAChallenge.query.filter_by(id=challenge_id).first_or_404()
+                dirname = challenge.dirname.split("/")[1]
+                containers = GlowwormContainers.query.filter_by(challenge_id=challenge_id).all()
+                for index in containers:
+                    if mode == "users":
+                        victim = Users.query.filter_by(id=index.user_id).first()
+                        victim_name = victim.name
+                        team_id = victim.team_id if victim.team_id else None
+                    else:
+                        victim = None
+                        team = Teams.query.filter_by(id=index.user_id).first()
+                        team_id = team.id
+                        victim_name = team.name
+
                     check_file = os.path.join(basePath, challenge.dirname, "conf", "check.py")
                     # Todo: excute check file in containers
                     command = "python3 '%s' %s %s" % (check_file, index.ip, index.service_port)
@@ -59,13 +72,36 @@ class DockerUtils:
                         msg = index.docker_id + " seems ok."
                     else:
                         msg = index.docker_id + " seems down."
+                        check_log = GlowwormCheckLog(
+                            user_id=victim.id,
+                            team_id=team_id,
+                            victim_user_id=victim.id,
+                            victim_team_id=team_id,
+                            challenge_id=challenge.id,
+                            ip="127.0.0.1",
+                            provided=msg,
+                        )
+                        check = GlowwormAttacks(
+                            attack_id=None,
+                            attack_name=None,
+                            victim_id=victim.id,
+                            victim_name=victim_name,
+                            docker_id=index.docker_id,
+                            envname=index.docker_id.split("_", 1)[1],
+                            flag="",
+                            round=get_round()
+                        )
+                        db.session.add(check)
+                        db.session.add(check_log)
+                        print(check)
+                        print(check_log)
                     print(msg)
-            challenge.env_check_status = True
-            db.session.commit()
-            return True
-        except Exception as e:
-            print(e)
-            return False
+                db.session.commit()
+                db.session.close()
+                return True
+            except Exception as e:
+                print(e)
+                return False
 
     @staticmethod
     def build_env(challenge_id):
@@ -74,7 +110,7 @@ class DockerUtils:
         basePath = os.path.abspath(os.path.dirname(__file__))
         platformDir = os.path.join(basePath, platform_name)
         challenge = ADAChallenge.query.filter_by(id=challenge_id).first_or_404()
-        envPath = os.path.join(basePath, challenge.dirname, "conf")
+        envPath = os.path.join(basePath, challenge.dirname)
         command = 'cd ' + envPath + ' && docker build -f ' + envPath + '/Dockerfile -t ' + challenge.name + " ."
         print(command)
         try:

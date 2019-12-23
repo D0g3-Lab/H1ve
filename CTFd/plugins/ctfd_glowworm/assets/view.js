@@ -52,7 +52,7 @@ function loadInfo () {
         return response.json();
     }).then(function (response) {
         console.log(response);
-        if(response.port === undefined) {
+        if(response.service_port === undefined) {
             $('#glowworm-panel').html(
                     '<h5 class="card-title">Instance Info</h5>' +
                     '<h6 class="card-subtitle mb-2 text-muted"> Instance not started.</h6>'
@@ -69,7 +69,8 @@ function loadInfo () {
                 $('#glowworm-panel').html(
                     '<h5 class="card-title">Instance Info</h5>' +
                     // '<h6 class="card-subtitle mb-2 text-muted" id="owl-challenge-count-down">Remaining Time: ' + response.remaining_time + 's</h6>' +
-                    '<p class="card-text">' + response.ip + ':' + response.port + '</p>' +
+                    '<p class="card-text">' + response.ip + '<br>SSH Port: ' + response.ssh_port + '<br>Service Port: ' + response.service_port + '</p>' +
+                    '<p class="card-text">SSH Key:<br>web/pwn:' + response.ssh_key + '</p>' +
                     // '<button type="button" class="btn btn-sm btn-outline-secondary" id="glowworm-button-destroy" onclick="window.challenge.destroy()">Destroy this instance</button>' +
                     '<button type="button" class="btn btn-sm btn-outline-secondary" id="glowworm-button-renew" onclick="window.challenge.renew()">Renew this instance</button>'
                 );
