@@ -100,9 +100,9 @@ def load(app):
                 print(e)
 
             if mode == "teams":
-                jstandings.append({'userid':"", 'teamid':team[0], 'score':score, 'name':team[2],'solves':jsolves})
+                jstandings.append({'userid':"", 'teamid':team[0], 'score':str(score), 'name':team[2],'solves':jsolves})
             else:
-                jstandings.append({'userid':team[0], 'teamid':"", 'score':score, 'name':team[2],'solves':jsolves})
+                jstandings.append({'userid':team[0], 'teamid':"", 'score':str(score), 'name':team[2],'solves':jsolves})
         # 重新按分数排序
         jstandings.sort(key=lambda x: x["score"], reverse=True)
         db.session.close()
