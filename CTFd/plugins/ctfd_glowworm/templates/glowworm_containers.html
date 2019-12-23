@@ -1,0 +1,182 @@
+{% extends "admin/base.html" %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block content %}
+	<div class="jumbotron">
+		<div class="container">
+			<h1>CTFd Glowworm Instances</h1>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<table class="table table-striped">
+					<thead>
+					<tr>
+						<td class="text-center"><b>No</b></td>
+						<td class="text-center"><b>ID</b></td>
+						<td class="text-center"><b>Docker ID</b></td>
+						<td class="text-center"><b>Challenge</b></td>
+						<td class="text-center"><b>IP</b></td>
+						<td class="text-center"><b>SSH Key</b></td>
+						<td class="text-center"><b>Service Port</b></td>
+						<td class="text-center"><b>SSH Port</b></td>
+						<td class="text-center"><b>Flag</b></td>
+						<td class="text-center"><b>Renew</b></td>
+					</tr>
+					</thead>
+					<tbody>
+					{% for container in containers %}
+						<tr>
+                            <th scope="row" class="text-center">{{ curr_page_start + loop.index }}</th>
+							<td class="text-center">
+								{{ container.user_id }}
+							</td>
+							<td class="text-center">
+                                    {{ container.docker_id }}
+							</td>
+							<td class="text-center">
+								<a href="{{ url_for('admin.challenges_detail', challenge_id=container.challenge.id) }}">
+                                    {{ container.challenge.name }}
+                                </a>
+							</td>
+							<td class="text-center">
+                                    {{ container.ip }}
+							</td>
+							<td class="text-center">
+								<span>
+                                    {{ container.ssh_key }}
+                                </span>
+							</td>
+							<td class="text-center">
+                                {{ container.service_port }}
+                            </td>
+                            <td class="text-center">
+                                {{ container.ssh_port }}
+                            </td>
+                            <td class="text-center">
+                                {{ container.flag }}
+                            </td>
+                            <td class="text-center">
+                                <a class="renew-container" container-id="{{ container.challenge.id }}" data-toggle="tooltip"
+                                       user-id="{{ container.user_id }}" data-placement="top"
+                                       challenge-id="{{ container.challenge.id }}" title="Renew Container #{{ container.challenge.id }}">
+                                    <i class="fas fa-sync"></i>
+                                </a>
+                            </td>
+                        </tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		{% if pages > 1 %}
+			<div class="row">
+				<div class="col-md-12">
+					<div class="text-center">Page
+						<br>
+						{% if curr_page != 1 %}
+							<a href="/plugins/ctfd-glowworm/admin/containers?page={{ curr_page - 1 }}">
+								&lt;&lt;&lt;
+							</a>
+						{% endif %}
+						{% for page in range(1, pages + 1) %}
+							{% if curr_page != page %}
+								<a href="/plugins/ctfd-glowworm/admin/containers?page={{ page }}">{{ page }}</a>
+							{% else %}
+								<b>{{ page }}</b>
+							{% endif %}
+						{% endfor %}
+						{% if curr_page != pages %}
+							<a href="/plugins/ctfd-glowworm/admin/containers?page={{ curr_page + 1 }}">
+								&gt;&gt;&gt;
+							</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(".delete-container").click(function(e) {
+            e.preventDefault();
+            var container_id = $(this).attr("container-id");
+            var user_id = $(this).attr("user-id");
+
+            var body = "<span>Are you sure you want to delete <strong>Container #{0}</strong>?</span>".format(
+              htmlentities(container_id)
+            );
+
+            var row = $(this)
+              .parent()
+              .parent();
+
+            ezq({
+              title: "Destroy Container",
+              body: body,
+              success: function() {
+                CTFd.fetch("/plugins/ctfd-glowworm/admin/containers?user_id=" + user_id, {
+                  method: "DELETE",
+                  credentials: "same-origin",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                  }
+                })
+                  .then(function(response) {
+                    return response.json();
+                  })
+                  .then(function(response) {
+                    if (response.success) {
+                      row.remove();
+                    }
+                  });
+              }
+            });
+          });
+
+        $(".renew-container").click(function(e) {
+            e.preventDefault();
+            var container_id = $(this).attr("container-id");
+            var challenge_id = $(this).attr("challenge-id");
+            var user_id = $(this).attr("user-id");
+
+            var body = "<span>Are you sure you want to renew <strong>Container #{0}</strong>?</span>".format(
+              htmlentities(container_id)
+            );
+
+            ezq({
+              title: "Renew Container",
+              body: body,
+              success: function() {
+                CTFd.fetch("/plugins/ctfd-glowworm/admin/containers?user_id=" + user_id + "&challenge_id=" + challenge_id, {
+                  method: "PATCH",
+                  credentials: "same-origin",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                  }
+                })
+                  .then(function(response) {
+                    return response.json();
+                  })
+                  .then(function(response) {
+                    if (response.success) {
+                      ezal({
+                            title: "Success",
+                            body: "This instance has been renewed!",
+                            button: "OK"
+                        });
+                    }
+                  });
+              }
+            });
+          });
+    </script>
+{% endblock %}
+

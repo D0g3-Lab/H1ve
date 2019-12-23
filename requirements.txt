@@ -18,7 +18,7 @@ normality==0.6.1  # Pin normality version for dataset
 dataset==1.1.0
 mistune==0.8.4
 netaddr==0.7.19
-redis==2.10.6
+redis==3.0 # Adapt APScheduler
 datafreeze==0.1.0
 gevent==1.4.0
 python-dotenv==0.9.1

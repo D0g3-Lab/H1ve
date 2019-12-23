@@ -2,7 +2,10 @@ version: '3.5'
 
 services:
   main:
-    build: .
+    build:
+      context: .
+      args:
+        - WORKDIR=$PWD
     image: hive-main
     user: root
     restart: always
@@ -52,7 +55,7 @@ services:
       internal:
 
   frps:
-    image: d0g3/hive-frp
+    image: d0g3/h1ve-frp
     restart: always
     volumes:
       - ./frp:/conf/
@@ -67,7 +70,7 @@ services:
         ipv4_address: 10.1.0.3
 
   frpc:
-    image: d0g3/hive-frp
+    image: d0g3/h1ve-frp
     restart: always
     volumes:
       - ./frp:/conf/
