@@ -87,6 +87,20 @@ def load(app):
             print(e)
             return jsonify({'success': False})
 
+    @glowworm_blueprint.route("/challenge/<challenge_id>", methods=['GET'])
+    def get_targets(challenge_id):
+        try:
+            datas = {'success': True, 'data':[]}
+            containers = GlowwormContainers.query.filter_by(challenge_id=challenge_id).all()
+            print(challenge_id,containers)
+            for container in containers:
+                datas['data'].append({"target":"{}:{}".format(container.ip, container.service_port)})
+            datas['length'] = len(datas['data'])
+            return jsonify(datas)
+        except Exception as e:
+            print(e)
+            return jsonify({'success': False})
+
     @glowworm_blueprint.route('/admin/settings', methods=['GET'])
     @admins_only
     # list plugin settings
@@ -271,21 +285,12 @@ def load(app):
     app.register_blueprint(glowworm_blueprint)
 
     try:
-        from apscheduler.jobstores.redis import RedisJobStore
-        class Config(object):
-            SCHEDULER_JOBSTORES = {
-                'default': RedisJobStore(host="cache", port=6379, password="", db=15)
-            }
-            SCHEDULER_EXECUTORS = {
-                'default': {'type': 'threadpool', 'max_workers': 20}
-            }
-            SCHEDULER_API_ENABLED = True
 
         lock_file = open("/tmp/ctfd_glowworm.lock", "w")
         lock_fd = lock_file.fileno()
         fcntl.lockf(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
-        from .schedule import scheduler
+        from .schedule import scheduler, Config
         app.config.from_object(Config())
         scheduler.init_app(app)
         scheduler.start()

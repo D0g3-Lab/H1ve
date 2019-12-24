@@ -225,26 +225,18 @@ def load(app):
 
         return jsonify({'success': True})
 
-    def auto_clean_container():
-        with app.app_context():
-            results = DBUtils.get_all_expired_container()
-            for r in results:
-                ControlUtil.destroy_container(r.user_id)
-
-            FrpUtils.update_frp_redirect()
-
     app.register_blueprint(owl_blueprint)
 
     try:
-        lock_file = open("/tmp/ctfd_owl.lock", "w")
-        lock_fd = lock_file.fileno()
-        fcntl.lockf(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-
-        scheduler = APScheduler()
-        scheduler.init_app(app)
-        scheduler.start()
-        scheduler.add_job(id='owl-auto-clean', func=auto_clean_container, trigger="interval", seconds=5)
-
-        print("[CTFd Owl]Started successfully")
-    except IOError:
+        from CTFd.plugins.ctfd_glowworm.schedule import scheduler
+        try:
+            scheduler.remove_job("owl-auto-clean")
+            job = scheduler.add_job(id='owl-auto-clean', func=ControlUtil.auto_clean_container, trigger="interval",
+                                    seconds=5)
+            print("[CTFd Owl]Scheduled successfully")
+            print(job)
+        except Exception as e:
+            print(e)
+    except Exception as e:
+        print(e)
         pass

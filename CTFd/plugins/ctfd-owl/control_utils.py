@@ -2,6 +2,7 @@ import time
 
 from CTFd.models import Challenges, Users
 from .db_utils import DBUtils
+from .frp_utils import FrpUtils
 from .docker_utils import DockerUtils
 from sqlalchemy.sql import and_
 from flask import session
@@ -25,7 +26,15 @@ class ControlUtil:
         except Exception as e:
             print(e)
             return False
+    @staticmethod
+    def auto_clean_container():
+        from CTFd.plugins.ctfd_glowworm.schedule import scheduler
+        with scheduler.app.app_context():
+            results = DBUtils.get_all_expired_container()
+            for r in results:
+                ControlUtil.destroy_container(r.user_id)
 
+            FrpUtils.update_frp_redirect()
 
     @staticmethod
     def expired_container(user_id, challenge_id):
