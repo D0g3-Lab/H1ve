@@ -16,6 +16,7 @@ window.challenge.render = function (markdown) {
 
 window.challenge.postRender = function () {
     loadInfo();
+    get_targets($("#challenge-id").val());
 };
 
 function stopShowAuto () {
@@ -179,3 +180,26 @@ window.challenge.submit = function (cb, preview) {
         cb(response);
     });
 };
+
+function get_targets(id) {
+  $.get(script_root + "/plugins/ctfd-glowworm/challenge/" + id, function(
+    response
+  ) {
+    var data = response.data;
+    $(".challenge-targets").text(parseInt(data.length) + " Targets");
+    var box = $("#challenge-targets-lists");
+    box.empty();
+    for (var i = 0; i < data.length; i++) {
+      var target = data[i].target;
+      box.append(
+        '<tr><td>{0}</td></tr>'.format(
+          htmlentities(target),
+        )
+      );
+    }
+  });
+}
+
+$("#targets").click(function(e) {
+  get_targets($("#challenge-id").val());
+});

@@ -8,14 +8,17 @@
 				<li class="nav-item">
 					<a class="nav-link active" href="#challenge">Challenge</a>
 				</li>
-				{% if solves == None %}
-				{% else %}
-					<li class="nav-item">
-						<a class="nav-link challenge-solves" href="#solves">
-							{{ solves }} {% if solves > 1 %}Solves{% else %}Solves{% endif %}
-						</a>
-					</li>
-				{% endif %}
+
+				<li class="nav-item">
+					<a class="nav-link challenge-targets" href="#targets">
+						0 Targets
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#attacks" onClick="window.open('/plugins/ctfd-glowworm/attacks')">
+						Attacks
+					</a>
+				</li>
 			</ul>
 			<div role="tabpanel">
 				<div class="tab-content">
@@ -106,19 +109,17 @@
 							</div>
 						</div>
 					</div>
-					<div role="tabpanel" class="tab-pane fade" id="solves">
+					<div role="tabpanel" class="tab-pane fade" id="targets">
 						<div class="row">
 							<div class="col-md-12">
 								<table class="table table-striped text-center">
 									<thead>
 									<tr>
-										<td><b>Name</b>
-										</td>
-										<td><b>Date</b>
+										<td><b>Targets</b>
 										</td>
 									</tr>
 									</thead>
-									<tbody id="challenge-solves-names">
+									<tbody id="challenge-targets-lists">
 									</tbody>
 								</table>
 							</div>
