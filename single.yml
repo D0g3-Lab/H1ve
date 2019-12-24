@@ -16,7 +16,7 @@ services:
       - UPLOAD_FOLDER=/var/uploads
       - DATABASE_URL=mysql+pymysql://root:ctfd@db/ctfd
       - REDIS_URL=redis://cache:6379
-      - WORKERS=3
+      - WORKERS=1
       - LOG_FOLDER=/var/log/CTFd
       - ACCESS_LOG=/var/log/CTFd/access.log
       - ERROR_LOG=/var/log/CTFd/error.log
@@ -96,13 +96,13 @@ networks:
     internal:
         internal: true
     frp:
-      name: "h1ve-frp"
+      name: "h1ve_frp"
       driver: bridge
       ipam:
         config:
           - subnet: 10.1.0.0/16
     frp_containers:
-        name: "h1ve-frp_containers"
+        name: "h1ve_frp_containers"
         driver: bridge
         ipam:
           config:

@@ -20,4 +20,4 @@ networks:
     # 配置docker network
     net: 
       external: 
-         name: ctfd_frp_containers
+         name: h1ve_frp_containers

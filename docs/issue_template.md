@@ -1,4 +1,4 @@
-<!- 
+<!-- 
 为了方便我们能更好的复现和修复BUG，请遵从下面的规范描述您的问题
 In order to help us recurrence and fix bugs, please follow issue-rules as follow
 -->
