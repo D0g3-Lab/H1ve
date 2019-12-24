@@ -1,3 +1,7 @@
+1.0.7 / 2019-12-24
+=================
+
+
 1.0.6 / 2019-12-23
 =================
 
@@ -6,6 +10,7 @@
 * Add two icons and change some codes to adapt `CTFd-Glowworm` plugin
 * Change Dockerfile to an exist base image
 * Fix bugs when running with `CTFd-Glowworm` plugin
+* Fix jsonify decimal type data error
 
 1.0.5 / 2019-12-21
 =================
