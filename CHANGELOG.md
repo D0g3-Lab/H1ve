@@ -1,6 +1,20 @@
+1.0.8 / 2019-12-26
+=================
+
+* Add error tips when using `CTFd-Owl` plugin
+
+1.0.8 / 2019-12-25
+=================
+
+* Change `H1ve-theme` index content into admin page setting with route `index`
+
 1.0.7 / 2019-12-24
 =================
 
+* Fix scheduled job repeat working
+* Add targets and attack-logs message for view.html in `CTFd-Glowworm`
+* Add README for `CTFd-Glowworm` plugin
+* Uniform network name standard
 
 1.0.6 / 2019-12-23
 =================

@@ -1,6 +1,6 @@
 ![](./docs/img/hive-logo.jpg)
 ====
-[![issues](https://img.shields.io/github/issues/D0g3-Lab/H1ve)]() [![forks](https://img.shields.io/github/forks/D0g3-Lab/H1ve)]() [![stars](https://img.shields.io/github/stars/D0g3-Lab/H1ve)]() [![license](https://img.shields.io/github/license/D0g3-Lab/H1ve)]()
+[![issues](https://img.shields.io/github/issues/D0g3-Lab/H1ve)](https://github.com/D0g3-Lab/H1ve/issues) [![forks](https://img.shields.io/github/forks/D0g3-Lab/H1ve)]() [![stars](https://img.shields.io/github/stars/D0g3-Lab/H1ve)]() [![license](https://img.shields.io/github/license/D0g3-Lab/H1ve)]()
 
 ## What is H1ve
 An **Easy** / **Quick** / **Cheap** Integrated Platform
@@ -9,8 +9,6 @@ H1ve是一款自研CTF平台，同时具备解题、攻防对抗模式。其中�
 
 ![](./docs/img/H1ve-Demo-AWD_shrink.png)
 
-该作品随着[安洵杯](https://mp.weixin.qq.com/s/R9u4GFlf_KKt2k0HBwKl4Q)比赛进程，逐步开源，敬请期待。
-
 ## How to use
 
 ```bash
@@ -18,7 +16,7 @@ git clone https://github.com/D0g3-Lab/H1ve.git
 cd H1ve
 ```
 
-### Single Mode
+### Single Mode (Recommended)
 
 ```bash
 docker-compose -f single.yml up
@@ -34,7 +32,7 @@ docker-compose -f single-nginx.yml up
 
 [CTFd-Owl](https://github.com/D0g3-Lab/H1ve/CTFd/plugins/ctfd-owl)
 
-[CTFd-Glowworm (Not open source yet)]()
+[CTFd-Glowworm](https://github.com/D0g3-Lab/H1ve/CTFd/plugins/ctfd_glowworm)
 
 
 ## Architecture
@@ -43,7 +41,9 @@ docker-compose -f single-nginx.yml up
 ## Open Source Schedule
 
 - [x] [解题赛CTFd版](https://github.com/D0g3-Lab/H1ve/CTFd/plugins/ctfd-owl)
-- [ ] 攻防对抗赛CTFd版（预计2019/12/9）
+- [x] [攻防对抗赛CTFd版](https://github.com/D0g3-Lab/H1ve/CTFd/plugins/ctfd_glowworm)
+- [ ] UI改版（前后端分离）
+- [ ] 大屏实时战况页面（待定）
 - [ ] 一体化自研版（待定）
 - [ ] 银河麒麟版（待定）
 
@@ -66,11 +66,13 @@ https://ctf.dao.ge (备用)
 
 基于CTFd进行二次开发，在保留CTFd稳定性的情况下，提供优化版前端界面，队伍隔离容器，动态Flag机制。
 
-### 攻防对抗赛CTFd版（暂未开源）
+### 攻防对抗赛CTFd版
 
 **AWD Challenge** 
 
 ![](./docs/img/H1ve-Demo-AWD_shrink.png)
+
+![](./docs/img/H1ve-Demo-AWD-Scoreboard_shrink.png)
 
 ### 一体化自研版
 
