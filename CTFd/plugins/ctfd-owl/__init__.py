@@ -120,44 +120,47 @@ def load(app):
     @owl_blueprint.route('/container', methods=['GET'])
     @authed_only
     def list_container():
-        user_id = get_mode()
-        challenge_id = request.args.get('challenge_id')
-        ControlUtil.check_challenge(challenge_id, user_id)
-        data = ControlUtil.get_container(user_id=user_id)
-        configs = DBUtils.get_all_configs()
-        remain_time = int(configs.get("docker_max_renew_count"))
-        domain = configs.get('frp_http_domain_suffix', "")
-        if data is not None:
-            if int(data.challenge_id) != int(challenge_id):
-                return jsonify({})
-            dynamic_docker_challenge = DynamicCheckChallenge.query \
-                .filter(DynamicCheckChallenge.id == data.challenge_id) \
-                .first_or_404()
-            lan_domain = str(user_id) + "-" + data.docker_id
+        try:
+            user_id = get_mode()
+            challenge_id = request.args.get('challenge_id')
+            ControlUtil.check_challenge(challenge_id, user_id)
+            data = ControlUtil.get_container(user_id=user_id)
+            configs = DBUtils.get_all_configs()
+            remain_time = int(configs.get("docker_max_renew_count"))
+            domain = configs.get('frp_http_domain_suffix', "")
+            if data is not None:
+                if int(data.challenge_id) != int(challenge_id):
+                    return jsonify({})
+                dynamic_docker_challenge = DynamicCheckChallenge.query \
+                    .filter(DynamicCheckChallenge.id == data.challenge_id) \
+                    .first_or_404()
+                lan_domain = str(user_id) + "-" + data.docker_id
 
-            if dynamic_docker_challenge.deployment == "single":
-                return jsonify({'success': True, 'type': 'redirect', 'ip': configs.get('frp_direct_ip_address', ""),
-                                'port': data.port,
-                                'remaining_time': remain_time - (datetime.datetime.utcnow() - data.start_time).seconds,
-                                'lan_domain': lan_domain})
-            else:
-                if dynamic_docker_challenge.redirect_type == "http":
-                    if int(configs.get('frp_http_port', "80")) == 80:
-                        return jsonify({'success': True, 'type': 'http', 'domain': data.docker_id + "." + domain,
-                                           'remaining_time': remain_time - (datetime.datetime.utcnow() - data.start_time).seconds,
-                                           'lan_domain': lan_domain})
-                    else:
-                        return jsonify({'success': True, 'type': 'http',
-                                           'domain': data.docker_id + "." + domain + ":" + configs.get('frp_http_port', "80"),
-                                           'remaining_time': remain_time - (datetime.datetime.utcnow() - data.start_time).seconds,
-                                           'lan_domain': lan_domain})
-                else:
+                if dynamic_docker_challenge.deployment == "single":
                     return jsonify({'success': True, 'type': 'redirect', 'ip': configs.get('frp_direct_ip_address', ""),
-                                       'port': data.port,
-                                       'remaining_time': remain_time - (datetime.datetime.utcnow() - data.start_time).seconds,
-                                       'lan_domain': lan_domain})
-        else:
-            return jsonify({'success': True})
+                                    'port': data.port,
+                                    'remaining_time': remain_time - (datetime.datetime.utcnow() - data.start_time).seconds,
+                                    'lan_domain': lan_domain})
+                else:
+                    if dynamic_docker_challenge.redirect_type == "http":
+                        if int(configs.get('frp_http_port', "80")) == 80:
+                            return jsonify({'success': True, 'type': 'http', 'domain': data.docker_id + "." + domain,
+                                               'remaining_time': remain_time - (datetime.datetime.utcnow() - data.start_time).seconds,
+                                               'lan_domain': lan_domain})
+                        else:
+                            return jsonify({'success': True, 'type': 'http',
+                                               'domain': data.docker_id + "." + domain + ":" + configs.get('frp_http_port', "80"),
+                                               'remaining_time': remain_time - (datetime.datetime.utcnow() - data.start_time).seconds,
+                                               'lan_domain': lan_domain})
+                    else:
+                        return jsonify({'success': True, 'type': 'redirect', 'ip': configs.get('frp_direct_ip_address', ""),
+                                           'port': data.port,
+                                           'remaining_time': remain_time - (datetime.datetime.utcnow() - data.start_time).seconds,
+                                           'lan_domain': lan_domain})
+            else:
+                return jsonify({'success': True})
+        except Exception as e:
+            return jsonify({'success': False, 'msg': str(e)})
 
     @owl_blueprint.route('/container', methods=['POST'])
     @authed_only
