@@ -183,12 +183,14 @@ def load(app):
             dynamic_docker_challenge = DynamicCheckChallenge.query \
                 .filter(DynamicCheckChallenge.id == challenge_id) \
                 .first_or_404()
-
-            if dynamic_docker_challenge.redirect_type == "http":
-                ControlUtil.new_container(user_id=user_id, challenge_id=challenge_id)
-            else:
-                ControlUtil.new_container(user_id=user_id, challenge_id=challenge_id)
-            return jsonify({'success': True})
+            try:
+                result = ControlUtil.new_container(user_id=user_id, challenge_id=challenge_id)
+                if isinstance(result, bool):
+                    return jsonify({'success': True})
+                else:
+                    return jsonify({'success': False, 'msg': str(result)})
+            except Exception as e:
+                return jsonify({'success': True, 'msg':'Failed when launch instance, please contact with the admin.'})
 
     @owl_blueprint.route('/container', methods=['DELETE'])
     @authed_only
@@ -201,7 +203,7 @@ def load(app):
         if ControlUtil.destroy_container(user_id):
             return jsonify({'success': True})
         else:
-            return jsonify({'success': False, 'msg': 'Failed when destroy instance, please contact admin!'})
+            return jsonify({'success': False, 'msg': 'Failed when destroy instance, please contact with the admin!'})
 
     @owl_blueprint.route('/container', methods=['PATCH'])
     @authed_only

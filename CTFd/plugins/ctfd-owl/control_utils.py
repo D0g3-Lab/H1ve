@@ -11,11 +11,11 @@ class ControlUtil:
     @staticmethod
     def new_container(user_id, challenge_id):
         rq = DockerUtils.up_docker_compose(user_id=user_id, challenge_id=challenge_id)
-        if rq != False:
+        if isinstance(rq, tuple):
             DBUtils.new_container(user_id, challenge_id, flag=rq[2], port=rq[1], docker_id=rq[0], ip=rq[3])
             return True
         else:
-            return False
+            return rq
 
 
     @staticmethod
