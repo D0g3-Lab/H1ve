@@ -24,16 +24,17 @@ class DockerUtils:
 
         try:
             for index in counts:
-                if index.type == "admin":
-                    pass
-                else:
-                    teamDir = os.path.join(basePath, platform_name, 'team' + str(index.id))
-                    print(teamDir)
-                    if (os.path.exists(platformDir) == False):
-                        os.mkdir(platformDir)
-                        os.mkdir(teamDir)
-                    elif (os.path.exists(teamDir) == False):
-                        os.mkdir(teamDir)
+                if not isinstance(index, Teams):
+                    if index.type == "admin":
+                        pass
+
+                teamDir = os.path.join(basePath, platform_name, 'team' + str(index.id))
+                print(teamDir)
+                if (os.path.exists(platformDir) == False):
+                    os.mkdir(platformDir)
+                    os.mkdir(teamDir)
+                elif (os.path.exists(teamDir) == False):
+                    os.mkdir(teamDir)
             return True
         except Exception as e:
             return False
@@ -54,11 +55,13 @@ class DockerUtils:
                     if mode == "users":
                         victim = Users.query.filter_by(id=index.user_id).first()
                         victim_name = victim.name
+                        victim_id = victim.id
                         team_id = victim.team_id if victim.team_id else None
                     else:
                         victim = None
                         team = Teams.query.filter_by(id=index.user_id).first()
                         team_id = team.id
+                        victim_id = None
                         victim_name = team.name
 
                     check_file = os.path.join(basePath, challenge.dirname, "conf", "check.py")
@@ -73,9 +76,9 @@ class DockerUtils:
                     else:
                         msg = index.docker_id + " seems down."
                         check_log = GlowwormCheckLog(
-                            user_id=victim.id,
+                            user_id=victim_id,
                             team_id=team_id,
-                            victim_user_id=victim.id,
+                            victim_user_id=victim_id,
                             victim_team_id=team_id,
                             challenge_id=challenge.id,
                             ip="127.0.0.1",
@@ -84,7 +87,7 @@ class DockerUtils:
                         check = GlowwormAttacks(
                             attack_id=None,
                             attack_name=None,
-                            victim_id=victim.id,
+                            victim_id=victim_id,
                             victim_name=victim_name,
                             docker_id=index.docker_id,
                             envname=index.docker_id.split("_", 1)[1],
@@ -322,7 +325,7 @@ fi
                 db.session.add(instance)
                 db.session.commit()
                 command = """#!/bin/sh
-docker run -tid --restart=on-failure:10 --privileged --name %s --cpus=%s -m %s -v "%s":"%s" -p %s:%s -p %s:%s --network h1ve-frp_containers %s "/conf/service.sh"
+docker run -tid --restart=on-failure:10 --privileged --name %s --cpus=%s -m %s -v "%s":"%s" -p %s:%s -p %s:%s --network h1ve_frp_containers %s "/conf/service.sh"
 """ % ( name, cpu_limit, memory_limit, confPath, "/conf", insert_service_port, env_port, insert_ssh_port, "22", dirname)
                 print(command)
                 with open(os.path.join(confPath, "docker.sh"), 'w') as f:
