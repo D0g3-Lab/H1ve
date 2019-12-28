@@ -32,9 +32,9 @@ Know more on the [wiki](https://github.com/D0g3-Lab/H1ve/wiki)
 
 ### Plugins Settings
 
-[CTFd-Owl](https://github.com/D0g3-Lab/H1ve/CTFd/plugins/ctfd-owl)
+[CTFd-Owl](https://github.com/D0g3-Lab/H1ve/tree/master/CTFd/plugins/ctfd-owl)
 
-[CTFd-Glowworm](https://github.com/D0g3-Lab/H1ve/CTFd/plugins/ctfd_glowworm)
+[CTFd-Glowworm](https://github.com/D0g3-Lab/H1ve/tree/master/CTFd/plugins/ctfd_glowworm)
 
 
 ## Architecture
@@ -42,8 +42,8 @@ Know more on the [wiki](https://github.com/D0g3-Lab/H1ve/wiki)
 
 ## Open Source Schedule
 
-- [x] [解题赛CTFd版](https://github.com/D0g3-Lab/H1ve/CTFd/plugins/ctfd-owl)
-- [x] [攻防对抗赛CTFd版](https://github.com/D0g3-Lab/H1ve/CTFd/plugins/ctfd_glowworm)
+- [x] [解题赛CTFd版](https://github.com/D0g3-Lab/H1ve/tree/master/CTFd/plugins/ctfd-owl)
+- [x] [攻防对抗赛CTFd版](https://github.com/D0g3-Lab/H1ve/tree/master/CTFd/plugins/ctfd_glowworm)
 - [ ] UI改版（前后端分离）
 - [ ] 大屏实时战况页面（待定）
 - [ ] 一体化自研版（待定）
