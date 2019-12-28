@@ -1,44 +1,34 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="section section-hero" id="home" style="background-image: url('{{ url_for('views.themes', path='img/bg.jpg') }}'); background-position: 10% 50%">
-        <div class="section-inner">
-            <div class="table-container-outer container">
-                <div class="table-container-inner">
-                    <div data-0="transform[swing]:translateY(0px);opacity[swing]:1" data-250="transform[swing]:translateY(-50px);opacity[swing]:0">
-                    {% if get_ctf_logo() %}
-                        <img class="img-responsive ctf_logo" src="{{ url_for('views.files', path=get_ctf_logo()) }}" height="150px" width="150px" alt="{{ get_ctf_name() }}">
-                    </div>
-                    {% else %}    
-                        <img class="img-responsive ctf_logo" src="{{ url_for('views.themes', path='img/h1ve.png') }}" height="150px" width="150px" alt="{{ get_ctf_name() }}">
-                    {% endif %}
-                    <h1 class="hero-header" data-150="transform[swing]:translateX(0px);opacity[swing]:1" data-550="transform[swing]:translateX(-25px);opacity[swing]:0">D0g3 <strong class="main-color">Lab</strong></h1>
-                    <h2 class="hero-subheader" data-200="transform[swing]:translateX(0px);opacity[swing]:1" data-500="transform[swing]:translateX(25px);opacity[swing]:0">CTF <strong class="main-color">Online</strong></h2>
-                    <div data-250="transform[swing]:translateY(0px);opacity[swing]:1" data-550="transform[swing]:translateY(-15px);opacity[swing]:0">
-                        <div class="divider">//</div>
-                    </div>
-                    <div data-350="transform[swing]:translateY(0px);opacity[swing]:1" data-650="transform[swing]:translateY(-15px);opacity[swing]:0">
-                        <p class="">收集各类自创/大型CTF比赛赛题，提供容器化专属题目环境，供广大CTF爱好者学习。</p>
-                        <p class="">如有侵权，或题目问题请电联<a href="mailto:bot@d0g3.cn">bot@d0g3.cn</a></p>
-                    </div>
-                    <div>
-                        <p>
-                            
-                        </p>
-                    </div>
-                    <p> &copy; 2019 <a href="https://www.d0g3.cn">D0g3</a> | 道之若极,行必有格 | Power By <a href="https://github.com/D0g3-Lab/H1ve/">H1ve</a></p>
+<div class="section section-hero" id="home" style="background-image: url('/themes/H1ve-theme/static/img/bg.jpg'); background-position: 10% 50%">
+    <div class="section-inner">
+        <div class="table-container-outer container">
+            <div class="table-container-inner">
+                <div data-0="transform[swing]:translateY(0px);opacity[swing]:1" data-250="transform[swing]:translateY(-50px);opacity[swing]:0">
+                    <img class="img-responsive ctf_logo" src="/themes/H1ve-theme/static/img/h1ve.png" height="150px" width="150px" alt="H1ve-Logo">
+                <h1 class="hero-header" data-150="transform[swing]:translateX(0px);opacity[swing]:1" data-550="transform[swing]:translateX(-25px);opacity[swing]:0">D0g3 <strong class="main-color">Lab</strong></h1>
+                <h2 class="hero-subheader" data-200="transform[swing]:translateX(0px);opacity[swing]:1" data-500="transform[swing]:translateX(25px);opacity[swing]:0">CTF <strong class="main-color">Online</strong></h2>
+                <div data-250="transform[swing]:translateY(0px);opacity[swing]:1" data-550="transform[swing]:translateY(-15px);opacity[swing]:0">
+                    <div class="divider">//</div>
                 </div>
-            </div>
-            <div class="scroll-icon visible-lg" data-600="opacity[swing]:1" data-850="opacity[swing]:0">
-                <span class="icon icon-basic-magic-mouse"></span>
-            </div>
+                <div data-350="transform[swing]:translateY(0px);opacity[swing]:1" data-650="transform[swing]:translateY(-15px);opacity[swing]:0">
+                    <p class="">收集各类自创/大型CTF比赛赛题，提供容器化专属题目环境，供广大CTF爱好者学习。</p>
+                    <p class="">如有侵权，或题目问题请电联<a href="mailto:bot@d0g3.cn">bot@d0g3.cn</a></p>
+                </div>
+                <div>
+                    <p>
 
+                    </p>
+                </div>
+                <p> &copy; 2019 <a href="https://www.d0g3.cn">D0g3</a> | 道之若极,行必有格 | Power By <a href="https://github.com/D0g3-Lab/H1ve/">H1ve</a></p>
+            </div>
         </div>
-        <div id="to-top" class="to-top">
-            <a href="#" class="To the top" title="To the top">
-                <i class="fa fa-angle-up"></i>
-            </a>
+        <div class="scroll-icon visible-lg" data-600="opacity[swing]:1" data-850="opacity[swing]:0">
+            <span class="icon icon-basic-magic-mouse"></span>
         </div>
     </div>
+    </div>
+</div>
 {% endblock %}
 {% block scripts %}
 {% endblock %}

@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+
+    {% block title %}
+        <title>这是一个的博客</title>
+    {% endblock %}
+
+    {% block meta %}
+        <meta charset="UTF-8">
+        <meta name="keywords" content="博客"/>
+        <meta name="description" content="满饮此杯"/>
+    {% endblock %}
+    <meta name="author" content=""/>
+    <meta name="baidu-site-verification" content="2HhDg1sekr"/>
+    <meta name="google-site-verification" content="gpXH5Aw-1dy2I5NHeRnNFS_P-PSA_d5TOJHn5bBPvSI"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" user-scalable="no"/>
+    <!--CSS-->
+    <link rel="shortcut icon" href="/static/images/favicon_.ico"/>
+    <script src="/static/js/jquery.2.1.4.min.js"></script>
+    <script src="/static/js/my.js"></script>
+    <script>
+        $("html").append("<div class='jiazai'><img src='/static/images/icon/loading.gif'/><span>正在加载中请等待...</span></div>")
+
+    </script>
+    <!--CSS-->
+    <link rel="stylesheet" href="/static/css/default.css"/>
+    <link rel="stylesheet" href="/static/css/public.css"/>
+    <link rel="stylesheet" href="/static/css/animation.css"/>
+
+    <link rel="stylesheet" type="text/css" href="/static/css/skin_1.css" title="qingxin"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/skin_2.css" title="jianyue"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/skin_3.css" title="qingshuang"/>
+    <link rel="stylesheet" href="/static/css/font-icon.css"/>
+    <link rel="stylesheet" href="/static/css/flexslider.css"/>
+    {% block css %}{% endblock %}
+    <!--JS-->
+
+    <script src="/static/js/superbg.min.js"></script>
+    <script src="/static/js/superbg-custom.js"></script>
+    <script src="/static/js/jquery.flexslider-min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.10.0/jquery.min.js"></script>
+    <script src="/static/js/album.js"></script>
+    <script src="/static/js/tooltip.js"></script>
+    <script src="/static/js/layer/layer.js"></script>
+    <script src="/static/js/checkform.js" charset="utf-8"></script>
+    <!--[if lte IE 8]>
+	<script>window.location.href='http://cdn.dmeng.net/upgrade-your-browser.html?referrer='+location.href;</script>
+    <![endif]-->
+
+</head>
+
+<body class="nobg">
+<!--导航开始-->
+{% include "blog/header.html" %}
+<!--导航结束-->
+
+
+<!--主题框架开始-->
+<div class="container">
+    <!--左侧开始-->
+    {% block content %}
+    {% endblock %}
+    <!--左侧结束-->
+
+
+    <!--=========右侧开始==========-->
+    {% include "blog/right.html" %}
+    <!--=========END右侧==========-->
+</div>
+<!--主题框架结束-->
+
+
+<!---底部开始-->
+{% include "blog/footer.html" %}
+<!---返回顶部-->
+
+<!---END 底部开始-->
+<script type="text/javascript">
+
+    $(function () {
+        var swiper = new Swiper('.swiper-container', {
+            nextButton: '.swiper-button-next',
+            prevButton: '.swiper-button-prev',
+            pagination: '.swiper-pagination',
+            paginationType: 'fraction',
+            centeredSlides: true,
+            autoplay: 5500,//自动播放时间
+            autoHeight: true //自动高度
+
+        });
+        //瀑布流
+        $('.su').jaliswall({item: '.su-li'});
+
+    });
+</script>
+<script>
+    // 主动提交链接到百度 start
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+    // end
+
+</script>
+
+{% block js %}{% endblock %}
+</body>
+</html>

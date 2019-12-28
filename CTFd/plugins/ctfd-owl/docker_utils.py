@@ -1,4 +1,4 @@
-import os, uuid, subprocess, logging, time
+import os, uuid, subprocess, logging, time, subprocess
 from .db_utils import DBUtils
 from .models import DynamicCheckChallenge, OwlContainers
 from CTFd.utils.logging import log
@@ -22,66 +22,65 @@ class DockerUtils:
 
     @staticmethod
     def up_docker_compose(user_id, challenge_id):
-        configs = DBUtils.get_all_configs()
-        basedir = os.path.dirname(__file__)
-        challenge = DynamicCheckChallenge.query.filter_by(id=challenge_id).first_or_404()
-        port = str(int(configs.get("frp_direct_port_minimum")) + int(user_id))
-        flag = DockerUtils.gen_flag()
-        socket = DockerUtils.get_socket()
-        sname = os.path.join(basedir, "source/" + challenge.dirname)
-        print(sname)
-        dirname = challenge.dirname.split("/")[1]
-        print(dirname)
-        name = "User{}_{}".format(user_id,dirname)
-        dname = os.path.join(basedir, "source/run/" + name)
-        command = "cp -r " + sname + " " + dname
-        print(command)
-        os.system(command)
-
-        # sed port
-        os.system("cd " + dname + " && echo '{0}' > flag && sed 's/9999/{1}/g' docker-compose.yml > run.yml".format(flag, port))
-        print("Flag: " + flag + " && Sed Success")
-
-        command = "cd " + dname + " && docker-compose \
--H={} -f run.yml up -d".format(socket)
-        print(command)
+        try:
+            configs = DBUtils.get_all_configs()
+            basedir = os.path.dirname(__file__)
+            challenge = DynamicCheckChallenge.query.filter_by(id=challenge_id).first_or_404()
+            port = str(int(configs.get("frp_direct_port_minimum")) + int(user_id))
+            flag = DockerUtils.gen_flag()
+            socket = DockerUtils.get_socket()
+            sname = os.path.join(basedir, "source/" + challenge.dirname)
+            dirname = challenge.dirname.split("/")[1]
+            name = "User{}_{}".format(user_id,dirname)
+            dname = os.path.join(basedir, "source/run/" + name)
+        except Exception as e:
+            return e
 
         try:
-            os.system(command)
-            docker_id = str(uuid.uuid3(uuid.NAMESPACE_DNS, name)).replace("-","")
-            msg = name + " up."
+            command = "cp -r {} {}".format(sname, dname)
+            process = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+            # sed port
+            command = "cd {} && echo '{}' > flag && sed 's/9999/{}/g' docker-compose.yml > run.yml".format(dname, flag, port)
+            process = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+            # up docker-compose
+            command = "cd " + dname + " && docker-compose -H={} -f run.yml up -d".format(socket)
+            process = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             log(
                 "owl",
-                "[{date}] {name} {msg}",
-                msg=msg,
+                '[{date}] {name} {msg}',
+                msg=name + " up."
             )
+            docker_id = str(uuid.uuid3(uuid.NAMESPACE_DNS, name)).replace("-", "")
             return docker_id, port, flag, challenge.redirect_type
-        except Exception as e:
-            # print(e)
-            msg = name + " up error." + str(e)
-            log(
-                "owl",
-                "[{date}] {name} {msg}",
-                msg=msg,
+        except subprocess.CalledProcessError as e:
+            log("owl",
+                'Stdout: {out}\nStderr: {err}',
+                out=e.stdout.decode(),
+                err=e.stderr.decode()
             )
-            return False
+            return e.stderr.decode()
 
 
     @staticmethod
     def down_docker_compose(user_id, challenge_id):
-        basedir = os.path.dirname(__file__)
-        socket = DockerUtils.get_socket()
-        challenge = DynamicCheckChallenge.query.filter_by(id=challenge_id).first_or_404()
-        dirname = challenge.dirname.split("/")[1]
-        name = "User{}_{}".format(user_id, dirname)
-        dname = os.path.join(basedir, "source/run/" + name)
-        command = "cd " + dname + " && docker-compose \
--H={} -f run.yml down".format(socket)
-        print(command)
+        try:
+            basedir = os.path.dirname(__file__)
+            socket = DockerUtils.get_socket()
+            challenge = DynamicCheckChallenge.query.filter_by(id=challenge_id).first_or_404()
+            dirname = challenge.dirname.split("/")[1]
+            name = "User{}_{}".format(user_id, dirname)
+            dname = os.path.join(basedir, "source/run/" + name)
+        except Exception as e:
+            return str(e)
 
         try:
-            os.system(command)
-            os.system("rm -rf " + dname)
+            command = "cd {} && docker-compose -H={} -f run.yml down".format(dname, socket)
+            process = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+            command = "rm -rf {}".format(dname)
+            process = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             msg = name + " down."
             log(
                 "owl",
@@ -89,14 +88,8 @@ class DockerUtils:
                 msg=msg,
             )
             return True
-        except Exception as e:
-            msg = name + " up." + str(e)
-            log(
-                "owl",
-                "[{date}] {name} {msg}",
-                msg=msg,
-            )
-            return False
+        except subprocess.CalledProcessError as e:
+            return str(e.stderr.decode())
 
     @staticmethod
     def remove_current_docker_container(user_id, is_retry=False):

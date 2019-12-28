@@ -1,0 +1,191 @@
+/* === RESET === */
+*, html, body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, label, fieldset, input, p, blockquote, th, td { margin: 0; padding: 0; }
+table { border-collapse: collapse; border-spacing: 0; }
+fieldset, img { border: 0 none; }
+address, caption, cite, code, dfn, em, strong, th, var { font-style: normal; font-weight: normal; }
+ol, ul, li { list-style: none outside none; }
+caption, th { text-align: left; }
+table p { display: inline; }
+h1, h2, h3, h4, h5, h6 { font-size: 100%; font-weight: normal; }
+q:before, q:after { content: ""; }
+a img { border: medium none; }
+img { border: medium none; }
+a { color: #696969; text-decoration: none; }
+p { color: #888888; font-size: 15px; font-weight: 400;  line-height: 20px; }
+strong { font-weight: bold; }
+
+.last { margin-right: 0 !important; }
+.fl {float: left}
+.fr {float: right}
+.no-margin { margin: 0!important; }
+.text-align-center { text-align: center;}
+.clearfix:after { clear: both; content: ""; display: block; height: 0; }
+.clearfix { display: inline-block; }
+.clearfix { display: block; }
+
+/* === CSS === */
+
+html {
+	height: 100%;
+	background-color: #86dbeb;
+	background: -webkit-linear-gradient(top, #c8f6ff 0%, #5fcbdf 80%, #00b3d4 100%); /* For Safari */
+	background: -o-linear-gradient(top, #c8f6ff 0%, #5fcbdf 80%, #00b3d4 100%); /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(top, #c8f6ff 0%, #5fcbdf 80%, #00b3d4 100%); /* For Firefox 3.6 to 15 */
+	background: linear-gradient(to top, #c8f6ff 0%, #5fcbdf 80%, #00b3d4 100%); /* Standard syntax */
+}
+
+body {
+	font-family: 'Ubuntu', sans-serif;
+	font-weight: 300;
+	overflow: hidden;
+}
+
+a {
+	text-decoration: none;
+	-webkit-transition: all .3s;
+	-moz-transition: all .3s;
+	transition: all .3s;
+}
+
+strong {
+	font-weight: 700;
+}
+
+.container {
+	position: absolute;
+	width: 100%;
+	height: 700px;
+	background: url(images/main-bg.png) center top no-repeat;
+
+	bottom: 0px;
+}
+
+.centerContent {
+	width: 960px;
+	margin: 0 auto;
+}
+
+/* === Airplane === */
+#plane {
+	display: block;
+	position: relative;
+	width: 900px;
+	height: 70px;
+	top: 120px;
+}
+
+#plane span {
+	float: left;
+}
+
+#plane .tail {
+	height: 70px;
+	background: url(images/tail.png) repeat-x;
+	padding: 26px 40px;
+	font-size: 18px;
+	font-style: italic;
+	color: #fff;
+}
+
+/* === Search === */
+.search {
+	position: relative;
+	display: block;
+	margin-top: 230px;
+	width: 100%;
+	height: 30px;
+}
+
+.searchbox {
+	width: 650px;
+	border: 1px solid #e5aa4b;
+	box-shadow: inset 0px 2px 2px #9e7534;
+	-webkit-border-radius: 50px;
+	-moz-border-radius: 50px;
+	border-radius: 50px;
+	padding: 7px 15px;
+}
+
+::-webkit-input-placeholder { 
+	color:#bfa379; 
+}
+::-moz-placeholder { 
+	color:#bfa379; 
+}
+:-ms-input-placeholder { 
+	color:#bfa379; 
+} 
+input:-moz-placeholder { 
+	color:#bfa379; 
+}
+
+form {
+	width: 100%;
+}
+
+input:focus {
+	outline: 0;
+	box-shadow: 0 0 6px #bc8a3c;
+}
+
+.searchbox-submit {
+	position: absolute;
+	cursor: pointer;
+	display: block;
+	border: none;
+	width: 16px;
+	height: 16px;
+	background: url(images/search.png) center no-repeat;
+	top: 8px;
+	left: 655px;
+}
+
+/* === Menu === */
+.menu {
+	width: 100%;
+	display: block;
+	margin-top: 240px;
+}
+
+.menu a {
+	font-size: 12px;
+	color: #8d7856;
+	font-weight: 300;
+	margin-right: 24px;
+	text-transform: uppercase;
+	transition: all .3s;
+}
+
+.menu a:hover {
+	color: #473a24;
+}
+
+/* === Footer === */
+.footer {
+	display: block;
+	margin-top: 50px;
+	color: #b38e53;
+	font-size: 12px;
+}
+
+/* === Social Icons === */
+.social a {
+	margin-right: 3px;
+	opacity: 0.7;
+    transition: opacity .5s ease-in-out;
+    -moz-transition: opacity .5s ease-in-out;
+    -webkit-transition: opacity .5s ease-in-out;
+}
+
+.social a:hover {
+	opacity: 1.0;
+    transition: opacity .3s ease-in-out;
+    -moz-transition: opacity .3s ease-in-out;
+    -webkit-transition: opacity .3s ease-in-out;
+}
+
+/* === Credits === */
+.credits {
+	float: left;
+	padding: 5px 0 0 30px;
+}

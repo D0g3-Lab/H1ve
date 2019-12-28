@@ -1,0 +1,88 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+	<div class="container">
+		<h1>CTFd Glowworm Configuration</h1>
+	</div>
+</div>
+<div class="container">
+	<div class="row">
+		<div class="col-md-3">
+			<ul class="nav nav-pills flex-column">
+				<li class="nav-item">
+					<a class="nav-link rounded-0 active" href="#competition" role="tab" data-toggle="tab">Competition Settings</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link rounded-0" href="/plugins/ctfd-glowworm/admin/environments">Environments Console</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link rounded-0" href="/plugins/ctfd-glowworm/admin/containers">Containers Console</a>
+				</li>
+			</ul>
+		</div>
+		<div class="col-md-9">
+			{% for error in errors %}
+				<div class="alert alert-danger alert-dismissable" role="alert">
+					<span class="sr-only">Error:</span>
+					{{ error }}
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+			{% endfor %}
+
+			<div class="tab-content">
+				{% include "configs/competition_settings.html" %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function update_configs(obj) {
+          var target = "/plugins/ctfd-glowworm/admin/settings";
+          var method = "PATCH";
+
+          var params = {};
+
+          Object.keys(obj).forEach(function(x) {
+            if (obj[x] === "true") {
+              params[x] = true;
+            } else if (obj[x] === "false") {
+              params[x] = false;
+            } else {
+              params[x] = obj[x];
+            }
+          });
+
+          params["mode"] = $("#set-deploy-select").find("option:selected").val();
+
+          CTFd.fetch(target, {
+            method: method,
+            credentials: "same-origin",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(params)
+          })
+            .then(function(response) {
+              return response.json();
+            })
+            .then(function(data) {
+              window.location.reload();
+            });
+        }
+
+        $(function() {
+          $(".config-section > form:not(.form-upload)").submit(function(e) {
+            e.preventDefault();
+            var obj = $(this).serializeJSON();
+            update_configs(obj);
+          });
+        });
+</script>
+{% endblock %}

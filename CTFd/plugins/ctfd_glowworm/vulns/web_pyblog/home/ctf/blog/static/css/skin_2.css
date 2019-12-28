@@ -1,0 +1,168 @@
+body {
+    background: 0 0;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: 100% 100%
+}
+
+html {
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -webkit-appearance: none
+}
+
+#color li, #comment-post button, #nav > ul > li span:hover, .archives h4, .backtop, .carousel-indicators li, .comment-tools, .face, .post-context button:hover, .search button, .ssearch input[type=submit], .tab_nav, .toggler, .tools, .totop, .zujian, a {
+    cursor: url(http://ofcf9jxzt.bkt.clouddn.com/django_blog/static/default.cur), auto
+}
+
+body {
+    cursor: url(http://ofcf9jxzt.bkt.clouddn.com/django_blog/static/default.cur), auto
+}
+
+body:after {
+    content: '';
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 1);
+    z-index: -1
+}
+
+i {
+    color: #555
+}
+
+input, textarea {
+    border: #ddd 1px solid;
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, .05);
+    background: rgba(255, 255, 255, .5)
+}
+
+input:focus, textarea:focus {
+    border: #09b597 1px solid;
+    box-shadow: 0 0 8px rgba(9, 181, 151, .7)
+}
+
+.orange-text {
+    color: #555
+}
+
+.blue-text, .comment-line ul li, .pagination ul > li > a, .pagination ul > li > span, .re-info span a {
+    color: #09b597
+}
+
+.bg-color {
+    background: rgba(255, 255, 255, .5)
+}
+
+.index-title {
+    color: #09b597;
+    border-bottom: 1px solid #ddd
+}
+
+.index-title small {
+    color: #bcbcbc;
+    margin-left: 5px;
+    font-size: 12px
+}
+
+header {
+    background: rgba(255, 255, 255, .8) repeat-x;
+    box-shadow: 3px 3px 5px #ccc;
+    background-size: 100% 100%
+}
+
+.top nav > ul > li > a {
+    color: #555
+}
+
+.mynav > ul > li > a:hover {
+    background: #09b597;
+    background-size: 100%
+}
+
+.mynav > ul > li > a:hover {
+    color: #fff
+}
+
+.nav-active {
+    background: #09b597
+}
+
+.nav-active a {
+    color: #fff !important
+}
+
+.mynav > ul > li .el-caret-down {
+    color: #555
+}
+
+.drop-nav li a {
+    color: #555 !important
+}
+
+.arclist > ul > li, .comment-area > ul > li, .post-line, .shuos-area {
+    border-bottom: 1px solid #ddd
+}
+
+.arc-title {
+    border: none
+}
+
+.arrow_box {
+    position: relative;
+    background: rgba(255, 255, 255, .6);
+    border: 1px solid #ddd
+}
+
+.arrow_box:after, .arrow_box:before {
+    right: 100%;
+    top: 30px;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none
+}
+
+.arrow_box:after {
+    border-color: rgba(255, 255, 255, 0);
+    border-right-color: #fff;
+    border-width: 14px;
+    margin-top: -14px
+}
+
+.arrow_box:before {
+    border-color: rgba(255, 255, 255, 0);
+    border-right-color: #ddd;
+    border-width: 15px;
+    margin-top: -15px
+}
+
+.blog_links li, .pagination ul > li > a, .pagination ul > li > span, .pic-btn .pull-right, .return-xc a, .wall-li {
+    border: 1px solid #ccc
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    display: block
+}
+
+audio, canvas, video {
+    display: inline-block
+}
+
+div#tooltip {
+    background: rgba(0, 0, 0, .8)
+}
+
+div#tooltip p {
+    color: #fff
+}
+
+div#tooltip p:after {
+    border-bottom: 8px solid rgba(0, 0, 0, .8)
+}

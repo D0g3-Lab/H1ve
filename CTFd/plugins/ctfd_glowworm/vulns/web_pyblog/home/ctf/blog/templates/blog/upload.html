@@ -1,0 +1,13 @@
+{% extends "blog/base.html" %}
+{% load custom_filter %}
+
+{% block title %}
+    <title>{{ article.title }} - 测试页面</title>
+{% endblock %}
+{% block content %}
+请按照模板格式进行上传文件。<a href="/static/tpl/moban.yaml">点击下载模板</a>
+<form action="/blog/api/uploadarticle/" method="post" enctype="multipart/form-data">
+    <input type="file" name="fafafa">
+    <input type="submit">
+</form>
+{% endblock %}

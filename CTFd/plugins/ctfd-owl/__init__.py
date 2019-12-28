@@ -88,6 +88,7 @@ def load(app):
     @admins_only
     # list alive containers
     def admin_list_containers():
+        mode = utils.get_config("user_mode")
         configs = DBUtils.get_all_configs()
         page = abs(request.args.get("page", 1, type=int))
         results_per_page = 50
@@ -99,7 +100,7 @@ def load(app):
 
         pages = int(count / results_per_page) + (count % results_per_page > 0)
         return render_template("containers.html", containers=containers, pages=pages, curr_page=page,
-                               curr_page_start=page_start, configs=configs)
+                               curr_page_start=page_start, configs=configs, mode=mode)
 
     @owl_blueprint.route("/admin/containers", methods=['PATCH'])
     @admins_only
@@ -120,75 +121,82 @@ def load(app):
     @owl_blueprint.route('/container', methods=['GET'])
     @authed_only
     def list_container():
-        user_id = get_mode()
-        challenge_id = request.args.get('challenge_id')
-        ControlUtil.check_challenge(challenge_id, user_id)
-        data = ControlUtil.get_container(user_id=user_id)
-        configs = DBUtils.get_all_configs()
-        remain_time = int(configs.get("docker_max_renew_count"))
-        domain = configs.get('frp_http_domain_suffix', "")
-        if data is not None:
-            if int(data.challenge_id) != int(challenge_id):
-                return jsonify({})
-            dynamic_docker_challenge = DynamicCheckChallenge.query \
-                .filter(DynamicCheckChallenge.id == data.challenge_id) \
-                .first_or_404()
-            lan_domain = str(user_id) + "-" + data.docker_id
+        try:
+            user_id = get_mode()
+            challenge_id = request.args.get('challenge_id')
+            ControlUtil.check_challenge(challenge_id, user_id)
+            data = ControlUtil.get_container(user_id=user_id)
+            configs = DBUtils.get_all_configs()
+            domain = configs.get('frp_http_domain_suffix', "")
+            if data is not None:
+                if int(data.challenge_id) != int(challenge_id):
+                    return jsonify({})
+                dynamic_docker_challenge = DynamicCheckChallenge.query \
+                    .filter(DynamicCheckChallenge.id == data.challenge_id) \
+                    .first_or_404()
+                lan_domain = str(user_id) + "-" + data.docker_id
 
-            if dynamic_docker_challenge.deployment == "single":
-                return jsonify({'success': True, 'type': 'redirect', 'ip': configs.get('frp_direct_ip_address', ""),
-                                'port': data.port,
-                                'remaining_time': remain_time - (datetime.datetime.utcnow() - data.start_time).seconds,
-                                'lan_domain': lan_domain})
-            else:
-                if dynamic_docker_challenge.redirect_type == "http":
-                    if int(configs.get('frp_http_port', "80")) == 80:
-                        return jsonify({'success': True, 'type': 'http', 'domain': data.docker_id + "." + domain,
-                                           'remaining_time': remain_time - (datetime.datetime.utcnow() - data.start_time).seconds,
-                                           'lan_domain': lan_domain})
-                    else:
-                        return jsonify({'success': True, 'type': 'http',
-                                           'domain': data.docker_id + "." + domain + ":" + configs.get('frp_http_port', "80"),
-                                           'remaining_time': remain_time - (datetime.datetime.utcnow() - data.start_time).seconds,
-                                           'lan_domain': lan_domain})
-                else:
+                if dynamic_docker_challenge.deployment == "single":
                     return jsonify({'success': True, 'type': 'redirect', 'ip': configs.get('frp_direct_ip_address', ""),
-                                       'port': data.port,
-                                       'remaining_time': remain_time - (datetime.datetime.utcnow() - data.start_time).seconds,
-                                       'lan_domain': lan_domain})
-        else:
-            return jsonify({'success': True})
+                                    'port': data.port,
+                                    'remaining_time': 3600 - (datetime.datetime.utcnow() - data.start_time).seconds,
+                                    'lan_domain': lan_domain})
+                else:
+                    if dynamic_docker_challenge.redirect_type == "http":
+                        if int(configs.get('frp_http_port', "80")) == 80:
+                            return jsonify({'success': True, 'type': 'http', 'domain': data.docker_id + "." + domain,
+                                               'remaining_time': 3600 - (datetime.datetime.utcnow() - data.start_time).seconds,
+                                               'lan_domain': lan_domain})
+                        else:
+                            return jsonify({'success': True, 'type': 'http',
+                                               'domain': data.docker_id + "." + domain + ":" + configs.get('frp_http_port', "80"),
+                                               'remaining_time': 3600 - (datetime.datetime.utcnow() - data.start_time).seconds,
+                                               'lan_domain': lan_domain})
+                    else:
+                        return jsonify({'success': True, 'type': 'redirect', 'ip': configs.get('frp_direct_ip_address', ""),
+                                           'port': data.port,
+                                           'remaining_time': 3600 - (datetime.datetime.utcnow() - data.start_time).seconds,
+                                           'lan_domain': lan_domain})
+            else:
+                return jsonify({'success': True})
+        except Exception as e:
+            return jsonify({'success': False, 'msg': str(e)})
 
     @owl_blueprint.route('/container', methods=['POST'])
     @authed_only
     def new_container():
-        user_id = get_mode()
+        try:
+            user_id = get_mode()
 
-        if ControlUtil.frequency_limit():
-            return jsonify({'success': False, 'msg': 'Frequency limit, You should wait at least 1 min.'})
-        # check whether exist container before
-        existContainer = ControlUtil.get_container(user_id)
-        if existContainer:
-            return jsonify({'success': False, 'msg': 'You have boot {} before.'.format(existContainer.challenge.name)})
-        else:
-            challenge_id = request.args.get('challenge_id')
-            ControlUtil.check_challenge(challenge_id, user_id)
-            configs = DBUtils.get_all_configs()
-            current_count = DBUtils.get_all_alive_container_count()
-            # print(configs.get("docker_max_container_count"))
-            if configs.get("docker_max_container_count") != "None":
-                if int(configs.get("docker_max_container_count")) <= int(current_count):
-                    return jsonify({'success': False, 'msg': 'Max container count exceed.'})
-
-            dynamic_docker_challenge = DynamicCheckChallenge.query \
-                .filter(DynamicCheckChallenge.id == challenge_id) \
-                .first_or_404()
-
-            if dynamic_docker_challenge.redirect_type == "http":
-                ControlUtil.new_container(user_id=user_id, challenge_id=challenge_id)
+            if ControlUtil.frequency_limit():
+                return jsonify({'success': False, 'msg': 'Frequency limit, You should wait at least 1 min.'})
+            # check whether exist container before
+            existContainer = ControlUtil.get_container(user_id)
+            if existContainer:
+                return jsonify({'success': False, 'msg': 'You have boot {} before.'.format(existContainer.challenge.name)})
             else:
-                ControlUtil.new_container(user_id=user_id, challenge_id=challenge_id)
-            return jsonify({'success': True})
+                challenge_id = request.args.get('challenge_id')
+                ControlUtil.check_challenge(challenge_id, user_id)
+                configs = DBUtils.get_all_configs()
+                current_count = DBUtils.get_all_alive_container_count()
+                # print(configs.get("docker_max_container_count"))
+                if configs.get("docker_max_container_count") != "None":
+                    if int(configs.get("docker_max_container_count")) <= int(current_count):
+                        return jsonify({'success': False, 'msg': 'Max container count exceed.'})
+
+                dynamic_docker_challenge = DynamicCheckChallenge.query \
+                    .filter(DynamicCheckChallenge.id == challenge_id) \
+                    .first_or_404()
+                try:
+                    result = ControlUtil.new_container(user_id=user_id, challenge_id=challenge_id)
+                    if isinstance(result, bool):
+                        return jsonify({'success': True})
+                    else:
+                        return jsonify({'success': False, 'msg': str(result)})
+                except Exception as e:
+                    return jsonify({'success': True, 'msg':'Failed when launch instance, please contact with the admin.'})
+        except Exception as e:
+            return jsonify({'success': False, 'msg': str(e)})
 
     @owl_blueprint.route('/container', methods=['DELETE'])
     @authed_only
@@ -201,13 +209,12 @@ def load(app):
         if ControlUtil.destroy_container(user_id):
             return jsonify({'success': True})
         else:
-            return jsonify({'success': False, 'msg': 'Failed when destroy instance, please contact admin!'})
+            return jsonify({'success': False, 'msg': 'Failed when destroy instance, please contact with the admin!'})
 
     @owl_blueprint.route('/container', methods=['PATCH'])
     @authed_only
     def renew_container():
-        user_id = current_user.get_current_user().id
-
+        user_id = get_mode()
         if ControlUtil.frequency_limit():
             return jsonify({'success': False, 'msg': 'Frequency limit, You should wait at least 1 min.'})
 

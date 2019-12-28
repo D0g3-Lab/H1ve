@@ -1,0 +1,180 @@
+
+
+/* Reset CSS */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+}
+body {
+		background:url(../images/bg/images/blueprint.png)repeat;
+	color: #000;
+	font: 14px Arial;
+	margin: 0 auto;
+	padding: 0;
+	position: relative;
+	
+}
+h1{ font-size:28px;}
+h2{ font-size:26px;}
+h3{ font-size:18px;}
+h4{ font-size:16px;}
+h5{ font-size:14px;}
+h6{ font-size:12px;}
+h1,h2,h3,h4,h5,h6{ color:#563D64;}
+small{ font-size:10px;}
+b, strong{ font-weight:bold;}
+a{ text-decoration: none; }
+a:hover{ text-decoration: underline; }
+.left { float:left; }
+.right { float:right; }
+.alignleft { float: left; margin-right: 15px; }
+.alignright { float: right; margin-left: 15px; }
+.clearfix:after,
+form:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+.container { margin: 8% auto; position: relative; width:100%;max-width:450px; }
+
+#content {
+	background: rgba(255,255,255,1) ;
+	
+	border:1px solid #ccc;
+	box-shadow: 0 0 20px #ccc;
+	margin: 0 auto;
+	padding: 25px 0 0;
+	position: relative;
+	text-align: center;
+	
+	width:100%;max-width:680px;
+}
+#content h1 {
+	color: #333;font-family:'Microsoft Yahei';
+	font: bold 25px;
+	
+	line-height: 20px;
+	margin: 10px 0 10px;
+}
+
+#content h5{padding:1em 0;color:red;}
+#content form { margin: 0 20px; position: relative }
+#content form input[type="text"],
+#content form input[type="password"] {
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-ms-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
+	
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-ms-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+	background:rgba(255,255,255,0.6); url(http://cssdeck.com/uploads/media/items/8/8bcLQqF.png) no-repeat;
+	border: 1px solid rgba(109,204,41,0.8);
+	color: #777;
+	font: 13px Helvetica, Arial, sans-serif;
+	margin: 0 0 10px;
+	padding: 15px 10px 15px 40px;
+	width: 80%;
+}
+#content form input[type="text"]:focus,
+#content form input[type="password"]:focus {
+	-webkit-box-shadow: 0 0 2px #ed1c24 inset;
+	-moz-box-shadow: 0 0 2px #ed1c24 inset;
+	-ms-box-shadow: 0 0 2px #ed1c24 inset;
+	-o-box-shadow: 0 0 2px #ed1c24 inset;
+	box-shadow: 0 0 2px #ed1c24 inset;
+	background-color: #fff;
+	border: 1px solid #ed1c24;
+	outline: none;
+}
+#username { background-position: 10px 10px !important }
+#password { background-position: 10px -53px !important }
+#content form input[type="submit"] {
+	background: rgb(254,231,154);
+	
+	border: 1px solid #D69E31;
+	color: #85592e;
+	cursor: pointer;
+	
+	font: bold 16px  Microsoft Yahei;
+	height: 45px;
+	margin:20px auto;
+	
+	border-radius:5px;-webkit-border-radius:5px;
+	position: relative;
+	text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+	width: 200px;
+}
+#content form input[type="submit"]:hover {
+	background: rgb(254,193,81);
+	background: -moz-linear-gradient(top,  rgba(254,193,81,1) 0%, rgba(254,231,154,1) 100%);
+	background: -webkit-linear-gradient(top,  rgba(254,193,81,1) 0%,rgba(254,231,154,1) 100%);
+	background: -o-linear-gradient(top,  rgba(254,193,81,1) 0%,rgba(254,231,154,1) 100%);
+	background: -ms-linear-gradient(top,  rgba(254,193,81,1) 0%,rgba(254,231,154,1) 100%);
+	background: linear-gradient(top,  rgba(254,193,81,1) 0%,rgba(254,231,154,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fec151', endColorstr='#fee79a',GradientType=0 );
+}
+#content form div a {
+	color: #004a80;
+    float: left;
+    font-size: 12px;
+	margin: 20px 0 0px 15px;
+   
+    text-decoration: underline;
+}
+.button {
+	background: rgb(247,249,250);
+	background: -moz-linear-gradient(top,  rgba(247,249,250,1) 0%, rgba(240,240,240,1) 100%);
+	background: -webkit-linear-gradient(top,  rgba(247,249,250,1) 0%,rgba(240,240,240,1) 100%);
+	background: -o-linear-gradient(top,  rgba(247,249,250,1) 0%,rgba(240,240,240,1) 100%);
+	background: -ms-linear-gradient(top,  rgba(247,249,250,1) 0%,rgba(240,240,240,1) 100%);
+	background: linear-gradient(top,  rgba(247,249,250,1) 0%,rgba(240,240,240,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f9fa', endColorstr='#f0f0f0',GradientType=0 );
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset;
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset;
+	-ms-box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset;
+	-o-box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.1) inset;
+	-webkit-border-radius: 0 0 5px 5px;
+	-moz-border-radius: 0 0 5px 5px;
+	-o-border-radius: 0 0 5px 5px;
+	-ms-border-radius: 0 0 5px 5px;
+	border-radius: 0 0 5px 5px;
+	border-top: 1px solid #CFD5D9;
+	padding: 15px 0;
+}
+.button a {
+	background: url(http://cssdeck.com/uploads/media/items/8/8bcLQqF.png) 0 -112px no-repeat;
+	color: #7E7E7E;
+	font-size: 17px;
+	padding: 2px 0 2px 40px;
+	text-decoration: none;
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-ms-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+.button a:hover {
+	background-position: 0 -135px;
+	color: #00aeef;
+}

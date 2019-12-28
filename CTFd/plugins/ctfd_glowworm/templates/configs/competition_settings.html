@@ -1,0 +1,69 @@
+<div role="tabpanel" class="tab-pane config-section active" id="competition">
+	<form method="POST" autocomplete="off" class="w-100">
+        <div class="form-group">
+			<label>
+				Docker APIs URL
+				<small class="form-text text-muted">
+					Docker APIs URL to connect. (Separated by commas)
+				</small>
+			</label>
+			<input type="text" class="form-control" id="docker-api-url" name="docker_api_url" value="{{ configs.get("docker_api_url") }}">
+		</div>
+		<div class="form-group">
+			<label>
+				Direct IP Address
+				<small class="form-text text-muted">
+					IP address for participators to visit
+				</small>
+			</label>
+			<input type="text" class="form-control" id="direct-address" name="direct_address" value="{{ configs.get("direct_address") }}">
+		</div>
+        <div class="form-group">
+			<label>
+				Containers Key
+				<small class="form-text text-muted">
+					Container root pwd.
+				</small>
+			</label>
+			<input type="text" class="form-control" id="containers-key" name="containers_key" value="{{ configs.get("containers_key") }}">
+		</div>
+		<div class="form-group">
+			<label>
+				Seconds Per Round
+				<small class="form-text text-muted">
+					How many seconds per round. (default is 300)
+				</small>
+			</label>
+			<input type="text" class="form-control" id="per-round" name="per_round" value="{{ configs.get("per_round") }}">
+		</div>
+        <div class="form-group">
+			<label>
+				Random Port
+				<small class="form-text text-muted">
+					Whether container port setting to ramdom or not. (default is 1)
+				</small>
+			</label>
+			<input type="text" class="form-control" id="random-port" name="random_port" value="{{ configs.get("random_port") }}">
+		</div>
+		<div class="form-group">
+			<label>
+				Random Minimum Port
+				<small class="form-text text-muted">
+					Which port is set to ramdomed from.
+				</small>
+			</label>
+			<input type="text" class="form-control" id="port-minimum" name="port_minimum" value="{{ configs.get("port_minimum") }}">
+		</div>
+		<div class="form-group">
+			<label>
+				Random Maximum Port
+				<small class="form-text text-muted">
+					Which port is set to ramdomed to.
+				</small>
+			</label>
+			<input type="text" class="form-control" id="port-minimum" name="port_maximum" value="{{ configs.get("port_maximum") }}">
+		</div>
+
+		<button type="submit" class="btn btn-md btn-primary float-right">Update</button>
+	</form>
+</div>

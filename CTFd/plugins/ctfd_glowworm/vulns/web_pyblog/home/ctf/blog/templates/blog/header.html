@@ -1,0 +1,94 @@
+<header class="myheader">
+    <div class="top">
+        <!--头像左边部分-->
+        <div class="top-left">
+            <div class="logo"><a href="/"><img src="/static/images/h.gif"/></a></div>
+{#                <div class="logo"><a href="#"><img src="/static/images/logo.png"/></a></div>#}
+
+            <!--滚动消息-->
+            <div class="web-xiaoxi">
+                <i class="el-speaker"></i>
+                <ul class="mulitline">
+                    <li>正在最后的优化</li>
+                    <li>完成后将放出模板</li>
+                    <li>完美自适应手机</li>
+                </ul>
+            </div>
+            <!--END 消息 -->
+
+            <!--手机菜单按钮-->
+            <div class="mobile-nav"><i class="el-lines"></i><i class="el-remove"></i></div>
+        </div>
+        <!--电脑导航开始-->
+        <nav class="mynav">
+            <ul class="orange-text">
+                <li class=""><a href="{% url "blog:index" %}">首页</a></li>
+                <li><a href="{% url "blog:about" %}">关于</a></li>
+                <li><a href="{% url "blog:article" pk=0 %}">博客</a></li>
+                <li class='drop'>
+                    <a href="JavaScript:;">分类<i class='el-chevron-down'></i></a>
+                    <div class="drop-nav orange-text ">
+                        <ul>
+                            {% for category in category_list %}
+                                <li><a href="{% url "blog:article" pk=category.pk %}">{{ category.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </li>
+                <li><a href="{% url "blog:archive" %}">归档</a></li>
+                <li><a href="{% url "blog:link" %}">链接</a></li>
+                <li><a href="{% url "blog:message" %}">留言</a></li>
+            </ul>
+        </nav>
+
+        <!--这里是手机导航-->
+        <div class="mob-menu">
+            <!--手机顶部搜索-->
+            <div class="search ">
+                <form action="{% url "blog:search" %}" method="get">
+                    <div class="search-index">
+                        <input name="name" type="text" placeholder="请输入关键字" onfocus="this.placeholder=''"
+                               onblur="this.placeholder='请输入关键字'"/>
+                        <i class="el-search"><input value=" " type="submit"/></i>
+                    </div>
+                </form>
+            </div>
+            <!--手机下拉菜单-->
+            <ul>
+                <li><a href="{% url "blog:index" %}">首页</a></li>
+                <li><a href="{% url "blog:about" %}">关于</a></li>
+                <li><a href="{% url "blog:article" pk=0 %}">博客</a></li>
+                <li class='mob-drop'>
+                    <a href="javascrip:;">分类</a>
+                    <ul class="mob-dropmenu">
+                        {% for category in category_list %}
+                            <li><a href="{% url "blog:article" pk=category.pk %}">{{ category.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li><a href="{% url "blog:archive" %}">归档</a></li>
+                <li><a href="{% url "blog:link" %}">链接</a></li>
+                <li><a href="{% url "blog:message" %}">留言</a></li>
+            </ul>
+        </div>
+    </div>
+    <!--换肤--->
+    <script src="/static/js/skin.js"></script>
+    <div class="select-skin">
+        <div class="skin-btn">
+            <a href="javascript:void(0);" class="skin-btn-open">换<br>肤</a>
+        </div>
+
+        <div class="skin-content">
+            <h1>选择风格<span class="skin-close">关闭</span></h1>
+            <div class="skin-content-list">
+                <div class="skin-list"><a href="#" onclick="setActiveStyleSheet('qingxin'); return false;" class="btn1">清新</a>
+                </div>
+                <div class="skin-list"><a href="#" onclick="setActiveStyleSheet('jianyue'); return false;" class="btn2">简约</a>
+                </div>
+                <div class="skin-list"><a href="#" onclick="setActiveStyleSheet('qingshuang'); return false;"
+                                          class="btn3">清爽</a></div>
+            </div>
+        </div>
+    </div>
+</header>

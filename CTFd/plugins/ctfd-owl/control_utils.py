@@ -2,6 +2,7 @@ import time
 
 from CTFd.models import Challenges, Users
 from .db_utils import DBUtils
+from .frp_utils import FrpUtils
 from .docker_utils import DockerUtils
 from sqlalchemy.sql import and_
 from flask import session
@@ -10,11 +11,11 @@ class ControlUtil:
     @staticmethod
     def new_container(user_id, challenge_id):
         rq = DockerUtils.up_docker_compose(user_id=user_id, challenge_id=challenge_id)
-        if rq != False:
+        if isinstance(rq, tuple):
             DBUtils.new_container(user_id, challenge_id, flag=rq[2], port=rq[1], docker_id=rq[0], ip=rq[3])
             return True
         else:
-            return False
+            return rq
 
 
     @staticmethod
@@ -25,7 +26,6 @@ class ControlUtil:
         except Exception as e:
             print(e)
             return False
-
 
     @staticmethod
     def expired_container(user_id, challenge_id):

@@ -1,7 +1,7 @@
 version: '2'
 services:
   # 基本环境
-  php: # 容器名字
+  service: # 容器名字
     # build 该置顶目录下的dockerfile
     build: .
     # image指定build Dockerfile生成镜像的名称
@@ -20,4 +20,4 @@ networks:
     # 配置docker network
     net: 
       external: 
-         name: ctfd_frp_containers
+         name: h1ve_frp_containers

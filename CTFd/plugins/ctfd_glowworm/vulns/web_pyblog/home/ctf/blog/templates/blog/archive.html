@@ -1,0 +1,32 @@
+{% extends "blog/base.html" %}
+{% load custom_filter %}
+
+{% block title %}
+    <title>博客归档 - 烂笔头</title>
+{% endblock %}
+
+{% block css %}
+    <link href="/static/archives/style.css" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <section class="mysection main" style="animation: fuxiasuo 0.8s;">
+        <ul class="timeline">
+            {% for article in article_list %}
+                <li class="event">
+                    <input type="radio" name="tl-group" {% if forloop.counter0 == 0 %} checked {% endif %}/>
+                    <label></label>
+                    <div class="thumb"><span>{{ article.date_time }}</span></div>
+                    <div class="content-perspective">
+                        <div class="content">
+                            <div class="content-inner">
+                                <h3><a href="{% url "blog:detail" pk=article.id%}">{{ article.title }}</a></h3>
+                                <p>{{ article.digest }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+{% endblock %}

@@ -52,7 +52,13 @@ function loadInfo () {
         return response.json();
     }).then(function (response) {
         console.log(response);
-        if(response.remaining_time === undefined) {
+        if (response.success === false) {
+            $('#owl-panel').html(
+                    '<h5 class="card-title">Error</h5>' +
+                    '<h6 class="card-subtitle mb-2 text-muted" id="owl-challenge-count-down">' + response.msg + '</h6>'
+            );
+        }
+        else if(response.remaining_time === undefined) {
             $('#owl-panel').html(
                     '<h5 class="card-title">Instance Info</h5>' +
                     '<button type="button" class="btn btn-primary card-link" id="owl-button-boot" onclick="window.challenge.boot()">Launch an instance</button>'

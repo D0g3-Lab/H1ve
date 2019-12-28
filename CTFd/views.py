@@ -65,20 +65,33 @@ def setup():
 
             # Index page
 
-            index = """<div class="row">
-    <div class="col-md-6 offset-md-3">
-        <img class="w-100 mx-auto d-block" style="max-width: 500px;padding: 50px;padding-top: 14vh;" src="themes/core/static/img/logo.png" />
-        <h3 class="text-center">
-            <p>A cool CTF platform from <a href="https://ctfd.io">ctfd.io</a></p>
-            <p>Follow us on social media:</p>
-            <a href="https://twitter.com/ctfdio"><i class="fab fa-twitter fa-2x" aria-hidden="true"></i></a>&nbsp;
-            <a href="https://facebook.com/ctfdio"><i class="fab fa-facebook fa-2x" aria-hidden="true"></i></a>&nbsp;
-            <a href="https://github.com/ctfd"><i class="fab fa-github fa-2x" aria-hidden="true"></i></a>
-        </h3>
-        <br>
-        <h4 class="text-center">
-            <a href="admin">Click here</a> to login and setup your CTF
-        </h4>
+            index = """<div class="section section-hero" id="home" style="background-image: url('/themes/H1ve-theme/static/img/bg.jpg'); background-position: 10% 50%">
+    <div class="section-inner">
+        <div class="table-container-outer container">
+            <div class="table-container-inner">
+                <div data-0="transform[swing]:translateY(0px);opacity[swing]:1" data-250="transform[swing]:translateY(-50px);opacity[swing]:0">
+                    <img class="img-responsive ctf_logo" src="/themes/H1ve-theme/static/img/h1ve.png" height="150px" width="150px" alt="H1ve-Logo">
+                <h1 class="hero-header" data-150="transform[swing]:translateX(0px);opacity[swing]:1" data-550="transform[swing]:translateX(-25px);opacity[swing]:0">D0g3 <strong class="main-color">Lab</strong></h1>
+                <h2 class="hero-subheader" data-200="transform[swing]:translateX(0px);opacity[swing]:1" data-500="transform[swing]:translateX(25px);opacity[swing]:0">CTF <strong class="main-color">Online</strong></h2>
+                <div data-250="transform[swing]:translateY(0px);opacity[swing]:1" data-550="transform[swing]:translateY(-15px);opacity[swing]:0">
+                    <div class="divider">//</div>
+                </div>
+                <div data-350="transform[swing]:translateY(0px);opacity[swing]:1" data-650="transform[swing]:translateY(-15px);opacity[swing]:0">
+                    <p class="">收集各类自创/大型CTF比赛赛题，提供容器化专属题目环境，供广大CTF爱好者学习。</p>
+                    <p class="">如有侵权，或题目问题请电联<a href="mailto:bot@d0g3.cn">bot@d0g3.cn</a></p>
+                </div>
+                <div>
+                    <p>
+
+                    </p>
+                </div>
+                <p> &copy; 2019 <a href="https://www.d0g3.cn">D0g3</a> | 道之若极,行必有格 | Power By <a href="https://github.com/D0g3-Lab/H1ve/">H1ve</a></p>
+            </div>
+        </div>
+        <div class="scroll-icon visible-lg" data-600="opacity[swing]:1" data-850="opacity[swing]:0">
+            <span class="icon icon-basic-magic-mouse"></span>
+        </div>
+    </div>
     </div>
 </div>""".format(
                 request.script_root
@@ -181,17 +194,14 @@ def static_html(route):
     :param route:
     :return:
     """
-    if route == "index":
-        return render_template("index.html")
+    page = get_page(route)
+    if page is None:
+        abort(404)
     else:
-        page = get_page(route)
-        if page is None:
-            abort(404)
-        else:
-            if page.auth_required and authed() is False:
-                return redirect(url_for("auth.login", next=request.full_path))
+        if page.auth_required and authed() is False:
+            return redirect(url_for("auth.login", next=request.full_path))
 
-            return render_template("page.html", content=markdown(page.content))
+        return render_template("page.html", content=markdown(page.content))
 
 
 @views.route("/files", defaults={"path": ""})

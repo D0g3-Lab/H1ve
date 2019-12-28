@@ -1,0 +1,351 @@
+{% extends "admin/base.html" %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block content %}
+	<div class="jumbotron">
+		<div class="container">
+			<h1>CTFd Glowworm Environments</h1>
+			<div class="pt-3">
+			<a class="init-competition">
+				<i class="btn-fa fas fa-trophy fa-2x px-2" data-toggle="tooltip" data-placement="top" title="Init Competition"></i>
+			</a>
+				<a class="remove-competition">
+				<i class="btn-fa fas fa-trash fa-2x px-2" data-toggle="tooltip" data-placement="top" title="Remove Competition"></i>
+			</a>
+		</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<table class="table table-striped">
+					<thead>
+					<tr>
+						<td class="text-center"><b>No</b></td>
+						<td class="text-center"><b>ID</b></td>
+						<td class="text-center"><b>Name</b></td>
+						<td class="text-center"><b>Type</b></td>
+						<td class="text-center"><b>Language</b></td>
+						<td class="text-center"><b>Status</b></td>
+						<td class="text-center"><b>Build Status</b></td>
+						<td class="text-center"><b>Check Status</b></td>
+<!--						<td class="text-center"><b>Init</b></td>-->
+						<td class="text-center"><b>Build</b></td>
+						<td class="text-center"><b>Run</b></td>
+						<td class="text-center"><b>Remove</b></td>
+						<td class="text-center"><b>Start Check</b></td>
+					</tr>
+					</thead>
+					<tbody>
+					{% for environment in environments %}
+						<tr>
+                            <th scope="row" class="text-center">{{ curr_page_start + loop.index }}</th>
+							<td class="text-center">
+								{{ environment.id }}
+							</td>
+
+							<td class="text-center">
+								<a href="{{ url_for('admin.challenges_detail', challenge_id=environment.id) }}">
+                                    {{ environment.name }}
+                                </a>
+							</td>
+							<td class="text-center">
+								{{ environment.env_type }}
+							</td>
+							<td class="text-center">
+								{{ environment.env_language }}
+							</td>
+							<td class="text-center">
+								{{ environment.env_status }}
+							</td>
+							<td class="text-center">
+								{{ environment.env_build_status }}
+							</td>
+							<td class="text-center">
+								{{ environment.env_check_status }}
+							</td>
+							<td class="text-center">
+                                <a class="build-environment" environment-id="{{ environment.id }}" data-toggle="tooltip"
+                                     data-placement="top"
+								   	 challenge-id="{{ environment.id }}" title="Build Env #{{ environment.id }}">
+                                    <i class="fas fa-hammer"></i>
+                                </a>
+                            </td>
+							<td class="text-center">
+                                <a class="run-environment" environment-id="{{ environment.id }}" data-toggle="tooltip"
+                                       data-placement="top"
+                                       challenge-id="{{ environment.id }}" title="Run Env #{{ environment.id }}">
+                                    <i class="fas fa-sync"></i>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a class="remove-environment" environment-id="{{ environment.id }}" data-toggle="tooltip"
+                                     data-placement="top"
+								   	 challenge-id="{{ environment.id }}" title="Remove Env #{{ environment.id }}">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            </td>
+							<td class="text-center">
+                                <a class="check-environment" environment-id="{{ environment.id }}" data-toggle="tooltip"
+                                     data-placement="top"
+								   	 challenge-id="{{ environment.id }}" title="Check Env #{{ environment.id }}">
+                                    <i class="fas fa-check"></i>
+                                </a>
+                            </td>
+
+                        </tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		{% if pages > 1 %}
+			<div class="row">
+				<div class="col-md-12">
+					<div class="text-center">Page
+						<br>
+						{% if curr_page != 1 %}
+							<a href="/plugins/ctfd-glowworm/admin/environments?page={{ curr_page - 1 }}">
+								&lt;&lt;&lt;
+							</a>
+						{% endif %}
+						{% for page in range(1, pages + 1) %}
+							{% if curr_page != page %}
+								<a href="/plugins/ctfd-glowworm/admin/environments?page={{ page }}">{{ page }}</a>
+							{% else %}
+								<b>{{ page }}</b>
+							{% endif %}
+						{% endfor %}
+						{% if curr_page != pages %}
+							<a href="/plugins/ctfd-glowworm/admin/environments?page={{ curr_page + 1 }}">
+								&gt;&gt;&gt;
+							</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(".remove-environment").click(function(e) {
+            e.preventDefault();
+            var challenge_id = $(this).attr("challenge-id");
+
+            var body = "<span>Are you sure you want to Remove <strong>Env #{0}</strong>?</span>".format(
+              htmlentities(challenge_id)
+            );
+
+            var row = $(this)
+              .parent()
+              .parent();
+
+            ezq({
+              title: "Remove Env",
+              body: body,
+              success: function() {
+                CTFd.fetch("/plugins/ctfd-glowworm/admin/env", {
+                  method: "PATCH",
+                  credentials: "same-origin",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                  },
+					body: JSON.stringify({
+                  	"type" : "remove", "challenge_id" : challenge_id
+					})
+                })
+                  .then(function(response) {
+                    return response.json();
+                  })
+                  .then(function(response) {
+                    if (response.success) {
+                      ezal({
+                            title: "Success",
+                            body: "This instance has been Remove!",
+                            button: "OK"
+                        });
+                    }
+                  });
+              }
+            });
+          });
+
+        $(".build-environment").click(function(e) {
+            e.preventDefault();
+            var challenge_id = $(this).attr("challenge-id");
+
+            var body = "<span>Are you sure you want to Build <strong>Env #{0}</strong>?</span>".format(
+              htmlentities(challenge_id)
+            );
+
+            ezq({
+              title: "Build Env",
+              body: body,
+              success: function() {
+                CTFd.fetch("/plugins/ctfd-glowworm/admin/env", {
+                  method: "PATCH",
+                  credentials: "same-origin",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                  },
+					body: JSON.stringify({
+                  	"type" : "build", "challenge_id" : challenge_id
+					})
+                })
+                  .then(function(response) {
+                    return response.json();
+                  })
+                  .then(function(response) {
+                    if (response.success) {
+                      ezal({
+                            title: "Success",
+                            body: "This instance has been Build!",
+                            button: "OK"
+                        });
+                    }
+                  });
+              }
+            });
+          });
+
+        $(".run-environment").click(function(e) {
+            e.preventDefault();
+            var challenge_id = $(this).attr("challenge-id");
+
+            var body = "<span>Are you sure you want to Run <strong>Env #{0}</strong>?</span>".format(
+              htmlentities(challenge_id)
+            );
+
+            ezq({
+              title: "Run Env",
+              body: body,
+              success: function() {
+                CTFd.fetch("/plugins/ctfd-glowworm/admin/env", {
+                  method: "PATCH",
+                  credentials: "same-origin",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                  },
+					body: JSON.stringify({
+                  	"type" : "run", "challenge_id" : challenge_id
+					})
+                })
+                  .then(function(response) {
+                    return response.json();
+                  })
+                  .then(function(response) {
+                    if (response.success) {
+                      ezal({
+                            title: "Success",
+                            body: "This instance has been Run!",
+                            button: "OK"
+                        });
+                    }
+                  });
+              }
+            });
+          });
+
+        $(".check-environment").click(function(e) {
+            e.preventDefault();
+            var challenge_id = $(this).attr("challenge-id");
+
+            var body = "<span>Are you sure you want to Start Check <strong>Env #{0}</strong>?</span>".format(
+              htmlentities(challenge_id)
+            );
+
+            ezq({
+              title: "Check Env",
+              body: body,
+              success: function() {
+                CTFd.fetch("/plugins/ctfd-glowworm/admin/env", {
+                  method: "PATCH",
+                  credentials: "same-origin",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                  },
+					body: JSON.stringify({
+                  	"type" : "check", "challenge_id" : challenge_id
+					})
+                })
+                  .then(function(response) {
+                    return response.json();
+                  })
+                  .then(function(response) {
+                    if (response.success) {
+                      ezal({
+                            title: "Success",
+                            body: "This instance has been started Check!",
+                            button: "OK"
+                        });
+                    }
+                  });
+              }
+            });
+          });
+
+
+        $(".init-competition").click(function(e) {
+    ezq({
+      title: "Init competition",
+      body: "Are you sure you want to Init competition",
+      success: function() {
+        CTFd.fetch("/plugins/ctfd-glowworm/admin/init", {
+          method: "PATCH"
+        })
+          .then(function(response) {
+            return response.json();
+          })
+          .then(function(response) {
+                    if (response.success) {
+                      ezal({
+                            title: "Success",
+                            body: "This Competition has been inited!",
+                            button: "OK"
+                        });
+                    }
+                    else {
+                      ezal({
+                            title: "Failed",
+                            body: response.msg,
+                            button: "OK"
+                        });
+                    }
+                  });
+      }
+    });
+  });
+        $(".remove-competition").click(function(e) {
+    ezq({
+      title: "Remove competition",
+      body: "Are you sure you want to Remove competition",
+      success: function() {
+        CTFd.fetch("/plugins/ctfd-glowworm/admin/remove", {
+          method: "PATCH"
+        })
+          .then(function(response) {
+            return response.json();
+          })
+          .then(function(response) {
+                    if (response.success) {
+                      ezal({
+                            title: "Success",
+                            body: "This Competition has been removed!",
+                            button: "OK"
+                        });
+                    }
+                  });
+      }
+    });
+  });
+    </script>
+{% endblock %}
+

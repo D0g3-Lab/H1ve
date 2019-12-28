@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /blog/detail/
+Allow: /blog/tag/
+Allow: /blog/article/
+Sitemap: http://www.spiderpy.cn/sitemap.txt

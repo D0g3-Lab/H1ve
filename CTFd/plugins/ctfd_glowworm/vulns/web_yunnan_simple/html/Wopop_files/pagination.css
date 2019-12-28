@@ -1,0 +1,226 @@
+div.megas512 {
+    height: 25px;
+    padding-top:12px;
+    margin: 5px;
+    padding-left: 7px;
+    text-indent: 0;
+    text-align:center;
+}
+div.megas512 a {
+
+}
+div.megas512 a:hover {
+
+}
+
+#Pagination .current {
+	background: url("/pop/web/images/page.gif") no-repeat scroll -88px 0 transparent;
+    color: #B5B3B3;
+    cursor: pointer;
+    display: inline-block !important;
+    height: 24px !important;
+    line-height: 24px;
+    margin-left: 3px;
+    position: relative;
+    text-align: center;
+    top: -8px;
+    width: 22px;
+    position: relative;
+    top: -16px;*top: -12px;
+}
+
+#Pagination .current:hover { background-position:-88px -24px; color:#fff;}
+#Pagination span.current{ background-position:-88px -24px; color:#fff;}
+#Pagination .disabled {
+           background: url("/pop/web/images/page.gif") no-repeat -44px 0px scroll transparent;
+    color: #B5B3B3;
+    cursor: pointer;
+    display: inline-block !important;
+    height: 24px !important;
+    line-height: 24px;
+    margin-left: 3px;
+    position: relative;
+    text-align: center;
+    top: -8px;
+    width: 22px;}
+    
+    
+    
+     #Pagination .disabled:hover {background-position:-44px -24px;}
+     
+     #Pagination .classjason{background: url("/pop/web/images/page.gif") no-repeat -66px 0px scroll transparent;
+    color: #B5B3B3;
+    cursor: pointer;
+    display: inline-block !important;
+    height: 24px !important;
+    line-height: 24px;
+    margin-left: 3px;
+    position: relative;
+    text-align: center;
+    top: -8px;
+    width: 22px;}
+    
+    #Pagination .classjason:hover{background-position:-66px -24px;}
+
+
+
+
+#Pagination_S .current {
+	background: url("/pop/web/images/page.gif") no-repeat scroll -88px 0 transparent;
+    color: #B5B3B3;
+    cursor: pointer;
+    display: inline-block !important;
+    height: 24px !important;
+    line-height: 24px;
+    margin-left: 3px;
+    position: relative;
+    text-align: center;
+    top: -8px;
+    width: 22px;
+    position: relative;
+    top: -16px;*top: -12px;
+}
+
+#Pagination_S .current:hover { background-position:-88px -24px; color:#fff;}
+#Pagination_S span.current{ background-position:-88px -24px; color:#fff;}
+#Pagination_S .disabled {
+           background: url("/pop/web/images/page.gif") no-repeat -44px 0px scroll transparent;
+    color: #B5B3B3;
+    cursor: pointer;
+    display: inline-block !important;
+    height: 24px !important;
+    line-height: 24px;
+    margin-left: 3px;
+    position: relative;
+    text-align: center;
+    top: -8px;
+    width: 22px;}
+    
+    
+    
+     #Pagination_S .disabled:hover {background-position:-44px -24px;}
+     
+     #Pagination_S .classjason{background: url("/pop/web/images/page.gif") no-repeat -66px 0px scroll transparent;
+    color: #B5B3B3;
+    cursor: pointer;
+    display: inline-block !important;
+    height: 24px !important;
+    line-height: 24px;
+    margin-left: 3px;
+    position: relative;
+    text-align: center;
+    top: -8px;
+    width: 22px;}
+    
+    #Pagination_S .classjason:hover{background-position:-66px -24px;}
+   /* #Pagination_S{ margin-top:20px;}*/
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+    #dmepagination .current {
+	background: url("/pop/web/images/page.gif") no-repeat scroll -88px 0 transparent;
+    color: #B5B3B3;
+    cursor: pointer;
+    display: inline-block !important;
+    height: 24px !important;
+    line-height: 24px;
+    margin-left: 3px;
+    position: relative;
+    text-align: center;
+    top: -8px;
+    width: 22px;
+    position: relative;
+    top: -16px;*top: -12px;
+}
+
+#dmepagination .current:hover { background-position:-88px -24px; color:#fff;}
+#dmepagination span.current{ background-position:-88px -24px; color:#fff;}
+#dmepagination .disabled {
+           background: url("/pop/web/images/page.gif") no-repeat -44px 0px scroll transparent;
+    color: #B5B3B3;
+    cursor: pointer;
+    display: inline-block !important;
+    height: 24px !important;
+    line-height: 24px;
+    margin-left: 3px;
+    position: relative;
+    text-align: center;
+    top: -8px;
+    width: 22px;}
+    
+    
+    
+     #dmepagination .disabled:hover {background-position:-44px -24px;}
+     
+     #dmepagination .classjason{background: url("/pop/web/images/page.gif") no-repeat -66px 0px scroll transparent;
+    color: #B5B3B3;
+    cursor: pointer;
+    display: inline-block !important;
+    height: 24px !important;
+    line-height: 24px;
+    margin-left: 3px;
+    position: relative;
+    text-align: center;
+    top: -8px;
+    width: 22px;}
+    
+    #dmepagination .classjason:hover{background-position:-66px -24px;}
+    /*#dmepagination{ margin-top:20px;}*/
+    
+    
+    #Pagination_T .current {
+	background: url("/pop/web/images/page.gif") no-repeat scroll -88px 0 transparent;
+    color: #B5B3B3;
+    cursor: pointer;
+    display: inline-block !important;
+    height: 24px !important;
+    line-height: 24px;
+    margin-left: 3px;
+    position: relative;
+    text-align: center;
+    top: -8px;
+    width: 22px;
+    position: relative;
+    top: -16px;*top: -12px;
+}
+
+#Pagination_T .current:hover { background-position:-88px -24px; color:#fff;}
+#Pagination_T span.current{ background-position:-88px -24px; color:#fff;}
+#Pagination_T .disabled {
+           background: url("/pop/web/images/page.gif") no-repeat -44px 0px scroll transparent;
+    color: #B5B3B3;
+    cursor: pointer;
+    display: inline-block !important;
+    height: 24px !important;
+    line-height: 24px;
+    margin-left: 3px;
+    position: relative;
+    text-align: center;
+    top: -8px;
+    width: 22px;}
+    
+    
+    
+     #Pagination_T .disabled:hover {background-position:-44px -24px;}
+     
+     #Pagination_T .classjason{background: url("/pop/web/images/page.gif") no-repeat -66px 0px scroll transparent;
+    color: #B5B3B3;
+    cursor: pointer;
+    display: inline-block !important;
+    height: 24px !important;
+    line-height: 24px;
+    margin-left: 3px;
+    position: relative;
+    text-align: center;
+    top: -8px;
+    width: 22px;}
+    
+    #Pagination_T .classjason:hover{background-position:-66px -24px;}
+

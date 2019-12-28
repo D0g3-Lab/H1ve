@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html class="no-js"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+	<title>404 page not found - 烂笔头</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="stylesheet" href="/static/404/style.css">
+	<!-- Google Font -->
+	<link href="/static/404/css" rel="stylesheet" type="text/css">
+	<!-- jQuery -->
+	<script type="text/javascript" src="/static/404/jquery-1.11.0.min.js"></script>
+
+	<!-- Airplane Animation -->
+	<script>
+      $(document).ready(function() {
+
+       function fly(){
+         plane.css('left', startPos);
+         plane.animate({left: 2600}, 32000, 'linear')
+       };
+
+        var screenWidth = $(document).width();
+        var startPos = -700;
+        var plane = $('#plane')
+
+        fly();
+
+        setInterval(function() {
+          fly();
+        }, 34000);
+
+      });
+    </script>
+
+</head>
+
+<body style="">
+	<div class="container">
+		<!-- Airplane Container -->
+		<div id="plane" style="left: 832.644px;">
+			<span><img src="/static/404/tail-end.png"></span>
+
+			<!-- Replace this text with your custom -->
+			<span class="tail">Sorry, we can't find what you're looking for</span>
+
+			<span><img src="/static/404/plane.png"></span>
+		</div>
+
+		<div class="centerContent clearfix">
+			<!-- Search Box -->
+			<div class="search">
+				<form action="{% url "blog:search" %}">
+				<input type="text" class="searchbox fl" name="key" placeholder="Search for something..." style="font-size: 18px">
+				<input type="submit" class="searchbox-submit" value="">
+				</form>
+			</div>
+			<!-- Menu -->
+			<div class="menu fl">
+				<a href="{% url "blog:index" %}">Home</a>
+				<a href="{% url "blog:about" %}">About Me</a>
+				<a href="{% url "blog:article" pk=0 %}">Blog</a>
+				<a href="{% url "blog:archive" %}">Archives</a>
+				<a href="#">Contacts</a>
+			</div>
+			<!-- Footer -->
+			<div class="footer fl">
+				<!-- Social Icons -->
+				<div class="social fl">
+					<a href="https://twitter.com/j_hao104"><img src="/static/404/twitter.png"></a>
+					<a href="https://plus.google.com/yourname"><img src="/static/404/google.png"></a>
+					<a href="https://github.com/jhao104"><img src="/static/404/github.png"></a>
+					<a href="mailto:j_hao104@164.com"><img src="/static/404/email.png"></a>
+					<a href="#"><img src="/static/404/weibo.png"></a>
+				</div>
+				<!-- Credits -->
+				<div class="credits">Copyright © 2015-2016 - <strong>j_hao104's blog</strong>. All Rights Reserved.</div>
+
+			</div>
+		</div>
+
+	</div>
+
+
+</body></html>

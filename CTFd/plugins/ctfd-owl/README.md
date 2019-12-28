@@ -15,13 +15,13 @@ named `ctfd-owl`.
 
 ### Configuration
 
-**Docker Flag Prefix ** Flag前缀
+**Docker Flag Prefix** Flag前缀
 
 **Docker APIs URL** API名字（默认为`unix://var/run/docker.sock`）
 
 **Max Container Count** 最大容器数量（默认无限制）
 
-**Max Renewal Time** 最大容器失效时间（超过会自动关闭容器）
+**Max Renewal Time** 最大容器延长时间（超过将无法延长，达到时间后会自动摧毁）
 
 ![docker-setting-demo-w150](./assets/demo_img/owl-docker_shrink.png)
 

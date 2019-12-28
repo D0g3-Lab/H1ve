@@ -1,4 +1,4 @@
-version: '2'
+version: '3.5'
 
 services:
 
@@ -7,11 +7,11 @@ services:
       context: .
       args:
         - WORKDIR=$PWD
-    image: hive-main
+    image: h1ve-main
     user: root
     restart: always
     ports:
-      - 8000:8000
+      - 8000:4000
     environment:
       - UPLOAD_FOLDER=/var/uploads
       - DATABASE_URL=mysql+pymysql://root:ctfd@db/ctfd
@@ -31,6 +31,7 @@ services:
       default:
       internal:
       frp_containers:
+        ipv4_address: 10.2.0.10
 
   db:
     image: mariadb:10.4
@@ -43,7 +44,7 @@ services:
     volumes:
       - .data/mysql:/var/lib/mysql
     networks:
-      - internal
+      internal:
     # This command is required to set important mariadb defaults
     command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --wait_timeout=28800, --log-warnings=0]
 
@@ -53,10 +54,10 @@ services:
     volumes:
     - .data/redis:/data
     networks:
-       - internal
+       internal:
 
   frps:
-    image: 0akarma/hive-frp
+    image: d0g3/h1ve-frp
     # you can build image by yourself if you want.
     # build: ./frp
     restart: always
@@ -70,9 +71,10 @@ services:
       - /conf/frps.ini
     networks:
       frp:
+        ipv4_address: 10.1.0.3
 
   frpc:
-    image: 0akarma/hive-frp
+    image: d0g3/h1ve-frp
     # you can build image by yourself if you want.
     # build: ./frp
     restart: always
@@ -86,6 +88,7 @@ services:
       - /conf/frpc.ini
     networks:
       frp:
+        ipv4_address: 10.1.0.4
       frp_containers:
 
 networks:
@@ -93,11 +96,13 @@ networks:
     internal:
         internal: true
     frp:
+      name: "h1ve_frp"
       driver: bridge
       ipam:
         config:
           - subnet: 10.1.0.0/16
     frp_containers:
+        name: "h1ve_frp_containers"
         driver: bridge
         ipam:
           config:
