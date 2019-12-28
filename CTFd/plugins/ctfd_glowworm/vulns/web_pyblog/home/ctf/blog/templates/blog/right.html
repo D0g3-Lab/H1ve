@@ -1,0 +1,126 @@
+<aside class="myaside">
+    <!--关注我-->
+    <div class="focus-me bg-color animation-div">
+        <h4 class="index-title"><i class="el-heart"></i>关注我
+            <small>Focus Me</small>
+        </h4>
+        <!--
+        <div class="xiangguan">
+
+            <div><a class="benbo" href="https://github.com/jhao104/django-blog" target="_blank"><i
+                    class="el-download-alt"></i></a><span>博客源码</span></div>
+            <div><a class="taobao"
+                    href="https://my.oschina.net/jhao104/blog"
+                    target="_blank"><i class="el-blogger"></i></a><span>博客地址</span></div>
+            <div><a class="side-fx"><i class="el-share-alt"></i></a><span>分享本博</span></div>
+            <div><a class="mail-btn" href="javascript:;"><i class="el-envelope"></i></a><span>订阅我</span></div>
+        </div>
+        -->
+        <div class="mail-dy">
+            <form action="#">
+                <input type="hidden" name="t" value="qf_booked_feedback"/>
+                <input type="hidden" name="id" value="b2b151b4bc010575c083e18e227ae907aac82bc47e84d3e0"/>
+                <span>订阅</span>
+                <input name="to" type="text" placeholder="输入邮箱点击订阅吧" onfocus="this.placeholder=''"
+                       onblur="this.placeholder='输入邮箱点击订阅吧(暂无)'"/>
+                <i class="el-envelope"><input value=" " type="submit"/></i>
+            </form>
+            <i class="el-remove fx-close"></i>
+        </div>
+
+        <div class="bd-fx side-bdfx ">
+            <i class="el-remove fx-close"></i>
+            <ul class="bdsharebuttonbox">
+                <li><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a></li>
+                <li><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a></li>
+                <li><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a></li>
+                <li><a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a></li>
+            </ul>
+            <script>window._bd_share_config = {
+                "common": {
+                    "bdSnsKey": {},
+                    "bdText": "",
+                    "bdMini": "2",
+                    "bdMiniList": false,
+                    "bdPic": "",
+                    "bdStyle": "1",
+                    "bdSize": "32"
+                }, "share": {}
+            };
+            with (document)0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+        </div>
+    </div>
+    <!--最新更新-->
+
+    <div class="clos-new bg-color animation-div">
+        <h4 class="index-title"><i class="el-bulb"></i>最新资讯
+            <small>Latest News</small>
+        </h4>
+        <ul>
+            <li><i class="el-cloud"></i>
+                <iframe id="tianqi" scrolling="no" frameborder="0" allowtransparency="true"
+                        src="http://i.tianqi.com/index.php?c=code&a=getcode&id=34&h=25&w=280"></iframe>
+            </li>
+
+            <li><i class="el-calendar"></i>历史今天：
+                <iframe src="http://www.todayonhistory.com/code/6.html?w=250&h=20&bky=dotted&bks=0&fs=14&fc=#565656&hg=14&ie=0&xhx=none&sd=300&px=3&len=0&sk=1&n=0"
+                        width="250" height="15" scrolling="no" frameborder="0" allowtransparency="true"></iframe>
+            </li>
+        </ul>
+    </div>
+    <!--搜索-->
+    <div class="search animation-div">
+        <form action="{% url "blog:search" %}" method="get">
+            <div class="search-index">
+                <input name="key" type="text" placeholder="请输入关键字" onfocus="this.placeholder=''"
+                       onblur="this.placeholder='请输入关键字'"/>
+                <i class="el-search"><input value=" " type="submit"/></i>
+            </div>
+        </form>
+    </div>
+
+    <!--文章排行tab-->
+    <div class="mytab bg-color animation-div">
+        <div class="tab-btn"><a class="hd-btn tab-active" href="javascript:;"><i class="el-comment-alt"></i>最新评论</a><a
+                class="ph-btn" href="javascript:;"><i class="el-signal"></i>文章排行</a></div>
+        <ul class="hudong-ul">
+            <!--=======查询相册=============-->
+            {% for comment in comment_list %}
+                <li>
+                    <div class="sd-name">
+                        <span><i class="el-book"></i>{{ comment.title }}</span>
+                        <a class="blue-text" href="{{ comment.url }}" title="{{ comment.comment }}">{{ comment.comment }}</a>
+                        <span style="text-align: right">— &nbsp;<i class="el-user"></i>{{ comment.user_name }}</span>
+                    </div>
+                </li>
+            {% endfor %}
+
+
+        </ul>
+        <!--文章排行-->
+        <ul class="paihang-ul">
+            {% for article in article_rank %}
+                <li><span></span><a href="{% url "blog:detail" pk=article.id %}"
+                                    title="{{ article.title }}">{{ article.title }}<b><i
+                        class="el-eye-open"></i>({{ article.view }})</b></a></li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+    <!--标签-->
+    <div class="cloud bg-color animation-div">
+        <h4 class="index-title"><i class="el-tags"></i>标签云
+            <small>Tags Clouds</small>
+        </h4>
+        <ul id="3dcloud">
+            {% for tag in tag_list %}
+                <li><a href="{% url "blog:tag" name=tag.tag_name %}" title="标签：{{ tag.tag_name }} ">{{ tag.tag_name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+
+    <!--友情链接-->
+    {% include "blog/blogroll.html" %}
+</aside>

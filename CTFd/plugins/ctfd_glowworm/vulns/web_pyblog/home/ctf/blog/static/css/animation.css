@@ -1,0 +1,144 @@
+
+@-webkit-keyframes fuzuo{
+	0%{transform:translateX(-300px);-webkit-transform:translateX(-300px);opacity:0;}
+	20%{opacity:0;}
+	100%{transform:translateX(0px);-webkit-transform:translateX(0px);opacity:1;}
+	
+}
+@keyframes fuzuo{
+	0%{transform:translateX(-300px);-webkit-transform:translateX(-300px);opacity:0;}
+	20%{opacity:0;}
+	100%{transform:translateX(0px);-webkit-transform:translateX(0px);opacity:1;}
+	
+}
+
+@-webkit-keyframes fushang{
+	0%{transform:translateY(-300px);-webkit-transform:translateY(-300px);opacity:0;}
+	10%{opacity:0;}
+	100%{transform:translateY(0px);-webkit-transform:translateY(0px);opacity:1;}
+	
+}
+@keyframes fushang{
+	0%{transform:translateY(-300px);-webkit-transform:translateY(-300px);opacity:0;}
+	10%{opacity:0;}
+	100%{transform:translateY(0px);-webkit-transform:translateY(0px);opacity:1;}
+	
+}
+@-webkit-keyframes zhengshang{
+	0%{transform:translateY(300px);-webkit-transform:translateY(300px);opacity:0;}
+	10%{opacity:0;}
+	100%{transform:translateY(0px);-webkit-transform:translateY(0px);opacity:1;}
+	
+}
+@keyframes zhengshang{
+	0%{transform:translateY(300px);-webkit-transform:translateY(300px);opacity:0;}
+	10%{opacity:0;}
+	100%{transform:translateY(0px);-webkit-transform:translateY(0px);opacity:1;}
+	
+}
+
+@-webkit-keyframes zhuan{
+	0%{transform:rotateY(75deg);-webkit-transform:rotateY(75deg);opacity:0;}
+	
+	100%{transform:rotateY(0deg);-webkit-transform:rotateY(0deg);opacity:1;}
+	
+}
+@keyframes zhuan{
+	0%{transform:rotateY(75deg);-webkit-transform:rotateY(75deg);opacity:0;}
+	
+	100%{transform:rotateY(0deg);-webkit-transform:rotateY(0deg);opacity:1;}
+	
+}
+@-webkit-keyframes zuo{
+	0%{transform:translateX(300px);-webkit-transform:translateX(300px);opacity:0;}
+	30%{opacity:0;}
+	100%{transform:translateX(0px);-webkit-transform:translateX(0px);opacity:1;}
+	
+}
+@keyframes zuo{
+	0%{transform:translateX(300px);-webkit-transform:translateX(300px);opacity:0;}
+	30%{opacity:0;}
+	100%{transform:translateX(0px);-webkit-transform:translateX(0px);opacity:1;}
+	
+}
+@-webkit-keyframes fuxia{
+	0%{transform:translateY(300px);-webkit-transform:translateY(300px);opacity:0;}
+	30%{opacity:0;}
+	100%{transform:translateY(0px);-webkit-transform:translateY(0px);opacity:1;}
+	
+}
+@keyframes fuxia{
+	0%{transform:translateY(300px);-webkit-transform:translateY(300px);opacity:0;}
+	30%{opacity:0;}
+	100%{transform:translateY(0px);-webkit-transform:translateY(0px);opacity:1;}
+	
+}
+@-webkit-keyframes fuxiasuo{
+	0%{-webkit-transform:translateY(300px);transform:translateY(300px);opacity:0;}
+	20%{opacity:0;}
+	100%{-webkit-transform:translateY(0px);transform:translateY(0px);opacity:1;}
+	
+}
+@keyframes fuxiasuo{
+	0%{-webkit-transform:translateY(300px);transform:translateY(300px);opacity:0;}
+	20%{opacity:0;}
+	100%{-webkit-transform:translateY(0px);transform:translateY(0px);opacity:1;}
+	
+}
+@-webkit-keyframes suoxiao{
+	0%{-webkit-transform:scale(0.1,0.1);transform:scale(0.1,0.1);opacity:0;}
+	20%{opacity:0;}
+	100%{-webkit-transform:scale(1,1);transform:scale(1,1);opacity:1;}
+	
+}
+@keyframes suoxiao{
+	0%{-webkit-transform:scale(0.1,0.1);transform:scale(1,1);opacity:0;}
+	20%{opacity:0;}
+	100%{-webkit-transform:scale(1,1);transform:scale(1,1);opacity:1;}
+	
+}
+
+@-webkit-keyframes zuo1{
+	0%{transform:translateX(-300px);-webkit-transform:translateX(-300px);opacity:0;}
+	
+	100%{transform:translateX(0px);-webkit-transform:translateX(0px);opacity:1;}
+	
+}
+@keyframes zuo1{
+	0%{transform:translateX(-300px);-webkit-transform:translateX(-300px);opacity:0;}
+	
+	100%{transform:translateX(0px);-webkit-transform:translateX(0px);opacity:1;}
+	
+}
+@-webkit-keyframes zuo2{
+	0%{transform:translateX(0px);-webkit-transform:translateX(0px);opacity:1;}
+	
+	100%{transform:translateX(300px);-webkit-transform:translateX(300px);opacity:0;}
+	
+}
+@keyframes zuo2{
+	0%{transform:translateX(0px);-webkit-transform:translateX(0px);opacity:1;}
+	
+	100%{transform:translateX(300px);-webkit-transform:translateX(300px);opacity:0;}
+	
+}
+@-webkit-keyframes zuo3{
+	0%{transform:translateX(0px);-webkit-transform:translateX(0px);opacity:1;}
+	
+	100%{transform:translateX(-300px);-webkit-transform:translateX(-300px);opacity:0;}
+	
+}
+
+@keyframes zuo3{
+	0%{transform:translateX(0px);-webkit-transform:translateX(0px);opacity:1;}
+	
+	100%{transform:translateX(-300px);-webkit-transform:translateX(-300px);opacity:0;}
+	
+}
+
+
+
+
+
+
+

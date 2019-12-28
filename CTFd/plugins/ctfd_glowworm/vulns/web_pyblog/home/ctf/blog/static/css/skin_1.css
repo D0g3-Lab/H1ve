@@ -1,0 +1,143 @@
+body {
+    background: #e9ecd7 url(/static/images/bgimg/bg0.jpg);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: 100% 100%
+}
+
+html {
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -webkit-appearance: none
+}
+
+#color li, #comment-post button, #nav > ul > li span:hover, .active, .archives h4, .backtop, .carousel-indicators li, .comment-tools, .face, .post-context button:hover, .search button, .ssearch input[type=submit], .tab_nav, .toggler, .tools, .totop, .zujian, a {
+    cursor: url(http://ofcf9jxzt.bkt.clouddn.com/django_blog/static/link.cur), auto
+}
+
+body {
+    cursor: url(http://ofcf9jxzt.bkt.clouddn.com/django_blog/static/default.cur), auto
+}
+
+body:after {
+    content: '';
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, .5);
+    z-index: -1
+}
+
+i {
+    color: #ff6700
+}
+
+input, textarea {
+    border: #ddd 1px solid;
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, .05);
+    background: rgba(255, 255, 255, .5)
+}
+
+input:focus, textarea:focus {
+    border: #ff6700 1px solid;
+    box-shadow: 0 0 8px rgba(255, 103, 0, .7)
+}
+
+.orange-text {
+    color: #ff6700
+}
+
+.blue-text {
+    color: #0181da
+}
+
+.bg-color {
+    background: rgba(255, 255, 255, .5);
+    text-align: left
+}
+
+.index-title {
+    color: #0181da
+}
+
+.index-title small {
+    color: #bcbcbc;
+    margin-left: 5px;
+    font-size: 12px
+}
+
+header {
+    width: 100%;
+    height: 70px;
+    background: rgba(255, 255, 255, .85);
+    box-shadow: 0 0 5px #13c5f8;
+    position: fixed;
+    z-index: 10
+}
+
+.mynav > ul > li > a {
+    color: #ff6700
+}
+
+.mynav > ul > li > a:hover {
+    background: #13c5f8;
+    color: #fff;
+    font-size: 20px
+}
+
+.nav-active {
+    background: #13c5f8
+}
+
+.nav-active a {
+    color: #fff !important
+}
+
+.top nav > ul > li .el-caret-down {
+    color: #fff000
+}
+
+div#tooltip {
+    position: absolute;
+    z-index: 1000;
+    width: auto !important;
+    background: linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, .9), rgba(255, 255, 255, 1));
+    text-align: left;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: -webkit-linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, .9), rgba(255, 255, 255, 1));
+    box-shadow: 0 5px 20px #666
+}
+
+div#tooltip p {
+    color: #ff6700;
+    font-size: 12px
+}
+
+div#tooltip p:after {
+    content: '';
+    width: 0;
+    height: 0;
+    position: absolute;
+    left: 10%;
+    top: -8px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid rgba(255, 255, 255, .95)
+}
+
+audio, canvas, video {
+    display: inline-block
+}
+
+@media screen and (min-width: 320px) and (max-width: 1023px) {
+    body {
+        background: url(/static/images/bgimg/mob-bg2.jpg) no-repeat;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        background-size: 100%
+    }
+}

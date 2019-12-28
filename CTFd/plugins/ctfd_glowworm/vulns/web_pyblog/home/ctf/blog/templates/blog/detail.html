@@ -1,0 +1,152 @@
+{% extends "blog/base.html" %}
+{% load custom_filter %}
+
+{% block title %}
+    <title>{{ article.title }} - 测试页面</title>
+{% endblock %}
+
+{% block meta %}
+    <meta name="keywords"
+          content="{{ article.title }},{% for tag in article.tag.all %}{{ tag }},{% endfor %}{{ article.category }}"/>
+    <meta name="description" content="{{ article.digest|safe }}"/>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="/static/css/markdown.css">
+    <link rel="stylesheet" href="/static/prism/prism.css">
+
+    <script src="/static/prism/prism.js" charset="utf-8"></script>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {inlineMath: [['$', '$']]},
+            messageStyle: "none"
+        });
+    </script>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="mysection content">
+        <article>
+            <h3 class="arc-title index-title">{{ article.title }} </h3>
+            <div class="post-line bg-color">
+                <ul>
+                    <li><a title="{{ article.author }}发表于{{ article.date_time }}"><i class="el-time"></i>
+                        <time>{{ article.date_time }}</time>
+                    </a></li>
+                    <li><a href="#"><i class="el-user"></i>{{ article.author }}</a></li>
+                    <li><a href="#Coon" title="转到评论"><i class="el-comment"></i>{{ article.comment }}条</a></li>
+                    <li><a title="已有 {{ article.view }} 次浏览"><i class="el-eye-open"></i>{{ article.view }}</a></li>
+                    <li><a title="下载" href="/blog/api/getarticle/{{article.id}}/">下载</a></li>
+                </ul>
+            </div>
+
+            <!--文章正文-->
+            <div class="article-content bg-color markdown-body">
+                <div class="post-content" style="padding: 10px 20px 20px 10px">
+                    <div class="BlogAnchor" style="text-indent: 20px; font-size: 14px; margin-bottom: 30px">
+                        <p>
+                            <b id="AnchorContentToggle" title="收起" style="cursor:pointer;">目录[-]</b>
+                        </p>
+                        <div class="AnchorContent" id="AnchorContent"></div>
+                    </div>
+                    {{ article.content|custom_markdown|safe }}
+                </div>
+            </div>
+            <!--分享-->
+            <div class="article-fx"><a class="fx-btn img-circle" href="javascript:;">分享</a>
+                <div class="bd-fx arc-bdfx">
+                    <i class="el-remove fx-close"></i>
+                    <ul class="bdsharebuttonbox">
+                        <li><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a></li>
+                        <li><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a></li>
+                        <li><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a></li>
+                        <li><a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a></li>
+                    </ul>
+                    <script>window._bd_share_config = {
+                        "common": {
+                            "bdSnsKey": {},
+                            "bdText": "",
+                            "bdMini": "2",
+                            "bdMiniList": false,
+                            "bdPic": "",
+                            "bdStyle": "1",
+                            "bdSize": "32"
+                        }, "share": {}
+                    };
+                    with (document)0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+                </div>
+            </div>
+            <!--END 分享-->
+            <div class="cyReward " style="text-align: center">
+                <div id="cyReward" role="cylabs" data-use="reward" sid="{{ source_id }}"></div>
+
+            </div>
+
+            <hr>
+
+
+            <!--标签-->
+            <div class="article_tag">
+                <ul>
+                    <li><a href="{% url "blog:article" pk=article.category_id %}"
+                           title="归类：{{ article.category }}">{{ article.category }}</a></li>
+                    {% for tag in article.tag.all %}
+                        <li><a href="{% url "blog:tag" name=tag.tag_name %}"
+                               title="标签：{{ tag.tag_name }} ">{{ tag.tag_name }}</a>&nbsp;</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="cyEmoji" style="text-align: center">
+                <div id="cyEmoji" role="cylabs" data-use="emoji" sid="{{ source_id }}"></div>
+            </div>
+
+        </article>
+
+        <!--评论表单-->
+        {% include "blog/message.html" %}
+
+
+        <script type="text/javascript" charset="utf-8" src="https://changyan.itc.cn/js/lib/jquery.js"></script>
+        <script type="text/javascript" charset="utf-8"
+                src="https://changyan.sohu.com/js/changyan.labs.https.js?appid=cyt6A5N47"></script>
+    </div>
+
+
+{% endblock %}
+
+
+{% block js %}
+
+    <script>
+        function GenerateContentList() {
+            $(".post-content").find("h2,h3").each(function (i, item) {
+                var tag = $(item).get(0).localName;
+                $(item).attr("id", "wow" + i);
+                $("#AnchorContent").append('<li><a class="new' + tag + ' anchor-link"  href="#wow' + i + '">' + $(this).text() + '</a></li>');
+                $(".newh2").css("margin-left", 0);
+                $(".newh3").css("margin-left", 20);
+                $(".newh4").css("margin-left", 40);
+                $(".newh5").css("margin-left", 60);
+                $(".newh6").css("margin-left", 80);
+            });
+            $("#AnchorContentToggle").click(function () {
+                var text = $(this).html();
+                if (text == "目录[-]") {
+                    $(this).html("目录[+]");
+                    $(this).attr({"title": "展开"});
+                } else {
+                    $(this).html("目录[-]");
+                    $(this).attr({"title": "收起"});
+                }
+                $("#AnchorContent").toggle();
+            });
+        }
+        GenerateContentList();
+    </script>
+
+{% endblock %}

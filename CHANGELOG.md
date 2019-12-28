@@ -1,7 +1,23 @@
-1.0.8 / 2019-12-27
+1.1.0 / 2019-12-28
+=================
+
+* Offer random-ports option in `CTFd-Glowworm` (#7)
+* Add more error tips when using `CTFd-Glowworm` plugin
+* Fix Error when `docker_max_container_count` is None
+* Fix error when `start_time` is not defined
+* Support using existing image to start env for `CTFd-Glowworm` plugin
+* Fix error when clicking `Expired this instance` button
+* Modified messgage with different mode in owl-containers
+* Fix bugs when `challenge_name` != `envname`
+* Fix bugs when using `Teams` mode in `CTFd-Glowworm` plugins
+* Update plugins README
+
+1.0.9 / 2019-12-27
 =================
 
 * Seperate schedule-task into plugin-owned
+* Uniform network name standard for `CTF_Owl` challenge templates
+* Set regular alive time to 3600s for `CTFd_Owl` challenge containers
 
 1.0.8 / 2019-12-26
 =================

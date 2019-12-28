@@ -1,0 +1,66 @@
+{% extends "blog/base.html" %}
+{% load custom_filter %}
+
+{% block title %}
+    <title>标签：{{ tag }} - 烂笔头</title>
+{% endblock %}
+
+{% block content %}
+    {% paginate article_list 8 %}
+    <section class="mysection">
+        <h4 class="index-title">
+            <a href="{% url "blog:article" pk=0 %}"><i class="el-tag"></i> 标签<b class="lable">{{ tag }}</b></a>
+            <span class="orange-text">{{ category }}</span>
+            <span style="float:right;margin-right:10px;">共有:<a class="orange-text"> {{ count }} </a>篇</span>
+        </h4>
+        <div class="arclist">
+            <!--列表开始-->
+            <ul>
+                {% for article in article_list %}
+                    <li {% if article.view > 500 %}id="tuijian"{% elif article.view > 100 %} id="Hot" {% endif %}>
+                    <div class="arcimg">
+
+                        <img src="{{ article.picture }}"
+                             alt="{{ article.title }}" title="{{ article.title }}"/>
+                    </div>
+                    <div class="arc-right">
+                        <h4 class="blue-text"><a href="{% url "blog:detail" pk=article.id %}" title="{{ article.title }}">{{ article.title }}</a></h4>
+                        <p>{{ article.digest }}</p>
+                        <ul>
+                            <li><a title="{{ article.author }} {{ article.date_time }} 发表 "><i class="el-time"></i> {{ article.date_time }}</a></li>
+                            <li><a href="#" title="作者： {{ article.author }}"><i class="el-user"></i>{{ article.author }}</a></li>
+                            <li><a href="#" title="已有 {{ article.comment }} 条评论"><i class="el-comment"></i>{{ article.comment }}</a>
+                            </li>
+                            <li><a title="已有 {{ article.view }} 次浏览"><i class="el-eye-open"></i>{{ article.view }}</a></li>
+                            <li class="mob-hidden">
+                                <i class="el-tag"></i>
+                                <a href="#">{{ article.tag.values| getTag }}</a>&nbsp;
+                            </li>
+                            <li><a href="{% url "blog:article" pk=article.category_id %}" title="查看分类"><i class="el-th-list"></i>{{ article.category }}</a></li>
+                        </ul>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            <!--列表结束-->
+        </div>
+        <!--分页-->
+
+        <div class="pagination">
+            <div class="list-page">
+                <ul class="post-data">
+                    <li><a>第 {{ current_page }} - {{ last_page }} 页</a> <a>共 {{ count }} 条</a></li>
+                </ul>
+            </div>
+            <ul>
+
+                <li {% if current_page == 1 %}class="active"{% endif %}><a href="?page=1">首页</a></li>
+                <li {% if current_page >= 2 %} {% else %}class="active"{% endif %}><a href="?page={{ current_page|add:-1 }}">上一页</a></li>
+                <li {% if current_page < last_page %} {% else %}class="active"{% endif %}><a href="?page={{ current_page|add:1 }}">下一页</a></li>
+                <li {% if current_page == last_page %}class="active"{% endif %}><a href="?page={{ last_page }}">尾页</a></li>
+            </ul>
+        </div>
+
+    </section>
+
+{% endblock %}

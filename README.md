@@ -28,6 +28,8 @@ docker-compose -f single.yml up
 docker-compose -f single-nginx.yml up
 ```
 
+Know more on the [wiki](https://github.com/D0g3-Lab/H1ve/wiki)
+
 ### Plugins Settings
 
 [CTFd-Owl](https://github.com/D0g3-Lab/H1ve/CTFd/plugins/ctfd-owl)
