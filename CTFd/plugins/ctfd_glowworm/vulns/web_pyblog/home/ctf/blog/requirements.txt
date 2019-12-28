@@ -1,5 +1,5 @@
 -i https://mirrors.tencent.com/pypi/simple
-Django==1.11.22
+Django==1.11.23
 Markdown==2.5.2
 Pygments==2.2.0
 psycopg2==2.7.1
