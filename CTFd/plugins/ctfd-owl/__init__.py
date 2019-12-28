@@ -88,6 +88,7 @@ def load(app):
     @admins_only
     # list alive containers
     def admin_list_containers():
+        mode = utils.get_config("user_mode")
         configs = DBUtils.get_all_configs()
         page = abs(request.args.get("page", 1, type=int))
         results_per_page = 50
@@ -99,7 +100,7 @@ def load(app):
 
         pages = int(count / results_per_page) + (count % results_per_page > 0)
         return render_template("containers.html", containers=containers, pages=pages, curr_page=page,
-                               curr_page_start=page_start, configs=configs)
+                               curr_page_start=page_start, configs=configs, mode=mode)
 
     @owl_blueprint.route("/admin/containers", methods=['PATCH'])
     @admins_only

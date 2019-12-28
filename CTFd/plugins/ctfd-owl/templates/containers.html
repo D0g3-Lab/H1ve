@@ -35,9 +35,15 @@
 								{{ container.id }}
 							</td>
 							<td class="text-center">
-								<a href="{{ url_for('admin.users_detail', user_id=container.user.id) }}">
+								{% if mode == 'users' %}
+								<a href="{{ url_for('admin.users_detail', user_id=container.user_id) }}">
                                     {{ container.user.name | truncate(32) }}
                                 </a>
+								{% else %}
+                                 <a href="{{ url_for('admin.teams_detail', team_id=container.user_id) }}">
+                                    Team{{ container.user_id }}
+                                </a>
+								{% endif %}
 							</td>
 							<td class="text-center">
 								<a href="{{ url_for('admin.challenges_detail', challenge_id=container.challenge.id) }}">
