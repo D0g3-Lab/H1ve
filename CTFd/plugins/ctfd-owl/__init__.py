@@ -164,35 +164,38 @@ def load(app):
     @owl_blueprint.route('/container', methods=['POST'])
     @authed_only
     def new_container():
-        user_id = get_mode()
+        try:
+            user_id = get_mode()
 
-        if ControlUtil.frequency_limit():
-            return jsonify({'success': False, 'msg': 'Frequency limit, You should wait at least 1 min.'})
-        # check whether exist container before
-        existContainer = ControlUtil.get_container(user_id)
-        if existContainer:
-            return jsonify({'success': False, 'msg': 'You have boot {} before.'.format(existContainer.challenge.name)})
-        else:
-            challenge_id = request.args.get('challenge_id')
-            ControlUtil.check_challenge(challenge_id, user_id)
-            configs = DBUtils.get_all_configs()
-            current_count = DBUtils.get_all_alive_container_count()
-            # print(configs.get("docker_max_container_count"))
-            if configs.get("docker_max_container_count") != "None":
-                if int(configs.get("docker_max_container_count")) <= int(current_count):
-                    return jsonify({'success': False, 'msg': 'Max container count exceed.'})
+            if ControlUtil.frequency_limit():
+                return jsonify({'success': False, 'msg': 'Frequency limit, You should wait at least 1 min.'})
+            # check whether exist container before
+            existContainer = ControlUtil.get_container(user_id)
+            if existContainer:
+                return jsonify({'success': False, 'msg': 'You have boot {} before.'.format(existContainer.challenge.name)})
+            else:
+                challenge_id = request.args.get('challenge_id')
+                ControlUtil.check_challenge(challenge_id, user_id)
+                configs = DBUtils.get_all_configs()
+                current_count = DBUtils.get_all_alive_container_count()
+                # print(configs.get("docker_max_container_count"))
+                if configs.get("docker_max_container_count") != "None":
+                    if int(configs.get("docker_max_container_count")) <= int(current_count):
+                        return jsonify({'success': False, 'msg': 'Max container count exceed.'})
 
-            dynamic_docker_challenge = DynamicCheckChallenge.query \
-                .filter(DynamicCheckChallenge.id == challenge_id) \
-                .first_or_404()
-            try:
-                result = ControlUtil.new_container(user_id=user_id, challenge_id=challenge_id)
-                if isinstance(result, bool):
-                    return jsonify({'success': True})
-                else:
-                    return jsonify({'success': False, 'msg': str(result)})
-            except Exception as e:
-                return jsonify({'success': True, 'msg':'Failed when launch instance, please contact with the admin.'})
+                dynamic_docker_challenge = DynamicCheckChallenge.query \
+                    .filter(DynamicCheckChallenge.id == challenge_id) \
+                    .first_or_404()
+                try:
+                    result = ControlUtil.new_container(user_id=user_id, challenge_id=challenge_id)
+                    if isinstance(result, bool):
+                        return jsonify({'success': True})
+                    else:
+                        return jsonify({'success': False, 'msg': str(result)})
+                except Exception as e:
+                    return jsonify({'success': True, 'msg':'Failed when launch instance, please contact with the admin.'})
+        except Exception as e:
+            return jsonify({'success': False, 'msg': str(e)})
 
     @owl_blueprint.route('/container', methods=['DELETE'])
     @authed_only
