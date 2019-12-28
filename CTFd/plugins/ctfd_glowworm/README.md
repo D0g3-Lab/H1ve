@@ -38,6 +38,8 @@ named `ctfd_glowworm`.
 
 **Dirname** 题目所在文件夹（相对路径）
 
+**Docker image name** Build的image name(若有开源的题目，可直接写docker-hub上的名字)
+
 **Env Port** 容器内开放端口
 
 **Type** 题目类型（WEB1，WEB2，PWN1，PWN2）
@@ -69,3 +71,4 @@ named `ctfd_glowworm`.
 ![glowworm-targets-w150](./assets/demo_img/glowworm-targets_shrink.jpg)
 
 ![glowworm-attacks-w150](./assets/demo_img/glowworm-attacks_shrink.jpg)
+
