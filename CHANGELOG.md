@@ -11,6 +11,7 @@
 * Fix bugs when `challenge_name` != `envname`
 * Fix bugs when using `Teams` mode in `CTFd-Glowworm` plugins
 * Update plugins README
+* Add source codes of 3 challenges for CTFd-Glowworm plugin
 
 1.0.9 / 2019-12-27
 =================
