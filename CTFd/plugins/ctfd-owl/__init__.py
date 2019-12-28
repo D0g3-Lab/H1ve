@@ -213,8 +213,7 @@ def load(app):
     @owl_blueprint.route('/container', methods=['PATCH'])
     @authed_only
     def renew_container():
-        user_id = current_user.get_current_user().id
-
+        user_id = get_mode()
         if ControlUtil.frequency_limit():
             return jsonify({'success': False, 'msg': 'Frequency limit, You should wait at least 1 min.'})
 
