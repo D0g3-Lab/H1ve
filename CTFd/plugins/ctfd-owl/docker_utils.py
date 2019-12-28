@@ -73,7 +73,7 @@ class DockerUtils:
             name = "User{}_{}".format(user_id, dirname)
             dname = os.path.join(basedir, "source/run/" + name)
         except Exception as e:
-            return e
+            return str(e)
 
         try:
             command = "cd {} && docker-compose -H={} -f run.yml down".format(dname, socket)
@@ -89,8 +89,7 @@ class DockerUtils:
             )
             return True
         except subprocess.CalledProcessError as e:
-            logger.error('Stdout: {out}\nStderr: {err}'.format(out=e.stdout.decode(), err=e.stderr.decode()))
-            return e.stderr.decode()
+            return str(e.stderr.decode())
 
     @staticmethod
     def remove_current_docker_container(user_id, is_retry=False):

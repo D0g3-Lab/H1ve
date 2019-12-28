@@ -168,16 +168,19 @@ def load(app):
     @glowworm_blueprint.route("/admin/init", methods=['PATCH'])
     @admins_only
     def admin_init_competitions():
-        from .schedule import scheduler
-        interval = DBUtils.get_all_configs().get("per_round")
-        interval = str(int(int(interval) / 60))
-        if ControlUtil.init_competition():
-            job = scheduler.add_job(id='time_base', func=ControlUtil.check_env, args=["init"], trigger='cron', minute="*/{}".format(interval))
-            # job = scheduler.add_job(id='time_base', func=ControlUtil.check_env, args=["init"], trigger='interval', seconds=5)
-            print(job)
-            return jsonify({'success': True})
-        else:
-            return jsonify({'success': False})
+        try:
+            from .schedule import scheduler
+            interval = DBUtils.get_all_configs().get("per_round")
+            interval = str(int(int(interval) / 60))
+            if ControlUtil.init_competition():
+                job = scheduler.add_job(id='time_base', func=ControlUtil.check_env, args=["init"], trigger='cron', minute="*/{}".format(interval))
+                # job = scheduler.add_job(id='time_base', func=ControlUtil.check_env, args=["init"], trigger='interval', seconds=5)
+                print(job)
+                return jsonify({'success': True})
+            else:
+                return jsonify({'success': False})
+        except Exception as e:
+            return jsonify({'success': False, 'msg': str(e)})
 
     @glowworm_blueprint.route("/admin/remove", methods=['PATCH'])
     @admins_only
@@ -208,30 +211,20 @@ def load(app):
         req = request.get_json()
         print(req)
         if req["type"] == "init":
-            if ControlUtil.check_env():
-                return jsonify({'success': True})
-            else:
-                return jsonify({'success': False})
+            result = ControlUtil.check_env()
         elif req["type"] == "check":
-            if ControlUtil.check_env(req['type'], req['challenge_id']):
-                return jsonify({'success': True})
-            else:
-                return jsonify({'success': False})
+            result = ControlUtil.check_env(req['type'], req['challenge_id'])
         elif req["type"] == "build":
-            if ControlUtil.build_env(req['challenge_id']):
-                return jsonify({'success': True})
-            else:
-                return jsonify({'success': False})
+            result = ControlUtil.build_env(req['challenge_id'])
         elif req["type"] == "run":
-            if ControlUtil.start_env(req['challenge_id']):
-                return jsonify({'success': True})
-            else:
-                return jsonify({'success': False})
+            result = ControlUtil.start_env(req['challenge_id'])
         elif req["type"] == "remove":
-            if ControlUtil.remove_env(req['challenge_id']):
-                return jsonify({'success': True})
-            else:
-                return jsonify({'success': False})
+            result = ControlUtil.remove_env(req['challenge_id'])
+
+        if result:
+            return jsonify({'success': True})
+        else:
+            return jsonify({'success': False, 'msg': result})
 
     @glowworm_blueprint.route('/container', methods=['GET'])
     @authed_only
