@@ -43,7 +43,7 @@ def load(app):
         for team in standings:
             mode = utils.get_config("user_mode")
             if mode == "teams":
-                teamid = Users.query.filter_by(id=team[0]).first_or_404().team_id
+                teamid = team[0]
                 basic_solves = db.session.query(Solves.challenge_id.label('chalid'), Solves.date.label('date')).filter(
                     Solves.team_id == teamid)
             else:
@@ -88,11 +88,12 @@ def load(app):
                 from CTFd.plugins.ctfd_glowworm.extensions import get_round
                 all_challenges = ADAChallenge.query.all()
                 for challenge in all_challenges:
-                    log = GlowwormAttacks.query.filter_by(round=get_round(), victim_id=teamid, envname=challenge.name).first()
+                    envname = challenge.dirname.split('/')[1]
+                    log = GlowwormAttacks.query.filter_by(round=get_round(), victim_id=teamid, envname=envname).first()
                     if log == None:
                         solve = str(challenge.id) + "-4"
                         pass
-                    elif challenge.name == log.envname:
+                    elif envname == log.envname:
                         solve = str(challenge.id) + "-5"
                         pass
                     jsolves.append(solve)
@@ -209,7 +210,7 @@ def load(app):
             init_scores = (
                 db.session.query(
                     GlowwormInitLog.account_id.label("account_id"),
-                    (0 - db.func.sum(ADAChallenge.value)).label("score"),
+                    (0 - db.func.sum(ADAChallenge.check_value)).label("score"),
                     db.func.max(GlowwormInitLog.id).label("id"),
                     db.func.max(GlowwormInitLog.date).label("date"),
                 )
