@@ -170,6 +170,7 @@ def load(app):
     def admin_init_competitions():
         try:
             from .schedule import scheduler
+            start_time = int(utils.get_config("start"))
             interval = DBUtils.get_all_configs().get("per_round")
             interval = str(int(int(interval) / 60))
             if ControlUtil.init_competition():

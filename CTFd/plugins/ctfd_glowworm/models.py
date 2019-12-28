@@ -106,9 +106,6 @@ class GlowwormChallenge(BaseChallenge):
 
         data = request.form or request.get_json()
         for attr, value in data.items():
-            # We need to set these to floats so that the next operations don't operate on strings
-            if attr in ("initial", "minimum", "decay"):
-                value = float(value)
             setattr(challenge, attr, value)
 
         Model = get_model()
@@ -122,20 +119,6 @@ class GlowwormChallenge(BaseChallenge):
             )
                 .count()
         )
-
-        # It is important that this calculation takes into account floats.
-        # Hence this file uses from __future__ import division
-        value = (
-                        ((challenge.minimum - challenge.initial) / (challenge.decay ** 2))
-                        * (solve_count ** 2)
-                ) + challenge.initial
-
-        value = math.ceil(value)
-
-        if value < challenge.minimum:
-            value = challenge.minimum
-
-        challenge.value = value
 
         db.session.commit()
         return challenge
