@@ -114,7 +114,7 @@ class DockerUtils:
         platformDir = os.path.join(basePath, platform_name)
         challenge = ADAChallenge.query.filter_by(id=challenge_id).first_or_404()
         envPath = os.path.join(basePath, challenge.dirname)
-        command = 'cd ' + envPath + ' && docker build -f ' + envPath + '/Dockerfile -t ' + challenge.name + " ."
+        command = 'cd ' + envPath + ' && docker build -f ' + envPath + '/Dockerfile -t ' + challenge.image_name + " ."
         print(command)
         try:
             os.system(command)
@@ -333,7 +333,7 @@ fi
                     db.session.commit()
                     command = """#!/bin/sh
     docker run -tid --restart=on-failure:10 --privileged --name %s --cpus=%s -m %s -v "%s":"%s" -p %s:%s -p %s:%s --network h1ve_frp_containers %s "/conf/service.sh"
-    """ % ( name, cpu_limit, memory_limit, confPath, "/conf", insert_service_port, env_port, insert_ssh_port, "22", dirname)
+    """ % ( name, cpu_limit, memory_limit, confPath, "/conf", insert_service_port, env_port, insert_ssh_port, "22", challenge.image_name)
                     print(command)
                     with open(os.path.join(confPath, "docker.sh"), 'w') as f:
                         f.write(command)

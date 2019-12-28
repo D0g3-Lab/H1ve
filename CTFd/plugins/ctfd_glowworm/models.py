@@ -262,6 +262,7 @@ class ADAChallenge(Challenges):
     id = db.Column(None, db.ForeignKey("challenges.id"), primary_key=True)
 
     dirname = db.Column(db.String(80))
+    image_name = db.Column(db.String(80))
     check_value = db.Column(db.Integer, default=0)
 
     cpu_limit = db.Column(db.String(5))
