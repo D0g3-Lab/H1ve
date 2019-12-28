@@ -146,6 +146,13 @@ class DBUtils:
                         flag = flag,
                         round =round
                     )
+                    mode = utils.get_config("user_mode")
+                    if mode == "users":
+                        user_id = victim_id
+                        team_id = None
+                    else:
+                        user_id = None
+                        team_id = victim_id
                     init = GlowwormInitLog(
                         user_id=victim_id,
                         team_id=victim_name,

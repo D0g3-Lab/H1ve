@@ -61,7 +61,7 @@ class DockerUtils:
                         victim = None
                         team = Teams.query.filter_by(id=index.user_id).first()
                         team_id = team.id
-                        victim_id = None
+                        victim_id = team_id
                         victim_name = team.name
 
                     check_file = os.path.join(basePath, challenge.dirname, "conf", "check.py")
