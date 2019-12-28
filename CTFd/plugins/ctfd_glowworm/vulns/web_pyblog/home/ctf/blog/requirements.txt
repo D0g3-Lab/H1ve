@@ -4,4 +4,4 @@ Markdown==2.5.2
 Pygments==2.2.0
 psycopg2==2.7.1
 MySQL-Python==1.2.5
-PyYAML==3.13
+PyYAML==5.1
