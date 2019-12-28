@@ -121,7 +121,7 @@ class DockerUtils:
             return True
         except Exception as e:
             print(e)
-            return False
+            return str(e)
 
     @staticmethod
     def gen_env(language="PHP", rootpasswd="", teamPath="", key="", teamid="", interval=300):
@@ -280,77 +280,86 @@ fi
 
     @staticmethod
     def run_env(counts, challenge_id):
-        configs = DBUtils.get_all_configs()
-        interval = configs.get("per_round") if configs.get("per_round")== "" else "300"
-        cpu_limit = configs.get("cpu_limit") if configs.get("cpu_limit")== "" else "0.5"
-        memory_limit = configs.get("memory_limit") if configs.get("memory_limit")== "" else "512M"
-        rootpwd = configs.get("containers_key") if configs.get("containers_key") else "root"
-        mode = utils.get_config("user_mode")
-        platform_name = utils.get_config("ctf_name")
-        basePath = os.path.abspath(os.path.dirname(__file__))
-        platformDir = os.path.join(basePath, platform_name)
-        challenge = ADAChallenge.query.filter_by(id=challenge_id).first_or_404()
-        for index in counts:
-            if mode == "users" and index.type == "admin":
-                pass
-            else:
-                dirname = challenge.dirname.split("/")[1]
-                envPath = os.path.join(basePath, challenge.dirname)
-                teamDir = os.path.join(basePath, platform_name, 'team' + str(index.id))
-                teamEnvDir = os.path.join(teamDir, dirname)
-                name = "Team{}_{}".format(str(index.id), dirname)
-                # 目录复制
-                DockerUtils.copy_env(envPath, teamDir)
-                # 容器动态信息初始化
-                # save random key
-                key = str(uuid.uuid3(uuid.UUID(str(uuid.uuid1())), platform_name + str(time.time())))
-                print(key)
-                instance_pwd = DockerUtils.gen_env(language=challenge.env_language, rootpasswd=rootpwd, teamPath=teamEnvDir, key=key, teamid=name, interval=interval)
-                fixedPorts = 100 * int(challenge.id)
-                env_port = challenge.env_port if challenge.env_port != "" else "80"
-                insert_service_port = int(str(fixedPorts + index.id) + "80")
-                insert_ssh_port = int(str(fixedPorts + index.id) + "22")
-                confPath = os.path.join(teamEnvDir, "conf")
+        try:
+            configs = DBUtils.get_all_configs()
+            interval = configs.get("per_round") if configs.get("per_round") else "300"
+            cpu_limit = configs.get("cpu_limit") if configs.get("cpu_limit") else "0.5"
+            memory_limit = configs.get("memory_limit") if configs.get("memory_limit") else "512M"
+            rootpwd = configs.get("containers_key") if configs.get("containers_key") else "root"
+            mode = utils.get_config("user_mode")
+            platform_name = utils.get_config("ctf_name")
+            basePath = os.path.abspath(os.path.dirname(__file__))
+            platformDir = os.path.join(basePath, platform_name)
+            challenge = ADAChallenge.query.filter_by(id=challenge_id).first_or_404()
+            for index in counts:
+                if mode == "users" and index.type == "admin":
+                    pass
+                else:
+                    dirname = challenge.dirname.split("/")[1]
+                    envPath = os.path.join(basePath, challenge.dirname)
+                    teamDir = os.path.join(basePath, platform_name, 'team' + str(index.id))
+                    teamEnvDir = os.path.join(teamDir, dirname)
+                    name = "Team{}_{}".format(str(index.id), dirname)
+                    # 目录复制
+                    DockerUtils.copy_env(envPath, teamDir)
+                    # 容器动态信息初始化
+                    # save random key
+                    key = str(uuid.uuid3(uuid.UUID(str(uuid.uuid1())), platform_name + str(time.time())))
+                    print(key)
+                    instance_pwd = DockerUtils.gen_env(language=challenge.env_language, rootpasswd=rootpwd, teamPath=teamEnvDir, key=key, teamid=name, interval=interval)
+                    # choose alive random port
+                    if configs.get("random_port") == "1":
+                        fixedPorts = DBUtils.get_alive_ports()
+                        insert_service_port = fixedPorts[0]
+                        insert_ssh_port = fixedPorts[1]
+                    else:
+                        fixedPorts = 100 * int(challenge.id)
+                        insert_service_port = int(str(fixedPorts + index.id) + "80")
+                        insert_ssh_port = int(str(fixedPorts + index.id) + "22")
+                    env_port = challenge.env_port if challenge.env_port != "" else "80"
+                    confPath = os.path.join(teamEnvDir, "conf")
 
-                instance = GlowwormContainers(
-                    user_id=index.id
-                    , challenge_id=challenge_id
-                    , docker_id=name
-                    , ip=configs.get("direct_address")
-                    , service_port=insert_service_port
-                    , ssh_port=insert_ssh_port
-                    , ssh_key=instance_pwd
-                    , key=key
-                )
-                db.session.add(instance)
-                db.session.commit()
-                command = """#!/bin/sh
-docker run -tid --restart=on-failure:10 --privileged --name %s --cpus=%s -m %s -v "%s":"%s" -p %s:%s -p %s:%s --network h1ve_frp_containers %s "/conf/service.sh"
-""" % ( name, cpu_limit, memory_limit, confPath, "/conf", insert_service_port, env_port, insert_ssh_port, "22", dirname)
-                print(command)
-                with open(os.path.join(confPath, "docker.sh"), 'w') as f:
-                    f.write(command)
-                # 启动容器
-                command = 'cd "%s" && chmod +x ./docker.sh service.sh && ./docker.sh' % confPath
-                print(command)
-                try:
-                    os.system(command)
-                    msg = name + " up."
-                    log(
-                        "glowworm",
-                        "[{date}] {name} {msg}",
-                        msg=msg,
+                    instance = GlowwormContainers(
+                        user_id=index.id
+                        , challenge_id=challenge_id
+                        , docker_id=name
+                        , ip=configs.get("direct_address")
+                        , service_port=insert_service_port
+                        , ssh_port=insert_ssh_port
+                        , ssh_key=instance_pwd
+                        , key=key
                     )
+                    db.session.add(instance)
+                    db.session.commit()
+                    command = """#!/bin/sh
+    docker run -tid --restart=on-failure:10 --privileged --name %s --cpus=%s -m %s -v "%s":"%s" -p %s:%s -p %s:%s --network h1ve_frp_containers %s "/conf/service.sh"
+    """ % ( name, cpu_limit, memory_limit, confPath, "/conf", insert_service_port, env_port, insert_ssh_port, "22", dirname)
+                    print(command)
+                    with open(os.path.join(confPath, "docker.sh"), 'w') as f:
+                        f.write(command)
+                    # 启动容器
+                    command = 'cd "%s" && chmod +x ./docker.sh service.sh && ./docker.sh' % confPath
+                    print(command)
+                    try:
+                        os.system(command)
+                        msg = name + " up."
+                        log(
+                            "glowworm",
+                            "[{date}] {name} {msg}",
+                            msg=msg,
+                        )
 
-                except Exception as e:
-                    # print(e)
-                    msg = name + " up error." + str(e)
-                    log(
-                        "glowworm",
-                        "[{date}] {name} {msg}",
-                        msg=msg,
-                    )
-                    return False
-        challenge.env_status = True
-        db.session.commit()
-        return True
+                    except Exception as e:
+                        # print(e)
+                        msg = name + " up error." + str(e)
+                        log(
+                            "glowworm",
+                            "[{date}] {name} {msg}",
+                            msg=msg,
+                        )
+                        return str(e)
+            challenge.env_status = True
+            db.session.commit()
+            return True
+        except Exception as e:
+            return str(e)

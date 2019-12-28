@@ -40,10 +40,28 @@
 			<label>
 				Random Port
 				<small class="form-text text-muted">
-					Whether container port setting to ramdom or not. (default is 0)
+					Whether container port setting to ramdom or not. (default is 1)
 				</small>
 			</label>
 			<input type="text" class="form-control" id="random-port" name="random_port" value="{{ configs.get("random_port") }}">
+		</div>
+		<div class="form-group">
+			<label>
+				Random Minimum Port
+				<small class="form-text text-muted">
+					Which port is set to ramdomed from.
+				</small>
+			</label>
+			<input type="text" class="form-control" id="port-minimum" name="port_minimum" value="{{ configs.get("port_minimum") }}">
+		</div>
+		<div class="form-group">
+			<label>
+				Random Maximum Port
+				<small class="form-text text-muted">
+					Which port is set to ramdomed to.
+				</small>
+			</label>
+			<input type="text" class="form-control" id="port-minimum" name="port_maximum" value="{{ configs.get("port_maximum") }}">
 		</div>
 
 		<button type="submit" class="btn btn-md btn-primary float-right">Update</button>

@@ -1,5 +1,4 @@
-import datetime
-import uuid
+import datetime, random, uuid
 from CTFd import utils
 from .models import GlowwormConfigs, GlowwormContainers, ADAChallenge, GlowwormAttacks, GlowwormInitLog
 from CTFd.models import Users, Teams
@@ -43,7 +42,7 @@ class DBUtils:
             return True
         except Exception as e:
             print(e)
-            return False
+            return str(e)
 
     @staticmethod
     def get_current_containers(challenge_id, user_id):
@@ -107,6 +106,26 @@ class DBUtils:
         except Exception as e:
             print(e)
             return False
+
+    @staticmethod
+    def get_alive_ports():
+        configs = DBUtils.get_all_configs()
+        min = int(configs.get("port_minimum") )if configs.get("port_minimum") else 40000
+        max = int(configs.get("port_maximum")) if configs.get("port_maximum") else 50000
+
+        while 1:
+            service_port = random.randint(min, max)
+            if GlowwormContainers.query.filter_by(service_port=service_port).first() == None:
+                break
+            else:
+                service_port = random.randint(min, max)
+        while 1:
+            ssh_port = random.randint(min, max)
+            if GlowwormContainers.query.filter_by(ssh_port=ssh_port).first() == None:
+                break
+            else:
+                ssh_port = random.randint(min, max)
+        return service_port, ssh_port
 
     @staticmethod
     def update_attack_log(attack_id=None, attack_name=None, victim_id=None, victim_name=None, challenge_id=None, flag=None):
