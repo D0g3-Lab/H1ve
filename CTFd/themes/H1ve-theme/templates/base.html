@@ -86,8 +86,11 @@
 								<a class="nav-link" href="{{ page.route }}">{{ page.title }}</a>
 							</li>
 						{% else %}
-							<li class="nav-item">
-								<a class="nav-link" href="{{ url_for('views.static_html', route=page.route) }}">{{ page.title }}</a>
+							<li id="{{ page.route }}">
+								<a href="{{ url_for('views.static_html', route=page.route) }}">
+									<span class="main-link">{{ page.title }}</span>
+									<span class="jewel"></span>
+								</a>
 							</li>
 						{% endif %}
 					{% endfor %}
