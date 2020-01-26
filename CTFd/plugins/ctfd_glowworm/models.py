@@ -206,7 +206,7 @@ class GlowwormChallenge(BaseChallenge):
             attacker_name = team.name
             victim = GlowwormContainers.query.filter_by(flag=submission).first()
             victim_name = Teams.query.filter_by(id=victim.user_id).first()
-            team_id = victim_name.team_id
+            team_id = victim_name.id
 
         attack = GlowwormAttacks(
             attack_id = attacker.user_id,

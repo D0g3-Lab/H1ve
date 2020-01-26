@@ -1,3 +1,12 @@
+1.1.1 / 2020-1-26
+=================
+
+* Fix error when submit flags in Team mode when using `CTFd-Glowworm` (#15)
+* Modify the sort method of `CTFd-Matrix-Scorebard`
+* Add `.gitattributes` to prettify the repository
+* Modify `H1ve-Theme` base.html to adapt more navs add in admin page
+* Prettify the admin-containers page
+
 1.1.0 / 2019-12-28
 =================
 

@@ -52,7 +52,7 @@
 							</td>
 							<td class="text-center">
 								<span>
-                                    {% if container.port == 0 %}
+                                    {% if container.redirect_type == 'http' %}
                                         {% if configs.get('frp_http_port', "80") == "80" %}
                                             {{ "http://" + container.uuid + configs.get('frp_http_domain_suffix', "") }}
                                         {% else %}
