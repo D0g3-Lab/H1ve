@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "dev": "H1ve dev docs",
-        "build": "H1ve build docs"
+        "docs:dev": "vuepress dev docs",
+        "docs:build": "vuepress build docs"
     }
 }
