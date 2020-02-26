@@ -43,7 +43,7 @@ module.exports = {
       // 自定义仓库链接文字。默认从 `themeConfig.repo` 中自动推断为
       // "GitHub"/"GitLab"/"Bitbucket" 其中之一，或是 "Source"。
       repoLabel: 'GitHub',
-      // docsDir: 'docs',
+      docsDir: 'docs/docs',
       // 假如文档放在一个特定的分支下：
       docsBranch: 'dev',
       // 默认是 false, 设置为 true 来启用
