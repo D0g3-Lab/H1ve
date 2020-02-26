@@ -1,0 +1,6 @@
+{
+    "scripts": {
+        "dev": "H1ve dev docs",
+        "build": "H1ve build docs"
+    }
+}
