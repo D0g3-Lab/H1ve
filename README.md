@@ -36,6 +36,8 @@ Know more on the [wiki](https://h1ve.dao.ge/)
 
 [CTFd-Glowworm](https://github.com/D0g3-Lab/H1ve/tree/master/CTFd/plugins/ctfd_glowworm)
 
+[Aliyun-Instance](https://github.com/D0g3-Lab/H1ve/tree/master/CTFd/plugins/aliyun-instance)
+
 
 ## Architecture
 ![](./docs/img/H1ve-Main_shrink.png)
