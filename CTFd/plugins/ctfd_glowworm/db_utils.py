@@ -81,8 +81,9 @@ class DBUtils:
         if mode == "users":
             q = Users.query.filter_by(id=user_id).first()
         else:
-            qq = Users.query.filter_by(id=user_id).first().team_id
-            q = Teams.query.filter_by(id=qq).first()
+            # Todo: 重新封装模式判断
+            # qq = Users.query.filter_by(id=user_id).first().team_id
+            q = Teams.query.filter_by(id=user_id).first()
         return q
 
     @staticmethod
