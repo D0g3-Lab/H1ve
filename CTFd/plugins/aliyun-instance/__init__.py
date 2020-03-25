@@ -74,7 +74,7 @@ def load(app):
     # list plugin settings
     def admin_list_configs():
         configs = DBUtils.get_all_configs()
-        return render_template('configs.html', configs=configs)
+        return render_template('aliyun_configs.html', configs=configs)
 
 
     @ali_blueprint.route('/admin/settings', methods=['PATCH'])
@@ -101,7 +101,7 @@ def load(app):
 
         pages = int(count / results_per_page) + (count % results_per_page > 0)
 
-        return render_template("containers.html", containers=containers, pages=pages, curr_page=page,
+        return render_template("aliyun_containers.html", containers=containers, pages=pages, curr_page=page,
                                curr_page_start=page_start, configs=configs, mode=mode)
 
     @ali_blueprint.route("/admin/containers", methods=['PATCH'])
