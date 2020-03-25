@@ -1,0 +1,191 @@
+{% extends "admin/base.html" %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block content %}
+	<div class="jumbotron">
+		<div class="container">
+			<h1>Aliyun ECS Instances</h1>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<table class="table table-striped">
+					<thead>
+					<tr>
+						<td class="text-center"><b>No</b></td>
+						<td class="text-center"><b>ID</b></td>
+						<td class="text-center"><b>User</b></td>
+						<td class="text-center"><b>Challenge</b></td>
+						<td class="text-center"><b>Access Method</b></td>
+						<td class="text-center"><b>Flag</b></td>
+						<td class="text-center"><b>Startup Time</b></td>
+						<td class="text-center"><b>Renewal Times</b></td>
+						<td class="text-center"><b>Delete</b></td>
+						<td class="text-center"><b>Renew</b></td>
+					</tr>
+					</thead>
+					<tbody>
+					{% for container in containers %}
+						<tr>
+                            <th scope="row" class="text-center">{{ curr_page_start + loop.index }}</th>
+							<td class="text-center">
+								{{ container.id }}
+							</td>
+							<td class="text-center">
+								{% if mode == 'users' %}
+								<a href="{{ url_for('admin.users_detail', user_id=container.user_id) }}">
+                                    {{ container.user.name | truncate(32) }}
+                                </a>
+								{% else %}
+                                 <a href="{{ url_for('admin.teams_detail', team_id=container.user_id) }}">
+                                    Team{{ container.user_id }}
+                                </a>
+								{% endif %}
+							</td>
+							<td class="text-center">
+								<a href="{{ url_for('admin.challenges_detail', challenge_id=container.challenge.id) }}">
+                                    {{ container.challenge.name }}
+                                </a>
+							</td>
+							<td class="text-center">
+                  {{ container.ip }}
+							</td>
+              <td class="text-center">
+                  {{ container.flag }}
+              </td>
+              <td class="text-center">
+                  {{ container.start_time }}
+              </td>
+              <td class="text-center">
+                  {{ container.renew_count }}
+              </td>
+              <td class="text-center">
+                  <a class="delete-container" container-id="{{ container.id }}" data-toggle="tooltip"
+                        user-id="{{ container.user.id }}" data-placement="top" title="Destroy Container #{{ container.id }}">
+                      <i class="fas fa-times"></i>
+                  </a>
+              </td>
+              <td class="text-center">
+                  <a class="renew-container" container-id="{{ container.id }}" data-toggle="tooltip"
+                          user-id="{{ container.user.id }}" data-placement="top"
+                          challenge-id="{{ container.challenge_id }}" title="Renew Container #{{ container.id }}">
+                      <i class="fas fa-sync"></i>
+                  </a>
+              </td>
+          </tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		{% if pages > 1 %}
+			<div class="row">
+				<div class="col-md-12">
+					<div class="text-center">Page
+						<br>
+						{% if curr_page != 1 %}
+							<a href="/plugins/aliyun-instance/admin/containers?page={{ curr_page - 1 }}">
+								&lt;&lt;&lt;
+							</a>
+						{% endif %}
+						{% for page in range(1, pages + 1) %}
+							{% if curr_page != page %}
+								<a href="/plugins/aliyun-instance/admin/containers?page={{ page }}">{{ page }}</a>
+							{% else %}
+								<b>{{ page }}</b>
+							{% endif %}
+						{% endfor %}
+						{% if curr_page != pages %}
+							<a href="/plugins/aliyun-instance/admin/containers?page={{ curr_page + 1 }}">
+								&gt;&gt;&gt;
+							</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(".delete-container").click(function(e) {
+            e.preventDefault();
+            var container_id = $(this).attr("container-id");
+            var user_id = $(this).attr("user-id");
+
+            var body = "<span>Are you sure you want to delete <strong>Container #{0}</strong>?</span>".format(
+              htmlentities(container_id)
+            );
+
+            var row = $(this)
+              .parent()
+              .parent();
+
+            ezq({
+              title: "Destroy Container",
+              body: body,
+              success: function() {
+                CTFd.fetch("/plugins/aliyun-instance/admin/containers?user_id=" + user_id, {
+                  method: "DELETE",
+                  credentials: "same-origin",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                  }
+                })
+                  .then(function(response) {
+                    return response.json();
+                  })
+                  .then(function(response) {
+                    if (response.success) {
+                      row.remove();
+                    }
+                  });
+              }
+            });
+          });
+
+        $(".renew-container").click(function(e) {
+            e.preventDefault();
+            var container_id = $(this).attr("container-id");
+            var challenge_id = $(this).attr("challenge-id");
+            var user_id = $(this).attr("user-id");
+
+            var body = "<span>Are you sure you want to renew <strong>Container #{0}</strong>?</span>".format(
+              htmlentities(container_id)
+            );
+
+            ezq({
+              title: "Renew Container",
+              body: body,
+              success: function() {
+                CTFd.fetch("/plugins/aliyun-instance/admin/containers?user_id=" + user_id + "&challenge_id=" + challenge_id, {
+                  method: "PATCH",
+                  credentials: "same-origin",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                  }
+                })
+                  .then(function(response) {
+                    return response.json();
+                  })
+                  .then(function(response) {
+                    if (response.success) {
+                      ezal({
+                            title: "Success",
+                            body: "This instance has been renewed!",
+                            button: "OK"
+                        });
+                    }
+                  });
+              }
+            });
+          });
+    </script>
+{% endblock %}
+

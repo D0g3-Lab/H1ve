@@ -6,11 +6,11 @@ services:
       context: .
       args:
         - WORKDIR=$PWD
-    image: hive-main
+    image: h1ve-main
     user: root
     restart: always
     expose:
-      - 8000
+      - 4000
     environment:
       - UPLOAD_FOLDER=/var/uploads
       - DATABASE_URL=mysql+pymysql://root:ctfd@db/ctfd
@@ -22,7 +22,7 @@ services:
     volumes:
       - .data/CTFd/logs:/var/log/CTFd
       - .data/CTFd/uploads:/var/uploads
-      - .:/opt/CTFd
+      - $PWD:$PWD
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - db
@@ -92,9 +92,8 @@ services:
       - main
     # 数据卷
     volumes:
-      - "$PWD/nginx/conf/ssl:/etc/nginx/ssl:ro"
-      - "$PWD/nginx/conf/vhosts:/etc/nginx/vhosts:ro"
-      - "$PWD/nginx/conf/nginx.conf:/etc/nginx/nginx.conf:ro"
+      - "$PWD/nginx/conf/ssl:/opt/verynginx/openresty/nginx/conf/ssl:ro"
+      - "$PWD/nginx/conf/vhosts:/opt/verynginx/openresty/nginx/conf/vhosts:ro"
     ports:
       - "80:80"
       - "443:443"
@@ -107,13 +106,13 @@ networks:
     internal:
         internal: true
     frp:
-      name: "h1ve-frp"
+      name: "h1ve_frp"
       driver: bridge
       ipam:
         config:
           - subnet: 10.1.0.0/16
     frp_containers:
-        name: "h1ve-frp_containers"
+        name: "h1ve_frp_containers"
         driver: bridge
         ipam:
           config:

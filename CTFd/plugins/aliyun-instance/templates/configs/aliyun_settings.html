@@ -1,0 +1,52 @@
+<div role="tabpanel" class="tab-pane config-section active" id="#aliyun">
+	<form method="POST" autocomplete="off" class="w-100">
+        <div class="form-group">
+			<label>
+				Flag Prefix
+				<small class="form-text text-muted">
+					Flag Prefix in containers
+				</small>
+			</label>
+			<input type="text" class="form-control" id="aliyun-flag-prefix" name="aliyun_flag_prefix" value="{{ configs.get("aliyun_flag_prefix") }}">
+		</div>
+        <div class="form-group">
+			<label>
+				Aliyun AccessKey ID
+				<small class="form-text text-muted">
+					Your Aliyun AccessKey ID
+				</small>
+			</label>
+			<input type="text" class="form-control" id="aliyun-accesskey-id" name="aliyun_accesskey_id" value="{{ configs.get("aliyun_accesskey_id") }}">
+		</div>
+		<div class="form-group">
+			<label>
+				Access Key Secret
+				<small class="form-text text-muted">
+					Your Access Key Secret
+				</small>
+			</label>
+			<input type="text" class="form-control" id="aliyun-accesskey-secret" name="aliyun_accesskey_secret" value="{{ configs.get("aliyun_accesskey_secret") }}">
+		</div>
+        <div class="form-group">
+			<label>
+				Max ECS Count
+				<small class="form-text text-muted">
+					Max ECS Count
+				</small>
+			</label>
+			<input type="text" class="form-control" id="aliyun-max-ECS-count" name="aliyun_max_ECS_count" value="{{ configs.get("aliyun_max_ECS_count") }}">
+		</div>
+
+        <div class="form-group">
+			<label>
+				Max Renewal Times
+				<small class="form-text text-muted">
+					Max Renewal Times
+				</small>
+			</label>
+			<input type="text" class="form-control" id="aliyun-max-renew-count" name="aliyun_max_renew_count" value="{{ configs.get("aliyun_max_renew_count") }}">
+		</div>
+
+		<button type="submit" class="btn btn-md btn-primary float-right">Update</button>
+	</form>
+</div>
