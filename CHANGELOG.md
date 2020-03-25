@@ -1,3 +1,16 @@
+1.1.3 / 2020-3-25
+=================
+
+* Readme中添加`Aliyun-Instance`链接
+* 修复多次进行`user_id`转换导致`CTFd-Glowworm`插件重置容器失败的问题
+* 修复`Aliyun-Instance`插件模版文件名重复导致的Bug
+
+1.1.2 / 2020-3-17
+=================
+
+* fix vul & update single-nginx.yml
+* aliyun-instance-first-commit
+
 1.1.1 / 2020-1-26
 =================
 
