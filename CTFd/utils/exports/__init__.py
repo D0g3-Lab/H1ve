@@ -1,23 +1,31 @@
-from CTFd.utils import get_app_config, set_config
-from CTFd.utils.migrations import get_current_revision, create_database, drop_database, stamp_latest_revision
-from CTFd.utils.uploads import get_uploader
-from CTFd.models import db
-from CTFd.cache import cache
-from datafreeze.format import SERIALIZERS
-from flask import current_app as app
-from flask_migrate import upgrade
-from datafreeze.format.fjson import JSONSerializer, JSONEncoder
-from sqlalchemy.exc import OperationalError, ProgrammingError
-from alembic.util import CommandError
-import dataset
-import datafreeze
 import datetime
 import json
 import os
 import re
-import six
-import zipfile
 import tempfile
+import zipfile
+
+import datafreeze
+import dataset
+import six
+from alembic.util import CommandError
+from datafreeze.format import SERIALIZERS
+from datafreeze.format.fjson import JSONEncoder, JSONSerializer
+from flask import current_app as app
+from flask_migrate import upgrade
+from sqlalchemy.exc import OperationalError, ProgrammingError
+from sqlalchemy.sql import sqltypes
+
+from CTFd.cache import cache
+from CTFd.models import db, get_class_by_tablename
+from CTFd.utils import get_app_config, set_config
+from CTFd.utils.migrations import (
+    create_database,
+    drop_database,
+    get_current_revision,
+    stamp_latest_revision,
+)
+from CTFd.utils.uploads import get_uploader
 
 
 class CTFdSerializer(JSONSerializer):
@@ -120,16 +128,6 @@ def import_ctf(backup, erase=True):
     if not zipfile.is_zipfile(backup):
         raise zipfile.BadZipfile
 
-    if erase:
-        drop_database()
-        create_database()
-        # We explicitly do not want to upgrade or stamp here.
-        # The import will have this information.
-
-    side_db = dataset.connect(get_app_config("SQLALCHEMY_DATABASE_URI"))
-    sqlite = get_app_config("SQLALCHEMY_DATABASE_URI").startswith("sqlite")
-    postgres = get_app_config("SQLALCHEMY_DATABASE_URI").startswith("postgres")
-
     backup = zipfile.ZipFile(backup)
 
     members = backup.namelist()
@@ -142,6 +140,44 @@ def import_ctf(backup, erase=True):
         if max_content_length:
             if info.file_size > max_content_length:
                 raise zipfile.LargeZipFile
+
+    try:
+        alembic_version = json.loads(backup.open("db/alembic_version.json").read())
+        alembic_version = alembic_version["results"][0]["version_num"]
+    except Exception:
+        raise Exception(
+            "Could not determine appropriate database version. This backup cannot be automatically imported."
+        )
+
+    # Check if the alembic version is from CTFd 1.x
+    if alembic_version in (
+        "1ec4a28fe0ff",
+        "2539d8b5082e",
+        "7e9efd084c5a",
+        "87733981ca0e",
+        "a4e30c94c360",
+        "c12d2a1b0926",
+        "c7225db614c1",
+        "cb3cfcc47e2f",
+        "cbf5620f8e15",
+        "d5a224bf5862",
+        "d6514ec92738",
+        "dab615389702",
+        "e62fd69bd417",
+    ):
+        raise Exception(
+            "The version of CTFd that this backup is from is too old to be automatically imported."
+        )
+
+    if erase:
+        drop_database()
+        create_database()
+        # We explicitly do not want to upgrade or stamp here.
+        # The import will have this information.
+
+    side_db = dataset.connect(get_app_config("SQLALCHEMY_DATABASE_URI"))
+    sqlite = get_app_config("SQLALCHEMY_DATABASE_URI").startswith("sqlite")
+    postgres = get_app_config("SQLALCHEMY_DATABASE_URI").startswith("postgres")
 
     try:
         if postgres:
@@ -176,9 +212,6 @@ def import_ctf(backup, erase=True):
 
     members = first + members
 
-    alembic_version = json.loads(backup.open("db/alembic_version.json").read())[
-        "results"
-    ][0]["version_num"]
     upgrade(revision=alembic_version)
 
     # Create tables created by plugins
@@ -210,24 +243,36 @@ def import_ctf(backup, erase=True):
                     # This is a hack to get SQLite to properly accept datetime values from dataset
                     # See Issue #246
                     if sqlite:
+                        direct_table = get_class_by_tablename(table.name)
                         for k, v in entry.items():
                             if isinstance(v, six.string_types):
-                                match = re.match(
-                                    r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d", v
-                                )
-                                if match:
-                                    entry[k] = datetime.datetime.strptime(
-                                        v, "%Y-%m-%dT%H:%M:%S.%f"
+                                # We only want to apply this hack to columns that are expecting a datetime object
+                                try:
+                                    is_dt_column = (
+                                        type(getattr(direct_table, k).type)
+                                        == sqltypes.DateTime
                                     )
-                                    continue
-                                match = re.match(
-                                    r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}", v
-                                )
-                                if match:
-                                    entry[k] = datetime.datetime.strptime(
-                                        v, "%Y-%m-%dT%H:%M:%S"
+                                except AttributeError:
+                                    is_dt_column = False
+
+                                # If the table is expecting a datetime, we should check if the string is one and convert it
+                                if is_dt_column:
+                                    match = re.match(
+                                        r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d", v
                                     )
-                                    continue
+                                    if match:
+                                        entry[k] = datetime.datetime.strptime(
+                                            v, "%Y-%m-%dT%H:%M:%S.%f"
+                                        )
+                                        continue
+                                    match = re.match(
+                                        r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}", v
+                                    )
+                                    if match:
+                                        entry[k] = datetime.datetime.strptime(
+                                            v, "%Y-%m-%dT%H:%M:%S"
+                                        )
+                                        continue
                     # From v2.0.0 to v2.1.0 requirements could have been a string or JSON because of a SQLAlchemy issue
                     # This is a hack to ensure we can still accept older exports. See #867
                     if member in (
@@ -274,7 +319,9 @@ def import_ctf(backup, erase=True):
     for f in files:
         filename = f.split(os.sep, 1)
 
-        if len(filename) < 2:  # just an empty uploads directory (e.g. uploads/)
+        if (
+            len(filename) < 2 or os.path.basename(filename[1]) == ""
+        ):  # just an empty uploads directory (e.g. uploads/) or any directory
             continue
 
         filename = filename[1]  # Get the second entry in the list (the actual filename)
@@ -284,7 +331,7 @@ def import_ctf(backup, erase=True):
     # Alembic sqlite support is lacking so we should just create_all anyway
     try:
         upgrade(revision="head")
-    except (CommandError, RuntimeError, SystemExit):
+    except (OperationalError, CommandError, RuntimeError, SystemExit, Exception):
         app.db.create_all()
         stamp_latest_revision()
 

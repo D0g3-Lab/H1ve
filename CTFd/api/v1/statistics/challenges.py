@@ -1,10 +1,11 @@
 from flask_restplus import Resource
-from CTFd.models import db, Challenges, Solves
-from CTFd.utils.modes import get_model
-from CTFd.utils.decorators import admins_only
-from CTFd.api.v1.statistics import statistics_namespace
 from sqlalchemy import func
 from sqlalchemy.sql import or_
+
+from CTFd.api.v1.statistics import statistics_namespace
+from CTFd.models import Challenges, Solves, db
+from CTFd.utils.decorators import admins_only
+from CTFd.utils.modes import get_model
 
 
 @statistics_namespace.route("/challenges/<column>")
@@ -107,7 +108,7 @@ class ChallengeSolvePercentages(Resource):
             )
 
             if teams_with_points > 0:
-                percentage = float() / float(teams_with_points)
+                percentage = float(solve_count) / float(teams_with_points)
             else:
                 percentage = 0.0
 

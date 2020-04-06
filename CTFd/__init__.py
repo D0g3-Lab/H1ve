@@ -1,34 +1,36 @@
-import sys
+import datetime
 import os
-
+import sys
 from distutils.version import StrictVersion
+
 from flask import Flask, Request
 from flask_migrate import upgrade
-from werkzeug.utils import cached_property
-from werkzeug.middleware.proxy_fix import ProxyFix
 from jinja2 import FileSystemLoader
 from jinja2.sandbox import SandboxedEnvironment
 from six.moves import input
+from werkzeug.middleware.proxy_fix import ProxyFix
+from werkzeug.utils import cached_property
 
 from CTFd import utils
-from CTFd.utils.migrations import migrations, create_database, stamp_latest_revision
-from CTFd.utils.sessions import CachingSessionInterface
-from CTFd.utils.updates import update_check
+from CTFd.plugins import init_plugins
+from CTFd.utils.crypto import sha256
 from CTFd.utils.initialization import (
+    init_events,
+    init_logs,
     init_request_processors,
     init_template_filters,
     init_template_globals,
-    init_logs,
-    init_events,
 )
-from CTFd.plugins import init_plugins
+from CTFd.utils.migrations import create_database, migrations, stamp_latest_revision
+from CTFd.utils.sessions import CachingSessionInterface
+from CTFd.utils.updates import update_check
 
 # Hack to support Unicode in Python 2 properly
 if sys.version_info[0] < 3:
     reload(sys)  # noqa: F821
     sys.setdefaultencoding("utf-8")
 
-__version__ = "2.1.5"
+__version__ = "2.3.2"
 
 
 class CTFdRequest(Request):
@@ -50,6 +52,12 @@ class CTFdFlask(Flask):
         self.jinja_environment = SandboxedBaseEnvironment
         self.session_interface = CachingSessionInterface(key_prefix="session")
         self.request_class = CTFdRequest
+
+        # Store server start time
+        self.start_time = datetime.datetime.utcnow()
+
+        # Create generally unique run identifier
+        self.run_id = sha256(str(self.start_time))[0:8]
         Flask.__init__(self, *args, **kwargs)
 
     def create_jinja_environment(self):
@@ -88,7 +96,7 @@ class ThemeLoader(FileSystemLoader):
             return super(ThemeLoader, self).get_source(environment, template)
 
         # Load regular theme data
-        theme = utils.get_config("ctf_theme")
+        theme = str(utils.get_config("ctf_theme"))
         template = "/".join([theme, "templates", template])
         return super(ThemeLoader, self).get_source(environment, template)
 
@@ -169,7 +177,7 @@ def create_app(config="CTFd.config.Config"):
 
         reverse_proxy = app.config.get("REVERSE_PROXY")
         if reverse_proxy:
-            if "," in reverse_proxy:
+            if type(reverse_proxy) is str and "," in reverse_proxy:
                 proxyfix_args = [int(i) for i in reverse_proxy.split(",")]
                 app.wsgi_app = ProxyFix(app.wsgi_app, None, *proxyfix_args)
             else:

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>native subscribe form a Flat Responsive Widget Template :: w3layouts</title>
+<!-- metatags-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="native subscribe form a Flat Responsive Widget,Login form widgets, Sign up Web 	forms , Login signup Responsive web form,Flat Pricing table,Flat Drop downs,Registration Forms,News letter Forms,Elements" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!--// Meta tag Keywords -->
+<link href="css/style.css" rel="stylesheet" type="text/css" media="all"/><!--stylesheet-css-->
+<link href="//fonts.googleapis.com/css?family=Cabin" rel="stylesheet"><!--online-fonts-->
+<link href="//fonts.googleapis.com/css?family=Raleway" rel="stylesheet"><!--online-fonts-->
+
+</head>
+<body>
+<div class="w3ls-head">
+	<h1>n<span>a</span>tive s<span>u</span>bscribe f<span>o</span>rm</h1>	
+</div>
+	<div class="w3ls-container">
+		<div class="w3l-form">
+			<form action="" method="get">
+				<div class="w3l-h2">
+					<h2>subscribe now</h2>
+				</div>
+				<div class="w3l-notify">
+					<p>get notify about the next update</p>
+				</div>
+				<div class="w3l-email">
+					<input type="text" name="text" placeholder="enter your email" required=""/>
+				</div>	
+				<div class="w3l-submit">
+					<input type="submit" value="subscribe now">
+				</div>
+			</form>
+		</div>
+	</div>
+		<footer>&copy; native subscribe Form. All Rights Reserved | Design by <a href="http://w3layouts.com/" target="_blank"> W3layouts</a>
+		</footer>
+<!-- -->
+<?php
+error_reporting(0);
+$text = $_GET['text'];
+if(preg_match('[<>?]', $text)) {
+		die('error!');
+	}
+if(!is_array($text) and isset($text))
+{
+	echo "<div>Your f* put content is ".$text."</div>";	
+}
+else
+{
+	if(file_put_contents('/tmp/input.php', $text)){
+			include_once("include/f1ag_1s_n0t_here.php");
+	}
+}
+?>
+</body>
+</html>

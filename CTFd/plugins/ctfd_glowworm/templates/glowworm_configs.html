@@ -41,48 +41,9 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-  function update_configs(obj) {
-          var target = "/plugins/ctfd-glowworm/admin/settings";
-          var method = "PATCH";
+{% endblock %}
 
-          var params = {};
-
-          Object.keys(obj).forEach(function(x) {
-            if (obj[x] === "true") {
-              params[x] = true;
-            } else if (obj[x] === "false") {
-              params[x] = false;
-            } else {
-              params[x] = obj[x];
-            }
-          });
-
-          params["mode"] = $("#set-deploy-select").find("option:selected").val();
-
-          CTFd.fetch(target, {
-            method: method,
-            credentials: "same-origin",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(params)
-          })
-            .then(function(response) {
-              return response.json();
-            })
-            .then(function(data) {
-              window.location.reload();
-            });
-        }
-
-        $(function() {
-          $(".config-section > form:not(.form-upload)").submit(function(e) {
-            e.preventDefault();
-            var obj = $(this).serializeJSON();
-            update_configs(obj);
-          });
-        });
-</script>
+{% block entrypoint %}
+	<script defer src="{{ url_for('views.themes', theme='admin', path='js/pages/main.js') }}"></script>
+	<script defer src="/plugins/ctfd-glowworm/assets/configs.js"></script>
 {% endblock %}

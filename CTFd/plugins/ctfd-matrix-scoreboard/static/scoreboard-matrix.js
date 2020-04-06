@@ -1,14 +1,16 @@
 function updatescores () {
+    var $ = CTFd.lib.$;
+    var script_root = CTFd.config.urlRoot;
     $.get(script_root + '/matrix/scores', function( data ) {
         teams = $.parseJSON(JSON.stringify(data));
         console.log(teams);
         $('#scoreboard > tbody').empty()
         for (var i = 0; i < teams.length; i++) {
             if (teams[i].userid !== "") {
-                row = "<tr><td>{0}</td><td><a href='/users/{1}' title='{5}'>{2}</a><td>{3}</td></td><td>{4}</td>".format(i+1, teams[i].userid, htmlentities(teams[i]['name']), teams[i].affiliation, teams[i].score, teams[i].username);
+                row = "<tr><td>{0}</td><td><a href='/users/{1}' title='{5}'>{2}</a><td>{3}</td></td><td>{4}</td>".format(i+1, teams[i].userid, teams[i]['name'], teams[i].affiliation, teams[i].score, teams[i].username);
             }
             else {
-                row = "<tr><td>{0}</td><td><a href='/teams/{1}' title='{5}'>{2}</a><td>{3}</td></td><td>{4}</td>".format(i+1, teams[i].teamid, htmlentities(teams[i]['name']), teams[i].affiliation, teams[i].score, teams[i].username);
+                row = "<tr><td>{0}</td><td><a href='/teams/{1}' title='{5}'>{2}</a><td>{3}</td></td><td>{4}</td>".format(i+1, teams[i].teamid, teams[i]['name'], teams[i].affiliation, teams[i].score, teams[i].username);
             }
             chalids = new Array();
             tops = new Array();

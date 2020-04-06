@@ -26,7 +26,7 @@ class DockerUtils:
             for index in counts:
                 if not isinstance(index, Teams):
                     if index.type == "admin":
-                        pass
+                        continue
 
                 teamDir = os.path.join(basePath, platform_name, 'team' + str(index.id))
                 print(teamDir)

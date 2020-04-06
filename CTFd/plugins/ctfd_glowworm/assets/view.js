@@ -1,20 +1,15 @@
-window.challenge.data = undefined;
+CTFd._internal.challenge.data = undefined;
 
-window.challenge.renderer = new markdownit({
-    html: true,
-    linkify: true,
-});
+CTFd._internal.challenge.renderer = CTFd.lib.markdown();
 
-window.challenge.preRender = function () {
+CTFd._internal.challenge.preRender = function () { };
 
-};
-
-window.challenge.render = function (markdown) {
-    return window.challenge.renderer.render(markdown);
+CTFd._internal.challenge.render = function (markdown) {
+    return CTFd._internal.challenge.renderer.render(markdown);
 };
 
 
-window.challenge.postRender = function () {
+CTFd._internal.challenge.postRender = function () {
     loadInfo();
     get_targets($("#challenge-id").val());
 };
@@ -22,8 +17,8 @@ window.challenge.postRender = function () {
 function stopShowAuto () {
     // 窗口关闭时停止循环
     $("#challenge-window").on("hide.bs.modal", function(event) {
-        clearInterval(window.t);
-        window.t = undefined;
+        clearInterval(CTFd._internal.t);
+        CTFd._internal.t = undefined;
     });
 }
 
@@ -64,7 +59,7 @@ function loadInfo () {
                     '<h5 class="card-title">Instance Info</h5>' +
                     // '<h6 class="card-subtitle mb-2 text-muted" id="owl-challenge-count-down">Remaining Time: ' + response.remaining_time + 's</h6>' +
                     '<p class="card-text">http://' + response.domain + '</p>' +
-                    '<button type="button" class="btn btn-sm btn-outline-secondary" id="glowworm-button-renew" onclick="window.challenge.renew()">Renew this instance</button>'
+                    '<button type="button" class="btn btn-sm btn-outline-secondary" id="glowworm-button-renew" onclick="CTFd._internal.challenge.renew()">Renew this instance</button>'
                 );
             } else {
                 $('#glowworm-panel').html(
@@ -72,14 +67,14 @@ function loadInfo () {
                     // '<h6 class="card-subtitle mb-2 text-muted" id="owl-challenge-count-down">Remaining Time: ' + response.remaining_time + 's</h6>' +
                     '<p class="card-text">' + response.ip + '<br>SSH Port: ' + response.ssh_port + '<br>Service Port: ' + response.service_port + '</p>' +
                     '<p class="card-text">SSH Key:<br>web/pwn:' + response.ssh_key + '</p>' +
-                    // '<button type="button" class="btn btn-sm btn-outline-secondary" id="glowworm-button-destroy" onclick="window.challenge.destroy()">Destroy this instance</button>' +
-                    '<button type="button" class="btn btn-sm btn-outline-secondary" id="glowworm-button-renew" onclick="window.challenge.renew()">Renew this instance</button>'
+                    // '<button type="button" class="btn btn-sm btn-outline-secondary" id="glowworm-button-destroy" onclick="CTFd._internal.challenge.destroy()">Destroy this instance</button>' +
+                    '<button type="button" class="btn btn-sm btn-outline-secondary" id="glowworm-button-renew" onclick="CTFd._internal.challenge.renew()">Renew this instance</button>'
                 );
             }
 
-            if(window.t !== undefined) {
-                clearInterval(window.t);
-                window.t = undefined;
+            if(CTFd._internal.t !== undefined) {
+                clearInterval(CTFd._internal.t);
+                CTFd._internal.t = undefined;
             }
 
 
@@ -91,12 +86,13 @@ function loadInfo () {
             //         loadInfo();
             //     }
             // }
-            // window.t = setInterval(showAuto, 1000);
+            // CTFd._internal.t = setInterval(showAuto, 1000);
         }
     });
 };
 
-window.challenge.renew = function() {
+CTFd._internal.challenge.renew = function() {
+    var ezal = CTFd.ui.ezq;
     var challenge_id = parseInt($('#challenge-id').val());
     var url = "/plugins/ctfd-glowworm/container?challenge_id=" + challenge_id;
 
@@ -127,7 +123,7 @@ window.challenge.renew = function() {
     }).then(function (response) {
         if(response.success) {
             loadInfo();
-            ezal({
+            ezal.ezAlert({
                 title: "Success",
                 body: "Your instance has been renewed!",
                 button: "OK"
@@ -135,7 +131,7 @@ window.challenge.renew = function() {
         } else {
             $('#glowworm-button-renew')[0].innerHTML = "Renew this instance";
             $('#glowworm-button-renew')[0].disabled = false;
-            ezal({
+            ezal.ezAlert({
                 title: "Fail",
                 body: response.msg,
                 button: "OK"
@@ -144,7 +140,7 @@ window.challenge.renew = function() {
     });
 };
 
-window.challenge.submit = function (cb, preview) {
+CTFd._internal.challenge.submit = function (cb, preview) {
     var challenge_id = parseInt($('#challenge-id').val());
     var submission = $('#submission-input').val();
     var url = "/api/v1/challenges/attempt";
@@ -182,6 +178,7 @@ window.challenge.submit = function (cb, preview) {
 };
 
 function get_targets(id) {
+  var script_root = CTFd.config.urlRoot;
   $.get(script_root + "/plugins/ctfd-glowworm/challenge/" + id, function(
     response
   ) {
@@ -192,9 +189,7 @@ function get_targets(id) {
     for (var i = 0; i < data.length; i++) {
       var target = data[i].target;
       box.append(
-        '<tr><td>{0}</td></tr>'.format(
-          htmlentities(target),
-        )
+        '<tr><td>{0}</td></tr>'.format(target),
       );
     }
   });
