@@ -53,7 +53,7 @@ def load(app):
 
             freeze = utils.get_config('freeze')
             if freeze:
-                freeze = utils.unix_time_to_utc(freeze)
+                freeze = unix_time_to_utc(freeze)
                 if teamid != session.get('id'):
                     basic_solves = basic_solves.filter(Solves.date < freeze)
             basic_solves = basic_solves.all()
