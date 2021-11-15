@@ -92,8 +92,8 @@ services:
       - main
     # 数据卷
     volumes:
-      - "$PWD/nginx/conf/ssl:/opt/verynginx/openresty/nginx/conf/ssl:ro"
-      - "$PWD/nginx/conf/vhosts:/opt/verynginx/openresty/nginx/conf/vhosts:ro"
+      - "$PWD/nginx/nginx/conf/ssl:/opt/verynginx/openresty/nginx/conf/ssl:ro"
+      - "$PWD/nginx/nginx/conf/vhosts:/opt/verynginx/openresty/nginx/conf/vhosts:ro"
     ports:
       - "80:80"
       - "443:443"
